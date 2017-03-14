@@ -1,0 +1,9 @@
+
+    { // adds drug orders section to patient dashboard
+        "id": "intelehealth.overview.activeDrugOrders",
+        "extensionParams": {
+            "provider": "intelehealth",
+            "fragment": "overview/activeDrugOrders"
+        }
+    }
+]

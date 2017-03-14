@@ -1,0 +1,19 @@
+[
+    {
+        "id": "intelehealth.findRecord",
+        "instanceOf": "intelehealth.template.findPatient",
+        "description": "Basic patient search that goes to the patient dashboard",
+        "order": 2,
+        "extensions": [
+            {
+                "id": "intelehealth.findRecordHomepageLink",
+                "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
+                "type": "link",
+                "label": "intelehealth.findPatient.app.label",
+                "url": "intelehealth/findrecord/findRecord.page?app=intelehealth.findRecord",
+                "icon": "icon-search",
+                "requiredPrivilege": "App: intelehealth.findRecord"
+            }
+        ]
+    }
+]

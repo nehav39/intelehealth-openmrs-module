@@ -1,0 +1,110 @@
+@import "variables";
+
+.care-setting {
+  &.active {
+    font-weight: bold;
+  }
+}
+
+.will-replace {
+  color: $subtleText;
+}
+
+form.css-form {
+  input.ng-invalid.ng-touched {
+    background-color: #FA787E;
+    &:focus {
+      background-color: white;
+    }
+  }
+
+  input[type="number"] {
+    width: 55px;
+  }
+}
+
+.ui-tabs .ui-tabs-panel ul {
+  background-color: white;
+}
+
+td.actions {
+  width: 50px;
+}
+
+div.actions {
+  padding: 5px;
+}
+
+form#new-order {
+  background-color: $white;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  .dosing-type {
+    span {
+      margin-right: 15px;
+    }
+    a {
+      font-size: 0.9em;
+      display: inline-block;
+      padding-right: 15px;
+      &.active {
+        font-family: $primaryBoldFont;
+        font-weight: normal;
+      }
+    }
+  }
+
+  label {
+    &.disabled {
+      color: $darkerGrey; // Replace with $subtlerText
+    }
+  }
+}
+
+#draft-orders {
+  border: 1px $lighterGrey solid;
+  background-color: $focus;
+  padding: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  .signature {
+    text-align: right;
+    color: $subtleText;
+  }
+}
+
+#past-drug-orders {
+  font-size: 0.9em;
+}
+
+.css-form {
+  .ng-dirty.ng-invalid {
+    background-color: $error;
+    &:focus {
+      background-color: white;
+    }
+  }
+}
+
+form.sized-inputs {
+  input {
+    min-width: 0%;
+    display: inline;
+  }
+  label {
+    display: inline;
+
+    &.heading {
+      display: block;
+    }
+  }
+}
+
+div.editing-draft-order {
+  border: 1px $darkerGrey solid;
+  background-color: $lighterGrey;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

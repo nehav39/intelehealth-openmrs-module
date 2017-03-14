@@ -1,0 +1,16 @@
+[
+    {
+        "id": "intelehealth.patientsummary",
+        "description": "Basic patient summary page",
+        "config": {
+            "encounterTypeUuid": "d7151f82-c1f3-4152-a605-2f9ea7414a79"
+        },
+        "extensions": [
+            {
+                "id": "intelehealth.findRecordHomepageLink",
+                "url": "/intelehealth/overview/patientSummary.page?patientId={{ patientId }}",
+                "requiredPrivilege": "App: intelehealth.findRecord"
+            }
+        ]
+    }
+]

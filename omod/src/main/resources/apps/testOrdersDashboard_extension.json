@@ -1,0 +1,9 @@
+
+    { // adds test orders section to patient dashboard
+        "id": "intelehealth.overview.activeTestOrders",
+        "extensionParams": {
+            "provider": "intelehealth",
+            "fragment": "overview/activeTestOrders"
+        }
+    }
+]

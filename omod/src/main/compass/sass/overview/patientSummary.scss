@@ -1,0 +1,106 @@
+.lozenge {
+  display: inline-block;
+  padding: 0px 8px;
+  border: 1px solid black;
+  border-radius: 3px;
+  font-size: 0.7em;
+  text-transform: uppercase;
+
+  &.recent {
+    background-color: white;
+    color: #4a6785;
+    border-color: #4a6785;
+  }
+
+  &.prn {
+    background-color: #f6c342;
+    border-color: #f6c342;
+  }
+
+  &.alert {
+    background-color: darkred;
+    border-color: darkred;
+    color: white;
+  }
+}
+
+.prescription-group {
+  &.inactive, .inactive {
+    background-color: darkgray;
+  }
+  .prescriber{
+    font-size: 0.9em;
+  }
+}
+
+.iv-fluid-order {
+  .concept-name {
+    text-transform: uppercase;
+  }
+  &.inactive, .inactive {
+    background-color: darkgray;
+  }
+  .prescriber{
+    font-size: 0.9em;
+  }
+}
+
+.jump-header{
+
+    font-weight: bold;
+    font-size: 0.9em;
+    font-family: "OpenSansBold", serif;
+    margin-bottom: 20px;
+    margin-top: 15px;
+
+  .jump-label{
+    padding-left: 10px;
+  }
+  i{
+    padding-left: 20px !important;
+  }
+  a{
+
+    font-weight: bold;
+    text-decoration: underline;
+    padding-left: 3px;
+    padding-right: 10px;
+  }
+}
+.dashboard {
+  .long-info-section{
+    margin-bottom: 25px;
+  }
+  .info-header{
+    h3{
+      width:250px;
+    }
+    .active-visit-started-at-message {
+      background: #51a351;
+      border-color: #51a351;
+    }
+    .active-visit-message {
+      background: #666;
+      border-color: #666;
+    }
+
+    .active-visit-message, .active-visit-started-at-message{
+      display: inline-block;
+      vertical-align: text-bottom;
+      color: #FFF;
+      padding: 2px 4px;
+      border-radius: 1px;
+      font-size: 0.8em;
+    }
+  }
+
+  [class^="icon-"],
+  [class*=" icon-"]{
+    display: inline;
+  }
+
+  .back-to-top{
+    margin-top: 10px;
+  }
+
+}

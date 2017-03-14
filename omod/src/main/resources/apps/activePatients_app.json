@@ -1,0 +1,22 @@
+[
+    {
+        "id": "intelehealth.activePatients",
+		"instanceOf": "intelehealth.template.activeVisits",
+        "description": "intelehealth.activeVisits.app.description",
+        "order": 10,
+        "config": {
+            "afterSelectedUrl": "/myresearchstudy/editContacts.page?patientId={{ patientId }}"
+        },
+        "extensions": [
+            {
+                "id": "${project.parent.groupId}.${project.parent.artifactId}.activeVisitsHomepageLink",
+                "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
+                "type": "link",
+                "label": "intelehealth.activeVisits.app.label",
+                "url": "intelehealth/activePatients.page?app=intelehealth.activePatients",
+                "icon": "icon-user",
+                "requiredPrivilege": "App: intelehealth.activePatients"
+            }
+        ]
+    }
+]
