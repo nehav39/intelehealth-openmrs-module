@@ -1,0 +1,146 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.openmrs.module</groupId>
+	<artifactId>intelehealth</artifactId>
+	<version>1.1.4</version>
+	<packaging>pom</packaging>
+	<name>Intelehealth Module</name>
+	<description>Intelehealth Module for Telemedicine</description>
+	<url>https://wiki.openmrs.org/display/docs/Intelehealth+Module+Module</url>
+	
+	<developers>
+		<developer>
+			<name>Emily Eggert</name>
+		</developer>
+	</developers>
+	
+	<organization>
+		<name>OpenMRS</name>
+		<url>http://openmrs.org</url>
+	</organization>
+<!-- need to fix -->
+	<scm>
+		<connection>scm:git:git@github.com:openmrs/openmrs-module-coreapps.git</connection>
+		<developerConnection>scm:git:git@github.com:openmrs/openmrs-module-coreapps.git</developerConnection>
+		<url>https://github.com/openmrs/openmrs-module-coreapps</url>
+    <tag>HEAD</tag>
+  </scm>
+
+	<modules>
+		<module>api</module>
+<!--		<module>web-1.9</module>
+		<module>web-2.0</module>
+-->		<module>omod</module>
+	</modules>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<distro.groupId>org.openmrs.distro</distro.groupId>
+       		<distro.artifactId>referenceapplication</distro.artifactId>
+       		<distro.version>2.4</distro.version>
+        	<emrapi.version>1.17-SNAPSHOT</emrapi.version>
+        	<appui.version>1.6</appui.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>	
+	        <!-- Importing versions from refapp distro -->
+	        <dependency>
+	            <groupId>${distro.groupId}</groupId>
+	            <artifactId>${distro.artifactId}</artifactId>
+	            <version>${distro.version}</version>
+	            <type>pom</type>
+	            <scope>import</scope>
+	        </dependency>
+
+		 <!-- we explicitly use version 3.2.10 since 3.2.11 has a bug which was giving us issues,
+	         can probably remove this after next sass release -->
+	        <dependency>
+	            <groupId>rubygems</groupId>
+	            <artifactId>sass</artifactId>
+	            <version>3.2.10</version>
+	            <type>gem</type>
+              <!--  <scope>provided</scope> -->
+	        </dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<target>1.6</target>
+						<source>1.6</source>
+                        <encoding>UTF-8</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.openmrs.maven.plugins</groupId>
+					<artifactId>maven-openmrs-plugin</artifactId>
+					<version>1.0.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+                <!-- The 2.10 version of this plugin released in Sept 2014 leads to opaque errors and a lot of:
+                 [ERROR] java.lang.ClassCastException: com.sun.tools.javadoc.ClassDocImpl cannot be cast to com.sun.javadoc.AnnotationTypeDoc
+                    http://jira.codehaus.org/browse/MJAVADOC-408                 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.9.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.3.2</version>
+                    <configuration>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <tagNameFormat>@{project.version}</tagNameFormat>
+                        <!-- refapp distro contains SNAPSHOT dependencies -->
+                        <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
+                    </configuration>
+                </plugin>
+            </plugins>
+		</pluginManagement>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>openmrs-repo</id>
+			<name>OpenMRS Nexus Repository</name>
+			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>openmrs-repo</id>
+			<name>OpenMRS Nexus Repository</name>
+			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+	
+	<distributionManagement>
+		<repository>
+			<id>openmrs-repo-modules</id>
+			<name>Modules</name>
+			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/modules</url>
+		</repository>
+        <snapshotRepository>
+            <id>openmrs-repo-snapshots</id>
+            <name>OpenMRS Snapshots</name>
+            <url>http://mavenrepo.openmrs.org/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+	</distributionManagement>
+
+</project>
