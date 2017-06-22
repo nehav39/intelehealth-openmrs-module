@@ -1,4 +1,4 @@
-package org.openmrs.module.intelehealth.fragment.controller.overview;
+package org.openmrs.module.intelehealth.fragment.controller;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.openmrs.Order;
