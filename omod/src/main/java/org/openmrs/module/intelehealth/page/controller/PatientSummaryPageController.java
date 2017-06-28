@@ -1,4 +1,4 @@
-package org.openmrs.module.intelehealth.page.controller;
+package org.openmrs.module.intelehealt.page.controller;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.openmrs.EncounterType;
