@@ -71,7 +71,7 @@ button.close {
 
 </style>
 
-<div id="orderedTests" class="long-info-section"  ng-app="orderedTestsSummary" ng-controller="OrderedTestsSummaryController">
+<div id="orderedTests" class="long-info-section" ng-controller="OrderedTestsSummaryController">
         {{ data }}<br>
         {{ data2 }}<br>
         {{ data3 }}<br>
@@ -102,125 +102,8 @@ button.close {
 </div>
 
 <script>
-var app = angular.module('orderedTestsSummary', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
 
-app.factory('OrderedTestsSummaryFactory1', function(\$http, \$filter){
-  var patient = "${ patient.uuid }";
-  var date = new Date();
-  date = \$filter('date')(new Date(), 'yyyy-MM-dd');
-  var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
-      url += "?patient=" + patient;
-      url += "&encounterType=" + "d7151f82-c1f3-4152-a605-2f9ea7414a79";
-      url += "&fromdate=" + date;
-  return {
-    async: function(){
-      return \$http.get(url).then(function(response){
-        return response.data.results;
-      });
-    }
-  };
-});
-
-app.factory('OrderedTestsSummaryFactory2', function(\$http){
-  var patient = "${ patient.uuid }";
-  var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
-  var date2 = new Date();
-  var json = {
-      patient: patient,
-      encounterType: "d7151f82-c1f3-4152-a605-2f9ea7414a79",
-      encounterDatetime: date2
-  };
-  return {
-    async: function(){
-      return \$http.post(url1, JSON.stringify(json)).then(function(response){
-        return response.data.uuid;
-      });
-    }
-  };
-});
-
-app.controller('OrderedTestsSummaryController', function(\$scope, \$http, \$filter, \$timeout, OrderedTestsSummaryFactory1, OrderedTestsSummaryFactory2) {
-  \$scope.alerts = [];
-  var _selected;
-  var patient = "${ patient.uuid }";
-  var date2 = new Date();
-
-  \$timeout(function () {
-        \$scope.myHeader = "How are you today?";
-
-        var promise = OrderedTestsSummaryFactory1.async().then(function(d){
-                var length = d.length;
-                if(length > 0) {
-                        angular.forEach(d, function(value, key){
-                                \$scope.data = value.uuid;
-                        });
-                } else {
-                        \$scope.data2 = "Created an Encounter";
-                        OrderedTestsSummaryFactory2.async().then(function(d2){
-                                \$scope.data = d2;
-                        })
-                };
-                return \$scope.data;
-        });
-
-        promise.then(function(x){
-                \$scope.data3 = x;
-
-                \$scope.respuuid = [];
-                \$scope.addAlert = function() {
-                        \$scope.errortext = "";
-                        if (!\$scope.addMe) {
-                                \$scope.errortext = "Please enter text.";
-                                return;
-                        }
-    			if (\$scope.alerts.indexOf(\$scope.addMe) == -1){
-    				\$scope.alerts.push({msg: \$scope.addMe})
-    				var url2 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs";
-    				\$scope.json = {
-         				concept: "23601d71-50e6-483f-968d-aeef3031346d",
-         				person: patient,
-         				obsDatetime: date2,
-         				value: \$scope.addMe,
-         				encounter: x
-        			}
-    				\$scope.addMe = "";
-    				\$http.post(url2, JSON.stringify(\$scope.json)).then(function(response){
-        				if(response.data)
-                				\$scope.statuscode = "Success";
-                				\$scope.respuuid.push(response.data.uuid);
-    				}, function(response){
-                			\$scope.statuscode = "Failed to create Obs";
-    				});
-    			}
-  		};
-
-  		\$scope.closeAlert = function(index) {
-    			\$scope.alerts.splice(index, 1);
-    			\$scope.errortext = "";
-    			\$scope.deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.respuuid[index] + "?purge=true";
-    			\$scope.respuuid.splice(index, 1);
-			\$http.delete(\$scope.deleteurl).then(function(response){
-				\$scope.statuscode = "Success";
-			}, function(response){
-				\$scope.statuscode = "Failed to delete Obs";
-			});
-  		};  
-        });
-  }, 2000);
-             
-  \$scope.selected = undefined;
-  \$scope.getTest = function() {
-    var testurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/concept/98c5881f-b214-4597-83d4-509666e9a7c9";
-    return \$http.get(testurl).then(function(response){
-      return response.data.answers.map(function(item){
-        return item.display;
-      });
-    });
-  };
-
-});
 </script>
 
 <script>
-    angular.bootstrap("#orderedTests", ['orderedTestsSummary']);
 </script>  

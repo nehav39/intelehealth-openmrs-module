@@ -4,7 +4,7 @@
     ui.includeJavascript("intelehealth", "angular/angular.js")
 %>
 
-<div id="history" class="long-info-section"  ng-app="historySummary" ng-controller="HistorySummaryController">
+<div id="history" class="long-info-section" ng-controller="HistorySummaryController">
 	<br/>
 	<div class="info-header">
 		<i class="icon-book"></i>
@@ -80,5 +80,4 @@ app.controller('HistorySummaryController', function(\$scope, \$http) {
 });
 </script>
 <script>
-    angular.bootstrap("#history", ['historySummary']);
 </script>  

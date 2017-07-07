@@ -7,7 +7,7 @@
     ui.includeJavascript("uicommons", "angular-resource.min.js")
     ui.includeJavascript("uicommons", "angular-common.js")
     ui.includeJavascript("intelehealth", "jquery/jquery.js")
-    ui.includeJavascript("intelehealth", "overview/vitalsSummary.js")
+
     ui.includeJavascript("intelehealth", "overview/angular.min.js")
     ui.includeJavascript("intelehealth", "angular/angular.js")
     ui.includeJavascript("intelehealth", "angular-sanitize/angular-sanitize.js")
@@ -66,7 +66,7 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient]) }
 
 
 <script>
-var app = angular.module('patientSummary', []);
+var app = angular.module('patientSummary', ['vitalsSummary', 'famhistSummary', 'historySummary', 'complaintSummary', 'examSummary', 'diagnoses', 'medsSummary', 'orderedTestsSummary', 'adviceSummary']);
 
 app.factory('PatientSummaryFactory1', function(\$http, \$filter){
   var patient = "${ patient.uuid }";
@@ -129,6 +129,5 @@ app.controller('PatientSummaryController', function(\$scope, PatientSummaryFacto
 </script>
 
 <script>
-    angular.bootstrap("#patientSummary", ['patientSummary']);
 </script>
 

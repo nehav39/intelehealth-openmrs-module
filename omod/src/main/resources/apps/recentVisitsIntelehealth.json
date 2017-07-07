@@ -1,0 +1,10 @@
+[
+  {
+    "id": "intelehealth.overview.recentVisits",
+    "icon": "icon-calendar",
+    "extensionParams": {
+          "provider": "intelehealth",
+          "fragment": "overview/recentVisits"
+        },
+  }
+]

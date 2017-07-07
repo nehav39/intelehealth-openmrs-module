@@ -4,7 +4,7 @@
     ui.includeJavascript("intelehealth", "angular/angular.js")
 %>
 
-<div id="complaint" class="long-info-section"  ng-app="complaintSummary" ng-controller="ComplaintSummaryController">
+<div id="complaint" class="long-info-section" ng-controller="ComplaintSummaryController">
 	<br/>
 	<div class="info-header">
 		<i class="icon-comment"></i>
@@ -80,5 +80,4 @@ app.controller('ComplaintSummaryController', function(\$scope, \$http) {
 });
 </script>
 <script>
-    angular.bootstrap("#complaint", ['complaintSummary']);
 </script>  

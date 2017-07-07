@@ -1,0 +1,1 @@
+var intelehealthPatientDashboard = angular.module('intelehealthPatientDashboard', ['recentVisit']);

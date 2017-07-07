@@ -244,14 +244,11 @@ var app = angular.module('diagnoses', []);
               }, 2000);
         }
     ]);
-</script>
 
-
-<script type="text/javascript">
     // manually bootstrap, in case there are multiple angular apps on a page
-    angular.bootstrap('#encounter-diagnoses-app', ['diagnoses']);
 
     // add any existing diagnoses
+    setTimeout(function(){
     angular.element('#encounter-diagnoses-app').scope().\$apply(function() {
         var encounterDiagnoses = angular.element('#encounter-diagnoses-app > .ng-scope').scope().encounterDiagnoses;
         <% jsForExisting.each { %>
@@ -266,6 +263,8 @@ var app = angular.module('diagnoses', []);
             priorDiagnoses.addDiagnosis(diagnoses.Diagnosis(${ it }));
         <% } %>
     });
-
+    
+    },1000);
+    
 
 </script>

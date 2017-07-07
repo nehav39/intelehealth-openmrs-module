@@ -1,0 +1,16 @@
+[
+    {
+        "id": "intelehealth.intelehealthPatientDashboardApp",
+        "description": "Contains extension points for the intelehealth module patient dashboard",
+        "extensions": [
+            {
+                "id": "intelehealth.activeVisitsHomepageLink",
+                "extensionPointId": "coreapps.findPatient",
+                "type": "link",
+                "url": "/intelehealth/overview/intelehealthPatientDashboard.page?patientId={{ patientId }}&app=intelehealth.intelehealthPatientDashboardApp",
+                "requiredPrivilege": "App: intelehealth.findRecord"
+            }
+        ],
+        "contextModel": [ "patient" ]
+    }
+]

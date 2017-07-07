@@ -71,7 +71,7 @@ button.close {
 
 </style>
 
-<div id="advice" class="long-info-section"  ng-app="adviceSummary" ng-controller="AdviceSummaryController">
+<div id="advice" class="long-info-section" ng-controller="AdviceSummaryController">
 	<div class="info-header">
 		<i class="icon-comments"></i>
 		<h3>Medical Advice</h3>
@@ -90,7 +90,7 @@ button.close {
 </div>
 
 <script>
-var app = angular.module('adviceSummary', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
+var app = angular.module('adviceSummary', ['ngAnimate', 'ngSanitize']);
 
 app.factory('AdviceSummaryFactory1', function(\$http, \$filter){
   var patient = "${ patient.uuid }";
@@ -220,5 +220,4 @@ app.controller('AdviceSummaryController', function(\$scope, \$http, \$timeout, A
 </script>
 
 <script>
-    angular.bootstrap("#advice", ['adviceSummary']);
 </script>  

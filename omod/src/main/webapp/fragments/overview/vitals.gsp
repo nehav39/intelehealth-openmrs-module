@@ -3,7 +3,7 @@
     ui.includeJavascript("intelehealth", "angular/angular.js")
 %>
 
-<div id="vitals" class="long-info-section"  ng-app="vitalsSummary" ng-controller="VitalsSummaryController">
+<div id="vitals" class="long-info-section" ng-controller="VitalsSummaryController">
 	<div class="info-header">
 		<i class="icon-vitals"></i>
 		<h3>Vitals</h3>
@@ -120,5 +120,5 @@ app.controller('VitalsSummaryController', function(\$scope, \$http) {
 });
 </script>
 <script>
-    angular.bootstrap("#vitals", ['vitalsSummary']);
+
 </script>  

@@ -50,6 +50,7 @@
         </span>
         <span class="age">{{- patient.person.age }}</span>
         <span class="gender">{{- patient.person.gender }}</span>
-        <a class="button" href="{{= '/' + OPENMRS_CONTEXT_PATH + '/intelehealth/overview/patientSummary.page?patientId=' + patient.uuid }}">${ ui.message("intelehealth.findPatient.result.view") }</a>
+        
+		<a class="button" href="{{= '/' + OPENMRS_CONTEXT_PATH + '/intelehealth/intelehealthPatientDashboard.page?patientId=' + patient.uuid}}">${ ui.message("intelehealth.findPatient.result.view") }</a>
     </li>
 </script>

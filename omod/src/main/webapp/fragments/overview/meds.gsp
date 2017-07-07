@@ -120,7 +120,7 @@ form.sized-inputs label.heading {
 
 </style>
 
-<div id="meds" class="long-info-section"  ng-app="medsSummary" ng-controller="MedsSummaryController">
+<div id="meds" class="long-info-section" ng-controller="MedsSummaryController">
 	<div class="info-header">
 		<i class="icon-comments"></i>
 		<h3>Prescribed Medication</h3>
@@ -160,7 +160,7 @@ form.sized-inputs label.heading {
 </div>
 
 <script>
-var app = angular.module('medsSummary', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
+var app = angular.module('medsSummary', ['ngAnimate', 'ngSanitize']);
 
 app.factory('CurrentEncountersFactory1', function(\$http, \$filter){
   var patient = "${ patient.uuid }";
@@ -362,5 +362,4 @@ app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, Cur
 </script>
 
 <script>
-    angular.bootstrap("#meds", ['medsSummary']);
 </script>  

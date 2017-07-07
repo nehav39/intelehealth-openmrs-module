@@ -1,0 +1,1 @@
+var recentVisits = angular.module('recentVisit', ['ngAnimate', 'ngSanitize']);
