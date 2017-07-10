@@ -6,6 +6,10 @@ recentVisits.factory('RecentVisitFactory', [ '$http', '$q',
 					var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/visit";
 					return $http.get(url);
 				},
+				fetchVisitDetails : function(uuid) {
+					var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/visit/" + uuid;
+					return $http.get(url);
+				}
 			};
 
 		} ]);
