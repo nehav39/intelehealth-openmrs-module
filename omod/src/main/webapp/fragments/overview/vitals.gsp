@@ -1,8 +1,3 @@
-<%
-    ui.includeJavascript("intelehealth", "angular/angular.min.js")
-    ui.includeJavascript("intelehealth", "angular/angular.js")
-%>
-
 <div id="vitals" class="long-info-section" ng-controller="VitalsSummaryController">
 	<div class="info-header">
 		<i class="icon-vitals"></i>
@@ -10,8 +5,9 @@
 	</div>
 	<div class="info-body">
         <table>
-                <tr ng-repeat="item in vitals | orderBy:'-date'">
-                        <td width="100px" style="border: none">{{item.date | dateFormat}}</td>
+                <tr ng-if="!vitalsPresent"><td>No Data</td></tr>
+                <tr ng-if="vitalsPresent" ng-repeat="item in vitalsData | orderBy:'-date'">
+                        <td width="100px" style="border: none">{{item.date | vitalsDate | date: 'dd.MMM.yyyy'}}</td>
                         <td style="border:none">
 	                    Temp: {{(item.temperature * 9/5) + 32 | round}} F
                         </td>
@@ -42,15 +38,20 @@
 </div>
 
 <script>
-var app = angular.module('vitalsSummary', []);
+var app = angular.module('vitalsSummary', ['recentVisit']);
 
-app.filter('dateFormat', function() {
-    return function(x) {
-        var txt = '';
-        txt = x.slice(7,x.length);
-        return txt;
+app.filter('vitalsDate', function() {
+   return function(text) {
+		text = text || "";
+		var str = text;
+        str = str.substr(7,str.length);
+        var date = str.substr(3,2);
+		date = date + "/" + str.substr(0,3) + str.substr(7,4);
+		var newDate =new Date(date);
+        return newDate;
     };
 });
+
 
 app.filter('round', function(){
 	return function(x){
@@ -58,7 +59,69 @@ app.filter('round', function(){
 	};
 });
 
-app.controller('VitalsSummaryController', function(\$scope, \$http) {
+app.controller('VitalsSummaryController', function(\$scope, \$http, \$location, RecentVisitFactory) {
+var path = window.location.search;
+var i = path.indexOf("visitId=");
+var visitId = path.substr(i + 8, path.length);
+\$scope.visitEncounters = [];
+\$scope.visitObs = []; 
+\$scope.vitalsData = [];
+\$scope.vitalsPresent = true;
+RecentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
+						\$scope.visitDetails = data.data;
+						\$scope.visitEncounters = data.data.encounters; 
+						if(\$scope.visitEncounters.length !== 0) {
+						\$scope.vitalsPresent = true;
+						angular.forEach(\$scope.visitEncounters, function(value, key){
+							var isVital = value.display;
+							if(isVital.match("Vitals") !== null) {
+								var encounterUuid = value.uuid;
+								var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + encounterUuid;
+								\$http.get(encounterUrl).then(function(response) {
+								\$scope.visitObs.push(response.data.obs);
+								 var answers = {date:response.data.display, temperature:'-', height:'-', weight:'-', o2sat:'-', systolicBP:'-', diastolicBP: '-', pulse: '-'};
+								   angular.forEach(response.data.obs, function(value, key){
+									if(value.display.includes('Temp')){
+										answers.temperature = Number(value.display.slice(17,value.display.length));
+									}
+				                                        if(value.display.includes('Height')){
+				                                                answers.height = Number(value.display.slice(13,value.display.length));
+				                                        }
+				                                        if(value.display.includes('Weight')){
+				                                                answers.weight = Number(value.display.slice(13,value.display.length));
+				                                        }
+				                                        if(value.display.includes('Blood oxygen')){
+				                                                answers.o2sat = Number(value.display.slice(25,value.display.length));
+				                                        }
+				                                        if(value.display.includes('Systolic')){
+				                                                answers.systolicBP = Number(value.display.slice(25,value.display.length));
+				                                        }
+				                                        if(value.display.includes('Diastolic')){
+				                                                answers.diastolicBP = Number(value.display.slice(26,value.display.length));
+				                                        }	
+				                                        if(value.display.includes('Pulse')){
+				                                                answers.pulse = Number(value.display.slice(7,value.display.length));
+				                                        }
+								   })
+							      \$scope.vitalsData.push(answers);
+										}, function(response) {
+											\$scope.error = "Get Encounter Obs Went Wrong";
+							        		\$scope.statuscode = response.status;
+							    	});				
+								}
+							});
+					}
+					else {
+					\$scope.vitalsPresent = false;
+					}
+					
+					}, function(error) {
+						console.log(error);
+					});
+
+	
+ 	
+    	
     var patient = "${ patient.uuid }";
     var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
         url += "?patient=" + patient;
@@ -85,7 +148,7 @@ app.controller('VitalsSummaryController', function(\$scope, \$http) {
 		  		   objects.push(response.data);
 				   var answers = {date:response.data.display, temperature:'-', height:'-', weight:'-', o2sat:'-', systolicBP:'-', diastolicBP: '-', pulse: '-'};
 				   angular.forEach(response.data.obs, function(value, key){
-					if(value.display.includes('TEMP')){
+					if(value.display.includes('Temp')){
 						answers.temperature = Number(value.display.slice(17,value.display.length));
 					}
                                         if(value.display.includes('Height')){
@@ -94,13 +157,13 @@ app.controller('VitalsSummaryController', function(\$scope, \$http) {
                                         if(value.display.includes('Weight')){
                                                 answers.weight = Number(value.display.slice(13,value.display.length));
                                         }
-                                        if(value.display.includes('OXYGEN')){
+                                        if(value.display.includes('Blood oxygen')){
                                                 answers.o2sat = Number(value.display.slice(25,value.display.length));
                                         }
-                                        if(value.display.includes('SYSTOLIC')){
+                                        if(value.display.includes('Systolic')){
                                                 answers.systolicBP = Number(value.display.slice(25,value.display.length));
                                         }
-                                        if(value.display.includes('DIASTOLIC')){
+                                        if(value.display.includes('Diastolic')){
                                                 answers.diastolicBP = Number(value.display.slice(26,value.display.length));
                                         }	
                                         if(value.display.includes('Pulse')){

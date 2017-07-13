@@ -1,9 +1,3 @@
-<%
-    ui.includeJavascript("intelehealth", "jquery/jquery.js")
-    ui.includeJavascript("intelehealth", "angular/angular.min.js")
-    ui.includeJavascript("intelehealth", "angular/angular.js")
-%>
-
 <div id="famhist" class="long-info-section" ng-controller="FamHistSummaryController">
 	<br/>
 	<div class="info-header">
@@ -29,17 +23,23 @@
 var app = angular.module('famhistSummary', []);
 
 app.filter('dateFormat', function() {
-    return function(x) {
-        var txt = '';
-        txt = x.slice(13,x.length);
-        return txt;
+return function(text) {
+		text = text || "";
+		var str = text;
+        str = str.substr(13,str.length);
+        var date = str.substr(3,2);
+		date = date + "/" + str.substr(0,3) + str.substr(7,4);
+		var newDate =new Date(date);
+        return newDate;
     };
 });
 app.filter('valueFormat', function() {
-    return function(x) {
-        var txt = '';
-        txt = x.slice(16,x.length);
-        return txt;
+return function(text) {
+		text = text || "";
+		var str = text;
+        var text = '';
+        text = text.substr(16,text.length);
+        return text;
     };
 });
 
@@ -50,6 +50,8 @@ app.controller('FamHistSummaryController', function(\$scope, \$http) {
         url += "&encounterType=" + "8d5b27bc-c2cc-11de-8d13-0010c6dffd0f";
     \$http.get(url)
     	  .then(function(response) {
+    	  console.log("famhist");
+    	  console.log(response);
         	\$scope.vitalEncounters = response.data.results;
 		\$scope.vitalEncountersUrl = [];
 		\$scope.url2 = [];

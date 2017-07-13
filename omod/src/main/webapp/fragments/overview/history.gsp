@@ -1,9 +1,3 @@
-<%
-    ui.includeJavascript("intelehealth", "jquery/jquery.js")
-    ui.includeJavascript("intelehealth", "angular/angular.min.js")
-    ui.includeJavascript("intelehealth", "angular/angular.js")
-%>
-
 <div id="history" class="long-info-section" ng-controller="HistorySummaryController">
 	<br/>
 	<div class="info-header">
@@ -29,17 +23,23 @@
 var app = angular.module('historySummary', []);
 
 app.filter('dateFormat', function() {
-    return function(x) {
-        var txt = '';
-        txt = x.slice(13,x.length);
-        return txt;
+return function(text) {
+		text = text || "";
+		var str = text;
+        str = str.substr(13,str.length);
+        var date = str.substr(3,2);
+		date = date + "/" + str.substr(0,3) + str.substr(7,4);
+		var newDate =new Date(date);
+        return newDate;
     };
 });
 app.filter('valueFormat', function() {
-    return function(x) {
-        var txt = '';
-        txt = x.slice(17,x.length);
-        return txt;
+return function(text) {
+		text = text || "";
+		var str = text;
+        var text = '';
+        text = text.substr(17,text.length);
+        return text;
     };
 });
 

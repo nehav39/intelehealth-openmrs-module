@@ -13,6 +13,8 @@
     ui.includeJavascript("intelehealth", "angular-sanitize/angular-sanitize.js")
     ui.includeJavascript("intelehealth", "angular-animate/angular-animate.js")
     ui.includeJavascript("intelehealth", "angular-bootstrap/ui-bootstrap-tpls.js")
+    ui.includeJavascript("intelehealth", "recent_visits/recent_visits.module.js")
+    ui.includeJavascript("intelehealth", "recent_visits/recent_visits.service.js")
 %>
 
 <script type="text/javascript">
@@ -66,7 +68,7 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient]) }
 
 
 <script>
-var app = angular.module('patientSummary', ['vitalsSummary', 'famhistSummary', 'historySummary', 'complaintSummary', 'examSummary', 'diagnoses', 'medsSummary', 'orderedTestsSummary', 'adviceSummary']);
+var app = angular.module('patientSummary', ['recentVisit', 'vitalsSummary', 'famhistSummary', 'historySummary', 'complaintSummary', 'examSummary', 'diagnoses', 'medsSummary', 'orderedTestsSummary', 'adviceSummary']);
 
 app.factory('PatientSummaryFactory1', function(\$http, \$filter){
   var patient = "${ patient.uuid }";
