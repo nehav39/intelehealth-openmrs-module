@@ -1,0 +1,1 @@
+var intelehealthPatientProfileImage = angular.module('intelehealthPatientProfileImage', ['ngAnimate', 'ngSanitize']);

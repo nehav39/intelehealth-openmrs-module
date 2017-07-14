@@ -1,1 +1,1 @@
-var intelehealthPatientDashboard = angular.module('intelehealthPatientDashboard', ['recentVisit']);
+var intelehealthPatientDashboard = angular.module('intelehealthPatientDashboard', ['intelehealthPatientProfileImage', 'recentVisit']);

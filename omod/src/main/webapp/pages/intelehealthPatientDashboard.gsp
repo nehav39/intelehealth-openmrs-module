@@ -10,8 +10,12 @@
     ui.includeJavascript("intelehealth", "intelehealth_patient_dashboard/intelehealth_patient_dashboard.service.js")
     ui.includeJavascript("intelehealth", "intelehealth_patient_dashboard/intelehealth_patient_dashboard.controller.js")
     ui.includeJavascript("intelehealth", "recent_visits/recent_visits.module.js")
+    ui.includeJavascript("intelehealth", "shared/visitDate.filter.js")
     ui.includeJavascript("intelehealth", "recent_visits/recent_visits.service.js")
     ui.includeJavascript("intelehealth", "recent_visits/recent_visits.controller.js")
+    ui.includeJavascript("intelehealth", "intelehealth_patient_profile_image/intelehealth_patient_profile_image.module.js")
+    ui.includeJavascript("intelehealth", "intelehealth_patient_profile_image/intelehealth_patient_profile_image.service.js")
+    ui.includeJavascript("intelehealth", "intelehealth_patient_profile_image/intelehealth_patient_profile_image.controller.js")
 %>
 
 <script type="text/javascript">
@@ -51,7 +55,7 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient.patient, a
 
 <div class="clear"></div>
 <div class="container">
-    <div class="dashboard clear">
+    <div class="dashboard clear" ng-app="intelehealthPatientDashboard" ng-controller="IntelehealthPatientDashboardController">
         <div class="info-container column">
             <% if (firstColumnFragments) {
 			    firstColumnFragments.each {
@@ -107,12 +111,16 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient.patient, a
 			<%   }
 			} %>
 			
-			<div ng-app="intelehealthPatientDashboard" ng-controller="IntelehealthPatientDashboardController">
+			<div>
 ${ui.includeFragment("intelehealth", "recentVisitsIntelehealth", [patient: patient])}
 </div>
 			
         </div>
+        <div class="action-container column">
+    ${ui.includeFragment("intelehealth", "patientProfileImageIntelehealth", [patient: patient])}
+        </div>
     </div>
+    
 </div>
 
 
