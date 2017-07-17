@@ -33,7 +33,7 @@
 				<td>
 
                     <!-- TODO: only add link to patient dashboard if user has appropriate privilege -->
-                        <a href="${ ui.urlBind("/openmrs/intelehealth/overview/patientSummary.page?patientId=" + v.visit.patient.uuid, v.visit) }">
+                        <a href="${ ui.urlBind("/openmrs/intelehealth/overview/patientSummary.page?patientId=" + v.visit.patient.uuid + "&visitId=" + v.visit.uuid, v.visit) }">
 
                     ${ ui.format(v.visit.patient) }
 

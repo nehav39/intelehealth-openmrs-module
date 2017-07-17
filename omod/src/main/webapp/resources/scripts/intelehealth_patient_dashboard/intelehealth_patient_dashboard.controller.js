@@ -1,4 +1,4 @@
 intelehealthPatientDashboard.controller(
-		'IntelehealthPatientDashboardController', function($scope, $http,
+		'intelehealthPatientDashboardController', function($scope, $http,
 				$timeout, $location) {
 		});

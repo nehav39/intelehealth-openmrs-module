@@ -1,4 +1,4 @@
-intelehealthPatientProfileImage.factory('intelehealthPatientProfileImageFactory', [ '$http', '$q',
+intelehealthAdditionalDocs.factory('intelehealthAdditionalDocsFactory', [ '$http', '$q',
 		function($http, $q) {
 			return {
 				fetchAdditionalDocuments : function() {

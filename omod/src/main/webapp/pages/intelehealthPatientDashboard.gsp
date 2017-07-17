@@ -55,7 +55,7 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient.patient, a
 
 <div class="clear"></div>
 <div class="container">
-    <div class="dashboard clear" ng-app="intelehealthPatientDashboard" ng-controller="IntelehealthPatientDashboardController">
+    <div class="dashboard clear" ng-app="intelehealthPatientDashboard" ng-controller="intelehealthPatientDashboardController">
         <div class="info-container column">
             <% if (firstColumnFragments) {
 			    firstColumnFragments.each {

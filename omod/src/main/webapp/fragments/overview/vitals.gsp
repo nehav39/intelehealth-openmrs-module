@@ -1,4 +1,4 @@
-<div id="vitals" class="long-info-section" ng-controller="VitalsSummaryController">
+<div id="vitals" class="long-info-section" ng-controller="vitalsSummaryController">
 	<div class="info-header">
 		<i class="icon-vitals"></i>
 		<h3>Vitals</h3>
@@ -59,7 +59,7 @@ app.filter('round', function(){
 	};
 });
 
-app.controller('VitalsSummaryController', function(\$scope, \$http, \$location, RecentVisitFactory) {
+app.controller('vitalsSummaryController', function(\$scope, \$http, \$location, recentVisitFactory) {
 var path = window.location.search;
 var i = path.indexOf("visitId=");
 var visitId = path.substr(i + 8, path.length);
@@ -67,7 +67,7 @@ var visitId = path.substr(i + 8, path.length);
 \$scope.visitObs = []; 
 \$scope.vitalsData = [];
 \$scope.vitalsPresent = true;
-RecentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
+recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 						\$scope.visitDetails = data.data;
 						\$scope.visitEncounters = data.data.encounters; 
 						if(\$scope.visitEncounters.length !== 0) {

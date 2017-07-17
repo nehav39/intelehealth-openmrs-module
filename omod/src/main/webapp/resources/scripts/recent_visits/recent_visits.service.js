@@ -1,4 +1,4 @@
-recentVisits.factory('RecentVisitFactory', [ '$http', '$q',
+recentVisits.factory('recentVisitFactory', [ '$http', '$q',
 		function($http, $q) {
 			return {
 				fetchRecentVisits : function() {
