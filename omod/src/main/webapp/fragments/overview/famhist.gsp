@@ -50,8 +50,6 @@ app.controller('FamHistSummaryController', function(\$scope, \$http) {
         url += "&encounterType=" + "8d5b27bc-c2cc-11de-8d13-0010c6dffd0f";
     \$http.get(url)
     	  .then(function(response) {
-    	  console.log("famhist");
-    	  console.log(response);
         	\$scope.vitalEncounters = response.data.results;
 		\$scope.vitalEncountersUrl = [];
 		\$scope.url2 = [];

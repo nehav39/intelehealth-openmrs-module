@@ -8,12 +8,10 @@
     ui.includeJavascript("uicommons", "angular-resource.min.js")
     ui.includeJavascript("uicommons", "angular-common.js")
     ui.includeJavascript("intelehealth", "jquery/jquery.js")
-
-    ui.includeJavascript("intelehealth", "overview/angular.min.js")
     ui.includeJavascript("intelehealth", "angular/angular.js")
     ui.includeJavascript("intelehealth", "angular-sanitize/angular-sanitize.js")
     ui.includeJavascript("intelehealth", "angular-animate/angular-animate.js")
-    ui.includeJavascript("intelehealth", "angular-bootstrap/ui-bootstrap-tpls.js")
+    ui.includeJavascript("intelehealth", "angular-ui-bootstrap/dist/ui-bootstrap-tpls.js")
     ui.includeJavascript("intelehealth", "angular-ui-carousel/dist/ui-carousel.js")
     
     ui.includeJavascript("intelehealth", "recent_visits/recent_visits.module.js")
@@ -79,9 +77,8 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient]) }
 	 </div>
     </div>
 
-
 <script>
-var app = angular.module('patientSummary', ['recentVisit', 'vitalsSummary', 'famhistSummary', 'historySummary', 'complaintSummary', 'examSummary', 'diagnoses', 'medsSummary', 'orderedTestsSummary', 'adviceSummary', 'intelehealthPatientProfileImage', 'intelehealthPhysicalExamination', 'intelehealthAdditionalDocs', 'ui.carousel']);
+var app = angular.module('patientSummary', ['ngAnimate', 'ngSanitize', 'recentVisit', 'vitalsSummary', 'famhistSummary', 'historySummary', 'complaintSummary', 'examSummary', 'diagnoses', 'medsSummary', 'orderedTestsSummary', 'adviceSummary', 'intelehealthPatientProfileImage', 'intelehealthPhysicalExamination', 'intelehealthAdditionalDocs', 'ui.bootstrap', 'ui.carousel']);
 
 app.factory('PatientSummaryFactory1', function(\$http, \$filter){
   var patient = "${ patient.uuid }";

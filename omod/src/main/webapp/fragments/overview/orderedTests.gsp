@@ -1,10 +1,3 @@
-<%
-    ui.includeJavascript("intelehealth", "angular/angular.min.js")
-    ui.includeJavascript("intelehealth", "angular/angular.js")
-    ui.includeJavascript("intelehealth", "angular-sanitize/angular-sanitize.js")
-    ui.includeJavascript("intelehealth", "angular-animate/angular-animate.js")
-    ui.includeJavascript("intelehealth", "angular-bootstrap/ui-bootstrap-tpls.js")
-%>
 
 <style>
 
