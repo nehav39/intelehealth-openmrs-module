@@ -1,1 +1,0 @@
-var intelehealthAdditionalDocs = angular.module('intelehealthAdditionalDocs', ['intelehealthPatientProfileImage']);

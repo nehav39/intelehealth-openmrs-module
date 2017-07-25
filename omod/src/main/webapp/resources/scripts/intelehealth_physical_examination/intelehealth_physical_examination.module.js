@@ -1,1 +1,0 @@
-var intelehealthPhysicalExamination = angular.module('intelehealthPhysicalExamination', ['intelehealthPatientProfileImage']);
