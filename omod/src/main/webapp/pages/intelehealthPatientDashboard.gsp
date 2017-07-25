@@ -112,12 +112,12 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient.patient, a
 			} %>
 			
 			<div>
-${ui.includeFragment("intelehealth", "recentVisitsIntelehealth", [patient: patient])}
+${ui.includeFragment("intelehealth", "intelehealthPatientDashboard/recentVisitsIntelehealth", [patient: patient])}
 </div>
 			
         </div>
         <div class="action-container column">
-    ${ui.includeFragment("intelehealth", "patientProfileImageIntelehealth", [patient: patient])}
+    ${ui.includeFragment("intelehealth", "intelehealthPatientDashboard/patientProfileImageIntelehealth", [patient: patient])}
         </div>
     </div>
     
