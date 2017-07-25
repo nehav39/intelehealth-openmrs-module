@@ -1,6 +1,7 @@
 <%
     ui.includeJavascript("uicommons", "handlebars/handlebars.min.js")
     ui.includeCss("intelehealth", "overview/patientSummary.css")
+    ui.includeCss("intelehealth", "overview/ui-carousel.css")
     ui.decorateWith("appui", "standardEmrPage")
     ui.includeJavascript("uicommons", "angular.min.js")
     ui.includeJavascript("uicommons", "angular-app.js")
@@ -13,17 +14,19 @@
     ui.includeJavascript("intelehealth", "angular-sanitize/angular-sanitize.js")
     ui.includeJavascript("intelehealth", "angular-animate/angular-animate.js")
     ui.includeJavascript("intelehealth", "angular-bootstrap/ui-bootstrap-tpls.js")
+    ui.includeJavascript("intelehealth", "angular-ui-carousel/dist/ui-carousel.js")
+    
     ui.includeJavascript("intelehealth", "recent_visits/recent_visits.module.js")
     ui.includeJavascript("intelehealth", "recent_visits/recent_visits.service.js")
     ui.includeJavascript("intelehealth", "intelehealth_patient_profile_image/intelehealth_patient_profile_image.module.js")
     ui.includeJavascript("intelehealth", "intelehealth_patient_profile_image/intelehealth_patient_profile_image.service.js")
     ui.includeJavascript("intelehealth", "intelehealth_patient_profile_image/intelehealth_patient_profile_image.controller.js")
-    ui.includeJavascript("intelehealth", "intelehealth_additional_docs/intelehealth_additional_docs.module.js")
-    ui.includeJavascript("intelehealth", "intelehealth_additional_docs/intelehealth_additional_docs.service.js")
-    ui.includeJavascript("intelehealth", "intelehealth_additional_docs/intelehealth_additional_docs.controller.js")
-    ui.includeJavascript("intelehealth", "intelehealth_physical_examination/intelehealth_physical_examination.module.js")
-    ui.includeJavascript("intelehealth", "intelehealth_physical_examination/intelehealth_physical_examination.service.js")
-    ui.includeJavascript("intelehealth", "intelehealth_physical_examination/intelehealth_physical_examination.controller.js")
+    ui.includeJavascript("intelehealth", "intelehealth_additional_docs_images/intelehealth_additional_docs_images.module.js")
+    ui.includeJavascript("intelehealth", "intelehealth_additional_docs_images/intelehealth_additional_docs_images.service.js")
+    ui.includeJavascript("intelehealth", "intelehealth_additional_docs_images/intelehealth_additional_docs_images.controller.js")
+    ui.includeJavascript("intelehealth", "intelehealth_physical_exam_images/intelehealth_physical_exam_images.module.js")
+    ui.includeJavascript("intelehealth", "intelehealth_physical_exam_images/intelehealth_physical_exam_images.service.js")
+    ui.includeJavascript("intelehealth", "intelehealth_physical_exam_images/intelehealth_physical_exam_images.controller.js")
 %>
 
 <script type="text/javascript">
@@ -67,9 +70,8 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient]) }
                 ${ui.includeFragment("intelehealth", "overview/history", [patient: patient])}
                 ${ui.includeFragment("intelehealth", "overview/complaint", [patient: patient])}
                 ${ui.includeFragment("intelehealth", "overview/exam", [patient: patient])}
-                ${ui.includeFragment("intelehealth", "overview/physicalExaminationIntelehealth", [patient: patient])}
-                ${ui.includeFragment("intelehealth", "overview/additionalDocsIntelehealth", [patient: patient])}
-                ${ui.includeFragment("coreapps", "clinicianfacing/diagnosisWidget", [patient: patient])}
+                ${ui.includeFragment("intelehealth", "overview/physicalExamImages", [patient: patient])}
+                ${ui.includeFragment("intelehealth", "overview/additionalDocsImages", [patient: patient])}
                 ${ui.includeFragment("intelehealth", "diagnosis/encounterDiagnoses", [patient: patient, formFieldName: 'Consultation'])}
 				${ui.includeFragment("intelehealth", "overview/meds", [patient: patient])}
                 ${ui.includeFragment("intelehealth", "overview/orderedTests", [patient: patient])}
@@ -79,7 +81,7 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient]) }
 
 
 <script>
-var app = angular.module('patientSummary', ['recentVisit', 'vitalsSummary', 'famhistSummary', 'historySummary', 'complaintSummary', 'examSummary', 'diagnoses', 'medsSummary', 'orderedTestsSummary', 'adviceSummary', 'intelehealthPatientProfileImage', 'intelehealthPhysicalExamination', 'intelehealthAdditionalDocs']);
+var app = angular.module('patientSummary', ['recentVisit', 'vitalsSummary', 'famhistSummary', 'historySummary', 'complaintSummary', 'examSummary', 'diagnoses', 'medsSummary', 'orderedTestsSummary', 'adviceSummary', 'intelehealthPatientProfileImage', 'intelehealthPhysicalExamination', 'intelehealthAdditionalDocs', 'ui.carousel']);
 
 app.factory('PatientSummaryFactory1', function(\$http, \$filter){
   var patient = "${ patient.uuid }";
