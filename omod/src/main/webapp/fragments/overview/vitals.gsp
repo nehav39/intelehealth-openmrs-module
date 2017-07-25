@@ -52,7 +52,6 @@ app.filter('vitalsDate', function() {
     };
 });
 
-
 app.filter('round', function(){
 	return function(x){
   		return x.toFixed(1);
@@ -118,9 +117,6 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 					}, function(error) {
 						console.log(error);
 					});
-
-	
- 	
     	
     var patient = "${ patient.uuid }";
     var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
