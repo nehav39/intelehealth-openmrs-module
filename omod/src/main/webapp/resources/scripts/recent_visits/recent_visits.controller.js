@@ -10,13 +10,13 @@ recentVisits.controller('recentVisitController', function($scope, $http,
 				$scope.links = [];
 				angular.forEach($scope.visitList, function(value, key) {
 					if($scope.patientId === value.patient.uuid){
-						$scope.recentVisits.push(value);	
 						var uuid = value.uuid;
 						recentVisitFactory.fetchVisitDetails(uuid).then(function(data) {
 							$scope.visitDetails = data.data;
 							if ($scope.visitDetails.stopDatetime == null || $scope.visitDetails.stopDatetime == undefined) {
-								$scope.recentVisits[key].visitStatus = "Active";
+								value.visitStatus = "Active";
 							}
+							$scope.recentVisits.push(value);
 						}, function(error) {
 							console.log(error);
 						})
