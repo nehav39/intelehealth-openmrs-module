@@ -80,7 +80,7 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 								\$scope.visitObs.push(response.data.obs);
 								 var answers = {date:response.data.display, temperature:'-', height:'-', weight:'-', o2sat:'-', systolicBP:'-', diastolicBP: '-', pulse: '-'};
 								   angular.forEach(response.data.obs, function(value, key){
-									if(value.display.includes('Temp')){
+									if(value.display.includes('TEMP')){
 										answers.temperature = Number(value.display.slice(17,value.display.length));
 									}
 				                                        if(value.display.includes('Height')){
@@ -89,13 +89,13 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 				                                        if(value.display.includes('Weight')){
 				                                                answers.weight = Number(value.display.slice(13,value.display.length));
 				                                        }
-				                                        if(value.display.includes('Blood oxygen')){
+				                                        if(value.display.includes('BLOOD OXYGEN')){
 				                                                answers.o2sat = Number(value.display.slice(25,value.display.length));
 				                                        }
-				                                        if(value.display.includes('Systolic')){
+				                                        if(value.display.includes('SYSTOLIC')){
 				                                                answers.systolicBP = Number(value.display.slice(25,value.display.length));
 				                                        }
-				                                        if(value.display.includes('Diastolic')){
+				                                        if(value.display.includes('DIASTOLIC')){
 				                                                answers.diastolicBP = Number(value.display.slice(26,value.display.length));
 				                                        }	
 				                                        if(value.display.includes('Pulse')){
