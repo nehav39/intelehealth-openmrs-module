@@ -30,7 +30,12 @@
 </script>
 
 <div id="encounter-diagnoses-app">
-
+<div class="info-header">
+        <i class="icon-diagnosis"></i>
+        <h3>${ ui.message("coreapps.clinicianfacing.diagnoses").toUpperCase() }</h3>
+    </div>
+    
+    <div class="info-body">
     <script type="text/ng-template" id="selected-diagnosis">
         <div class="diagnosis" data-ng-class="{primary: d.primary}">
             <span class="code">
@@ -61,7 +66,7 @@
         </div>
         <i data-ng-click="removeDiagnosis(d)" tabindex="-1" class="icon-remove delete-item"></i>
     </script>
-
+</div>
     <div data-ng-controller="DiagnosesController">
 
         <div id="diagnosis-search-container">
