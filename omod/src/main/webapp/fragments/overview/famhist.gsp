@@ -7,9 +7,9 @@
 	<div class="info-body">
 	<table>
 		<tr ng-repeat="item in objects | orderBy:'-encounterDatetime'">
-			<td width="100px" style="border: none">{{item.display | dateFormat}}</td>
-	                <td style="border:none" ng-repeat="ob in item.obs | filter : 'FAMILY HISTORY' | orderBy:'-display'">
-                	    {{ob.display | valueFormat}}
+			<td width="100px" style="border: none">{{item.display | dateFormat | date: 'dd.MMM.yyyy'}}</td>
+	                <td style="border:none" ng-repeat="ob in item.obs | filter : 'FAMILY HISTORY'">
+                	    {{ ob.display | limitTo : ob.display.length : '16' }}
                 	</td>
 		</tr>
 	</table>
@@ -38,13 +38,14 @@ return function(text) {
 		text = text || "";
 		var str = text;
         var text = '';
-        text = text.substr(16,text.length);
+        text = text.substr(6,text.length);
         return text;
     };
 });
 
 app.controller('FamHistSummaryController', function(\$scope, \$http) {
     var patient = "${ patient.uuid }";
+    \$scope.objects = [];
     var url =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
         url += "?patient=" + patient;
         url += "&encounterType=" + "8d5b27bc-c2cc-11de-8d13-0010c6dffd0f";
@@ -61,18 +62,17 @@ app.controller('FamHistSummaryController', function(\$scope, \$http) {
 	        	    url2 += value;
                 	\$scope.url2.push(url2);
 		});
-                var objects = [];
+                
 		\$scope.obs = \$scope.url2.length;
 		angular.forEach(\$scope.url2, function(item){
 			\$http.get(item)
 			      .then(function(response) {
-		  		   objects.push(response.data);
+		  		   \$scope.objects.push(response.data);
 			      }, function(response) {
 	       			   \$scope.error = "Get Encounter Observations Went Wrong";
 	       		           \$scope.statuscode = response.status;
 			      });
 		});
-		\$scope.objects = objects;
           }, function(response) {
 		\$scope.error = "Get Visit Encounters Went Wrong";
         	\$scope.statuscode = response.status;
