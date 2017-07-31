@@ -12,8 +12,7 @@ intelehealthPhysicalExamination.controller(
 						console.log(error);
 					});
 			
-			$scope.openFullImage = function () {
-//				debugger;
-//				window.open(url);
+			$scope.openPhysicalExamFullImage = function(url) {
+				window.open(url);
 			};
 		});

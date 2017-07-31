@@ -7,7 +7,7 @@
   <ui-carousel slides="patientImage" slides-to-show="3" slides-to-scroll="3" dots="true">
   <carousel-item>
   <div>
-    <img ng-click="openFullImage()" src="{{ item.Image.url }}" alt="{{ item.Image.name }}" width="200px" height="200px" />
+    <img ng-click="\$parent.\$parent.openPhysicalExamFullImage(item.Image.url)" src="{{ item.Image.url }}" alt="{{ item.Image.name }}" width="200px" height="200px" />
     </div>
 
   </carousel-item>

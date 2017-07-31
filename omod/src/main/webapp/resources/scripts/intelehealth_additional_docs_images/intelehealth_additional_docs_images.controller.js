@@ -11,9 +11,7 @@ intelehealthAdditionalDocs.controller('intelehealthAdditionalDocsController',
 						console.log(error);
 					});
 
-			$scope.openFullImage = function() {
-				alert("hi");
-				// debugger;
-				// window.open(url);
+			$scope.openAdditionalDocFullImage = function(url) {
+				window.open(url);
 			};
 		});
