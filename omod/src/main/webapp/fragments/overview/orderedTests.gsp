@@ -70,20 +70,26 @@ button.close {
 		<h3>Prescribed Tests</h3>
 	</div>
 	<div class="info-body">
-		<input type="text" ng-model="addMe" uib-typeahead="test for test in testlist | filter:\$viewValue | limitTo:8" class="form-control">
-		<button type="button" class='btn btn-default' ng-click="addAlert()">Add Test</button>
-		<p>{{errortext}}</p>
-		<br/>
-		<br/>
-		<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
+		<div ng-if="visitStatus">
+			<input type="text" ng-model="addMe" uib-typeahead="test for test in testlist | filter:\$viewValue | limitTo:8" class="form-control">
+			<button type="button" class='btn btn-default' ng-click="addAlert()">Add Test</button>
+			<p>{{errortext}}</p>
+			<br/>
+			<br/>
+			<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
+		</div>
+		<div ng-if="visitObs">
+			<div uib-alert ng-repeat="alert in visitObs" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.display | limitTo: alert.display.length : '17'}}</div>
+		</div>
 	</div>
+	
     <div>
         <a href="#" class="right back-to-top">Back to top</a>
     </div>
 </div>
 
 <script>
-var app = angular.module('orderedTestsSummary', ['ngAnimate', 'ngSanitize']);
+var app = angular.module('orderedTestsSummary', ['ngAnimate', 'ngSanitize', 'recentVisit']);
 
 app.factory('OrderedTestsSummaryFactory1', function(\$http, \$filter){
   var patient = "${ patient.uuid }";
@@ -135,11 +141,60 @@ app.factory('OrderedTestsSummaryFactory3', function(\$http){
   };
 });
 
-app.controller('OrderedTestsSummaryController', function(\$scope, \$http, \$timeout, OrderedTestsSummaryFactory1, OrderedTestsSummaryFactory2, OrderedTestsSummaryFactory3) {
+app.controller('OrderedTestsSummaryController', function(\$scope, \$http, \$timeout, OrderedTestsSummaryFactory1, OrderedTestsSummaryFactory2, OrderedTestsSummaryFactory3, recentVisitFactory) {
   \$scope.alerts = [];
   var _selected;
   var patient = "${ patient.uuid }";
   var date2 = new Date();
+
+
+var path = window.location.search;
+var i = path.indexOf("visitId=");
+var visitId = path.substr(i + 8, path.length);
+\$scope.visitEncounters = [];
+\$scope.visitObs = [];
+\$scope.visitNoteData = [];
+\$scope.visitNotePresent = true;
+\$scope.visitStatus = false;
+
+recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
+						\$scope.visitDetails = data.data;
+							if (\$scope.visitDetails.stopDatetime == null || \$scope.visitDetails.stopDatetime == undefined) {
+								\$scope.visitStatus = true;
+							}
+							else {
+								\$scope.visitStatus = false;
+							}
+						\$scope.visitEncounters = data.data.encounters; 
+						if(\$scope.visitEncounters.length !== 0) {
+						\$scope.visitNotePresent = true;
+							angular.forEach(\$scope.visitEncounters, function(value, key){
+								var isVital = value.display;
+								if(isVital.match("Visit Note") !== null) {
+									var encounterUuid = value.uuid;
+									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + encounterUuid;
+									\$http.get(encounterUrl).then(function(response) {
+										angular.forEach(response.data.obs, function(v, k){
+											var isRequestedTest = v.display;
+											if(isRequestedTest.match("REQUESTED TESTS") !== null) {
+											\$scope.visitObs.push(v);
+											}
+										});
+									}, function(response) {
+										\$scope.error = "Get Encounter Obs Went Wrong";
+								    	\$scope.statuscode = response.status;
+								    });				
+								}
+							});
+						}
+						else {
+							\$scope.visitNotePresent = false;
+						}
+					}, function(error) {
+						console.log(error);
+					});
+
+
 
   var promiseTests = OrderedTestsSummaryFactory3.async().then(function(d){
 	return d;
