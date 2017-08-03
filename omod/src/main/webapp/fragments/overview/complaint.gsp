@@ -6,7 +6,7 @@
 	</div>
 	<div class="info-body">
 	<table>
-		<tr ng-repeat="item in objects | orderBy:'-encounterDatetime'">
+		<tr ng-repeat="item in visitEncounters | orderBy:'-encounterDatetime' | filter : 'ADULTINITIAL'">
 			<td width="100px" style="border: none">{{item.display | dateFormat | date: 'dd.MMM.yyyy'}}</td>
 	                <td style="border:none" ng-repeat="ob in item.obs | filter : 'CURRENT COMPLAINT' | orderBy:'-display'">
                 	    {{ob.display | limitTo : ob.display.length : '19' }}
@@ -20,7 +20,7 @@
 </div>
 
 <script>
-var app = angular.module('complaintSummary', []);
+var app = angular.module('complaintSummary', ['recentVisit']);
 
 app.filter('dateFormat', function() {
  return function(text) {
@@ -44,7 +44,26 @@ return function(text) {
     };
 });
 
-app.controller('ComplaintSummaryController', function(\$scope, \$http) {
+app.controller('ComplaintSummaryController', function(\$scope, \$http, recentVisitFactory) {
+var path = window.location.search;
+var i = path.indexOf("visitId=");
+var visitId = path.substr(i + 8, path.length);
+\$scope.visitEncounters = [];
+\$scope.visitObs = []; 
+\$scope.vitalsData = [];
+\$scope.vitalsPresent = true;
+recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
+						\$scope.visitDetails = data.data;
+						\$scope.visitEncounters = data.data.encounters; 
+						if(\$scope.visitEncounters.length !== 0) {
+						\$scope.vitalsPresent = true;
+						console.log(\$scope.visitEncounters);
+					}
+					}, function(error) {
+						console.log(error);
+					});
+					
+					
     var patient = "${ patient.uuid }";
     \$scope.objects = [];
     var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
