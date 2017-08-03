@@ -70,16 +70,14 @@ button.close {
 		<h3>Prescribed Tests</h3>
 	</div>
 	<div class="info-body">
-		<div ng-if="visitStatus">
 			<input type="text" ng-model="addMe" uib-typeahead="test for test in testlist | filter:\$viewValue | limitTo:8" class="form-control">
 			<button type="button" class='btn btn-default' ng-click="addAlert()">Add Test</button>
 			<p>{{errortext}}</p>
 			<br/>
 			<br/>
 			<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
-		</div>
 		<div ng-if="visitObs">
-			<div uib-alert ng-repeat="alert in visitObs" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.display | limitTo: alert.display.length : '17'}}</div>
+			<div uib-alert ng-repeat="alert in visitObs" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg | limitTo: alert.msg.length : '17'}}</div>
 		</div>
 	</div>
 	
@@ -112,10 +110,15 @@ app.factory('OrderedTestsSummaryFactory2', function(\$http){
   var patient = "${ patient.uuid }";
   var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
   var date2 = new Date();
+  var path = window.location.search;
+  var i = path.indexOf("visitId=");
+  var visitId = path.substr(i + 8, path.length);
   var json = {
       patient: patient,
       encounterType: "d7151f82-c1f3-4152-a605-2f9ea7414a79",
-      encounterDatetime: date2
+      encounterDatetime: date2,
+      visit: visitId,
+      obs: []
   };
   return {
     async: function(){
@@ -147,7 +150,6 @@ app.controller('OrderedTestsSummaryController', function(\$scope, \$http, \$time
   var patient = "${ patient.uuid }";
   var date2 = new Date();
 
-
 var path = window.location.search;
 var i = path.indexOf("visitId=");
 var visitId = path.substr(i + 8, path.length);
@@ -177,7 +179,7 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 										angular.forEach(response.data.obs, function(v, k){
 											var isRequestedTest = v.display;
 											if(isRequestedTest.match("REQUESTED TESTS") !== null) {
-											\$scope.visitObs.push(v);
+											\$scope.visitObs.push({"msg":v.display});
 											}
 										});
 									}, function(response) {
