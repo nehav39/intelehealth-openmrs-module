@@ -57,7 +57,6 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 						\$scope.visitEncounters = data.data.encounters; 
 						if(\$scope.visitEncounters.length !== 0) {
 						\$scope.vitalsPresent = true;
-						console.log(\$scope.visitEncounters);
 					}
 					}, function(error) {
 						console.log(error);

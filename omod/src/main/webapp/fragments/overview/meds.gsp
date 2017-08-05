@@ -145,6 +145,9 @@ form.sized-inputs label.heading {
 		<br/>
 		<br/>
 		<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
+		<div ng-if="visitObs">
+			<div uib-alert ng-repeat="alert in visitObs" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg | limitTo: alert.msg.length : '16'}}</div>
+		</div>
 	</div>
     <div>
         <a href="#" class="right back-to-top">Back to top</a>
@@ -152,7 +155,7 @@ form.sized-inputs label.heading {
 </div>
 
 <script>
-var app = angular.module('medsSummary', ['ngAnimate', 'ngSanitize']);
+var app = angular.module('medsSummary', ['ngAnimate', 'ngSanitize', 'recentVisit']);
 
 app.factory('CurrentEncountersFactory1', function(\$http, \$filter){
   var patient = "${ patient.uuid }";
@@ -219,7 +222,57 @@ app.factory('MedsListFactory4', function(\$http){
   };
 });
 
-app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, CurrentEncountersFactory1, NewEncounterFactory2, MedsListFactory3, MedsListFactory4) {
+app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, CurrentEncountersFactory1, NewEncounterFactory2, MedsListFactory3, MedsListFactory4, recentVisitFactory) {
+var path = window.location.search;
+var i = path.indexOf("visitId=");
+var visitId = path.substr(i + 8, path.length);
+\$scope.visitEncounters = [];
+\$scope.visitObs = [];
+\$scope.visitNoteData = [];
+\$scope.visitNotePresent = true;
+\$scope.visitStatus = false;
+
+recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
+						\$scope.visitDetails = data.data;
+							if (\$scope.visitDetails.stopDatetime == null || \$scope.visitDetails.stopDatetime == undefined) {
+								\$scope.visitStatus = true;
+							}
+							else {
+								\$scope.visitStatus = false;
+							}
+						\$scope.visitEncounters = data.data.encounters; 
+						debugger;
+						if(\$scope.visitEncounters.length !== 0) {
+						\$scope.visitNotePresent = true;
+							angular.forEach(\$scope.visitEncounters, function(value, key){
+								var isVital = value.display;
+								if(isVital.match("Visit Note") !== null) {
+									var encounterUuid = value.uuid;
+									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + encounterUuid;
+									\$http.get(encounterUrl).then(function(response) {
+										angular.forEach(response.data.obs, function(v, k){
+											var isRequestedTest = v.display;
+											if(isRequestedTest.match("MEDICATIONS") !== null) {
+											\$scope.visitObs.push({"msg":v.display, "uuid":v.uuid});
+											}
+										});
+									}, function(response) {
+										\$scope.error = "Get Encounter Obs Went Wrong";
+								    	\$scope.statuscode = response.status;
+								    });				
+								}
+							});
+						}
+						else {
+							\$scope.visitNotePresent = false;
+						}
+						}, function(error) {
+						console.log(error);
+					});
+
+
+
+
   \$scope.alerts = [];
   var _selected;
   var patient = "${ patient.uuid }";
