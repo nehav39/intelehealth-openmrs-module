@@ -78,6 +78,12 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient]) }
     </div>
 
 <script>
+var visitNoteEncounterUuid = "";
+var path = window.location.search;
+var i = path.indexOf("visitId=");
+var visitId = path.substr(i + 8, path.length);
+var isVisitNotePresent = false;
+
 var app = angular.module('patientSummary', ['ngAnimate', 'ngSanitize', 'recentVisit', 'vitalsSummary', 'famhistSummary', 'historySummary', 'complaintSummary', 'examSummary', 'diagnoses', 'medsSummary', 'orderedTestsSummary', 'adviceSummary', 'intelehealthPatientProfileImage', 'intelehealthPhysicalExamination', 'intelehealthAdditionalDocs', 'ui.bootstrap', 'ui.carousel']);
 
 app.factory('PatientSummaryFactory1', function(\$http, \$filter){
@@ -104,6 +110,7 @@ app.factory('PatientSummaryFactory2', function(\$http){
   var json = {
       patient: patient,
       encounterType: "d7151f82-c1f3-4152-a605-2f9ea7414a79",
+      visit: visitId,
       encounterDatetime: date2
   };
   return {
@@ -115,27 +122,34 @@ app.factory('PatientSummaryFactory2', function(\$http){
   };  
 });
 
-app.controller('PatientSummaryController', function(\$scope, PatientSummaryFactory1, PatientSummaryFactory2) { 
-  \$scope.isLoading = true;
-  var promise = PatientSummaryFactory1.async().then(function(d){
-    var length = d.length;
-    if(length > 0) {
-	angular.forEach(d, function(value, key){
-		\$scope.data2 = value.uuid;
-	});
-    } else {
-	\$scope.data = "No Encounters";
-    	PatientSummaryFactory2.async().then(function(d2){
-      	  \$scope.data2 = d2;
-    	})
-    };
-    return \$scope.data2;
-  });
-  
-  promise.then(function(x){
-	\$scope.data3 = x;
-  });
-
+app.controller('PatientSummaryController', function(\$scope, \$http, PatientSummaryFactory1, PatientSummaryFactory2, recentVisitFactory) { 
+\$scope.isLoading = true;
+\$scope.visitEncounters = [];
+\$scope.visitObs = [];
+\$scope.visitNoteData = [];
+\$scope.visitStatus = false;  
+recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
+						\$scope.visitDetails = data.data;
+						\$scope.visitEncounters = data.data.encounters; 
+						if(\$scope.visitEncounters.length !== 0) {
+							angular.forEach(\$scope.visitEncounters, function(value, key){
+								var encounter = value.display;
+								if(encounter.match("Visit Note") !== null) {
+									var encounterUuid = value.uuid;
+									visitNoteEncounterUuid = encounterUuid;
+									isVisitNotePresent = true;
+								}
+							});
+						}
+						if (isVisitNotePresent = false || \$scope.visitEncounters.length == 0) {
+									PatientSummaryFactory2.async().then(function(d2){
+      	  								\$scope.data2 = d2;
+      	  								visitNoteEncounterUuid = d2;
+    								});
+						}
+					}, function(error) {
+						console.log(error);
+					});
 });
 
 </script>
