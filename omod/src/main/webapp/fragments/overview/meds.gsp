@@ -241,7 +241,6 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 								\$scope.visitStatus = false;
 							}
 						\$scope.visitEncounters = data.data.encounters; 
-						debugger;
 						if(\$scope.visitEncounters.length !== 0) {
 						\$scope.visitNotePresent = true;
 							angular.forEach(\$scope.visitEncounters, function(value, key){
