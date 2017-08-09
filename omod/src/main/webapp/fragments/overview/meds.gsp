@@ -118,36 +118,33 @@ form.sized-inputs label.heading {
 		<h3>Prescribed Medication</h3>
 	</div>
 	<div class="info-body">
-	    <form id="new-order" class="sized-inputs css-form" name="newOrderForm" novalidate>
+	    <form ng-if="visitStatus" id="new-order" class="sized-inputs css-form" name="newOrderForm" novalidate>
 		<br/>
 		<input type="text" ng-model="addMe" uib-typeahead="test for test in medslist | filter:\$viewValue | limitTo:8" class="form-control">
 		<button type="button" class='btn btn-default' ng-click="addAlert()">Add Medication</button>
 		<p>{{errortext}}</p>
 		<br/>
 		<div id="new-order" ng-show="addMe">
-			<input ng-show="visitStatus" ng-model="dose" type="number" placeholder="Dose" min="0">
-			<input ng-show="visitStatus" type="text" ng-model="doseUnits" uib-typeahead="test for test in doseunitlist | filter:\$viewValue" placeholder="Units" class="form-control">
-			<input ng-show="visitStatus" type="text" ng-model="frequency" uib-typeahead="test for test in frequencylist | filter:\$viewValue" placeholder="Frequency" class="form-control">
-			<input ng-show="visitStatus" type="text" ng-model="route" uib-typeahead="test for test in routelist | filter:\$viewValue" placeholder="Route (optional)" class="form-control">
+			<input ng-model="dose" type="number" placeholder="Dose" min="0">
+			<input type="text" ng-model="doseUnits" uib-typeahead="test for test in doseunitlist | filter:\$viewValue" placeholder="Units" class="form-control">
+			<input type="text" ng-model="frequency" uib-typeahead="test for test in frequencylist | filter:\$viewValue" placeholder="Frequency" class="form-control">
+			<input type="text" ng-model="route" uib-typeahead="test for test in routelist | filter:\$viewValue" placeholder="Route (optional)" class="form-control">
 			<br/>
 			As needed for
-			<input ng-show="visitStatus" ng-model="asNeededCondition" type="text" size="30" placeholder="reason (optional)"/>
+			<input ng-model="asNeededCondition" type="text" size="30" placeholder="reason (optional)"/>
 			<br/>
 			For
-			<input ng-show="visitStatus" ng-model="duration" type="number" min="0" placeholder="Duration">
-			<input ng-show="visitStatus" type="text" ng-model="durationUnits" uib-typeahead="test for test in durationlist | filter:\$viewValue" placeholder="Units" class="form-control">
+			<input ng-model="duration" type="number" min="0" placeholder="Duration">
+			<input type="text" ng-model="durationUnits" uib-typeahead="test for test in durationlist | filter:\$viewValue" placeholder="Units" class="form-control">
 			total
 			<br/>
-			<textarea ng-show="visitStatus" ng-model="dosingInstructions" rows="2" cols="60" placeholder="Additional instruction not covered above"></textarea>
+			<textarea ng-model="dosingInstructions" rows="2" cols="60" placeholder="Additional instruction not covered above"></textarea>
 			<br/>
 		</div>
 	    </form>
 		<br/>
 		<br/>
 		<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
-		<div ng-if="visitObs">
-			<div uib-alert ng-repeat="alert in visitObs" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg | limitTo: alert.msg.length : '16'}}</div>
-		</div>
 	</div>
     <div>
         <a href="#" class="right back-to-top">Back to top</a>
@@ -257,7 +254,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 										angular.forEach(response.data.obs, function(v, k){
 											var isRequestedTest = v.display;
 											if(isRequestedTest.match("MEDICATIONS") !== null) {
-											\$scope.alerts.push({"msg":v.display, "uuid":v.uuid});
+											\$scope.alerts.push({"msg":v.display.slice(16,v.display.length), "uuid":v.uuid});
 											}
 										});
 									}, function(response) {

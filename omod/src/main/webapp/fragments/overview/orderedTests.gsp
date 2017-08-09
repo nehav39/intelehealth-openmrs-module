@@ -176,7 +176,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 										angular.forEach(response.data.obs, function(v, k){
 											var isRequestedTest = v.display;
 											if(isRequestedTest.match("REQUESTED TESTS") !== null) {
-											\$scope.alerts.push({"msg":v.display});
+											\$scope.alerts.push({"msg":v.display.slice(17,v.display.length)});
 											}
 										});
 									}, function(response) {

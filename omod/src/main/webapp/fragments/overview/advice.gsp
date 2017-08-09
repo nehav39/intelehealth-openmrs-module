@@ -169,7 +169,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 										angular.forEach(response.data.obs, function(v, k){
 											var isRequestedTest = v.display;
 											if(isRequestedTest.match("MEDICAL ADVICE") !== null) {
-											\$scope.alerts.push({"msg":v.display, "uuid": v.uuid});
+											\$scope.alerts.push({"msg":v.display.slice(16,v.display.length), "uuid": v.uuid});
 											}
 										});
 									}, function(response) {
