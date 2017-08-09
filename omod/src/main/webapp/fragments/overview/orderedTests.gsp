@@ -70,15 +70,12 @@ button.close {
 		<h3>Prescribed Tests</h3>
 	</div>
 	<div class="info-body">
-			<input type="text" ng-model="addMe" uib-typeahead="test for test in testlist | filter:\$viewValue | limitTo:8" class="form-control">
+			<input ng-if="visitStatus" type="text" ng-model="addMe" uib-typeahead="test for test in testlist | filter:\$viewValue | limitTo:8" class="form-control">
 			<button type="button" class='btn btn-default' ng-click="addAlert()">Add Test</button>
 			<p>{{errortext}}</p>
 			<br/>
 			<br/>
 			<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
-		<div ng-if="visitObs">
-			<div uib-alert ng-repeat="alert in visitObs" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg | limitTo: alert.msg.length : '17'}}</div>
-		</div>
 	</div>
 	
     <div>
@@ -159,7 +156,7 @@ var visitId = path.substr(i + 8, path.length);
 \$scope.visitNotePresent = true;
 \$scope.visitStatus = false;
 
-recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
+recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 						\$scope.visitDetails = data.data;
 							if (\$scope.visitDetails.stopDatetime == null || \$scope.visitDetails.stopDatetime == undefined) {
 								\$scope.visitStatus = true;
@@ -179,7 +176,7 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 										angular.forEach(response.data.obs, function(v, k){
 											var isRequestedTest = v.display;
 											if(isRequestedTest.match("REQUESTED TESTS") !== null) {
-											\$scope.visitObs.push({"msg":v.display});
+											\$scope.alerts.push({"msg":v.display});
 											}
 										});
 									}, function(response) {
