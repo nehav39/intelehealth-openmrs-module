@@ -69,8 +69,8 @@ button.close {
 		<h3>Medical Advice</h3>
 	</div>
 	<div class="info-body">
-		<input ng-show="visitStatus" type="text" ng-model="addMe" uib-typeahead="test for test in advicelist | filter:\$viewValue | limitTo:8" class="form-control">
-		<button ng-show="visitStatus" type="button" class='btn btn-default' ng-click="addAlert()">Add Advice</button>
+		<input ng-if="visitStatus" type="text" ng-model="addMe" uib-typeahead="test for test in advicelist | filter:\$viewValue | limitTo:8" class="form-control">
+		<button ng-if="visitStatus" type="button" class='btn btn-default' ng-click="addAlert()">Add Advice</button>
 		<p>{{errortext}}</p>
 		<br/>
 		<br/>
@@ -240,15 +240,17 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
   		};
 
   		\$scope.closeAlert = function(index) {
-        		\$scope.alerts.splice(index, 1);
-        		\$scope.errortext = "";
-			\$scope.deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.respuuid[index] + "?purge=true";
-                	\$scope.respuuid.splice(index, 1);
-                	\$http.delete(\$scope.deleteurl).then(function(response){
-                		\$scope.statuscode = "Success";
-                	}, function(response){
-                		\$scope.statuscode = "Failed to delete Obs";
-                	});
+	  		if (\$scope.visitStatus) {
+	        		\$scope.alerts.splice(index, 1);
+	        		\$scope.errortext = "";
+				\$scope.deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.respuuid[index] + "?purge=true";
+	                	\$scope.respuuid.splice(index, 1);
+	                	\$http.delete(\$scope.deleteurl).then(function(response){
+	                		\$scope.statuscode = "Success";
+	                	}, function(response){
+	                		\$scope.statuscode = "Failed to delete Obs";
+	                	});
+	        }
   		};
   	});
   }, 2000);
