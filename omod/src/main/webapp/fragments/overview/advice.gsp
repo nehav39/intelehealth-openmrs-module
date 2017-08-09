@@ -69,8 +69,8 @@ button.close {
 		<h3>Medical Advice</h3>
 	</div>
 	<div class="info-body">
-		<input ng-if="visitStatus" type="text" ng-model="addMe" uib-typeahead="test for test in advicelist | filter:\$viewValue | limitTo:8" class="form-control">
-		<button ng-if="visitStatus" type="button" class='btn btn-default' ng-click="addAlert()">Add Advice</button>
+		<input ng-show="visitStatus" type="text" ng-model="addMe" uib-typeahead="test for test in advicelist | filter:\$viewValue | limitTo:8" class="form-control">
+		<button ng-show="visitStatus" type="button" class='btn btn-default' ng-click="addAlert()">Add Advice</button>
 		<p>{{errortext}}</p>
 		<br/>
 		<br/>
@@ -136,6 +136,7 @@ app.factory('AdviceSummaryFactory3', function(\$http){
 
 app.controller('AdviceSummaryController', function(\$scope, \$http, \$timeout, AdviceSummaryFactory1, AdviceSummaryFactory2, AdviceSummaryFactory3, recentVisitFactory) {
 \$scope.alerts = [];
+\$scope.respuuid = [];
 var _selected;
 var patient = "${ patient.uuid }";
 var date2 = new Date();
@@ -167,8 +168,8 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + \$scope.encounterUuid;
 									\$http.get(encounterUrl).then(function(response) {
 										angular.forEach(response.data.obs, function(v, k){
-											var isRequestedTest = v.display;
-											if(isRequestedTest.match("MEDICAL ADVICE") !== null) {
+											var encounter = v.display;
+											if(encounter.match("MEDICAL ADVICE") !== null) {
 											\$scope.alerts.push({"msg":v.display.slice(16,v.display.length), "uuid": v.uuid});
 											}
 										});
@@ -211,7 +212,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
   	});
 
   	promise.then(function(x){
-        	\$scope.respuuid = [];
+        	
   		\$scope.addAlert = function() {
         		\$scope.errortext = "";
         		if (!\$scope.addMe) {
@@ -228,11 +229,19 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
                                 	value: \$scope.addMe,
                                 	encounter: \$scope.encounterUuid
                         	}
-                        	\$scope.addMe = "";
+                        	
                         	\$http.post(url2, JSON.stringify(\$scope.json)).then(function(response){
-                        		if(response.data)
+                        		if(response.data){
                                 		\$scope.statuscode = "Success";
-                                        	\$scope.respuuid.push(response.data.uuid);
+                                		angular.forEach(\$scope.alerts, function(v, k){
+											var encounter = v.msg;
+											if(encounter.match(\$scope.addMe) !== null) {
+											debugger;
+											v.uuid = response.data.uuid;
+											}
+										});
+										\$scope.addMe = "";
+                                }
                         	}, function(response){
                         		\$scope.statuscode = "Failed to create Obs";
                         	});
@@ -241,11 +250,11 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 
   		\$scope.closeAlert = function(index) {
 	  		if (\$scope.visitStatus) {
-	        		\$scope.alerts.splice(index, 1);
-	        		\$scope.errortext = "";
-				\$scope.deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.respuuid[index] + "?purge=true";
-	                	\$scope.respuuid.splice(index, 1);
+	        		
+				\$scope.deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.alerts[index].uuid + "?purge=true";
 	                	\$http.delete(\$scope.deleteurl).then(function(response){
+			                \$scope.alerts.splice(index, 1);
+			        		\$scope.errortext = "";
 	                		\$scope.statuscode = "Success";
 	                	}, function(response){
 	                		\$scope.statuscode = "Failed to delete Obs";

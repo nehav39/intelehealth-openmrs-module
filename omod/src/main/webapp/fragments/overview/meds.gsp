@@ -381,16 +381,18 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
   		};
 
   		\$scope.closeAlert = function(index) {
+  			if (\$scope.visitStatus) {
         		\$scope.alerts.splice(index, 1);
         		\$scope.errortext = "";
-			\$scope.myColor = "white";
-			\$scope.deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.respuuid[index] + "?purge=true";
-                	\$scope.respuuid.splice(index, 1);
-                	\$http.delete(\$scope.deleteurl).then(function(response){
-                		\$scope.statuscode = "Success";
-                	}, function(response){
-                		\$scope.statuscode = "Failed to delete Obs";
-                	});
+				\$scope.myColor = "white";
+				\$scope.deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.respuuid[index] + "?purge=true";
+                \$scope.respuuid.splice(index, 1);
+                \$http.delete(\$scope.deleteurl).then(function(response){
+                	\$scope.statuscode = "Success";
+                }, function(response){
+                	\$scope.statuscode = "Failed to delete Obs";
+                });
+			}
   		};
   	});
   }, 2000);
