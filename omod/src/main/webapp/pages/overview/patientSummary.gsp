@@ -141,12 +141,14 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 								}
 							});
 						}
-						if (isVisitNotePresent = false || \$scope.visitEncounters.length == 0) {
+						if (isVisitNotePresent == false || \$scope.visitEncounters.length == 0) {
 									PatientSummaryFactory2.async().then(function(d2){
       	  								\$scope.data2 = d2;
       	  								visitNoteEncounterUuid = d2;
     								});
 						}
+						console.log("visitNoteEncounterUuid");
+						console.log(visitNoteEncounterUuid);
 					}, function(error) {
 						console.log(error);
 					});

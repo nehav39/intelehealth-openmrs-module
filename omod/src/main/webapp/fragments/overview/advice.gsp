@@ -69,15 +69,12 @@ button.close {
 		<h3>Medical Advice</h3>
 	</div>
 	<div class="info-body">
-		<input type="text" ng-model="addMe" uib-typeahead="test for test in advicelist | filter:\$viewValue | limitTo:8" class="form-control">
-		<button type="button" class='btn btn-default' ng-click="addAlert()">Add Advice</button>
+		<input ng-show="visitStatus" type="text" ng-model="addMe" uib-typeahead="test for test in advicelist | filter:\$viewValue | limitTo:8" class="form-control">
+		<button ng-show="visitStatus" type="button" class='btn btn-default' ng-click="addAlert()">Add Advice</button>
 		<p>{{errortext}}</p>
 		<br/>
 		<br/>
 		<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
-		<div ng-if="visitObs">
-			<div uib-alert ng-repeat="alert in visitObs" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg | limitTo: alert.msg.length : '16'}}</div>
-		</div>
 	</div>
     <div>
         <a href="#" class="right back-to-top">Back to top</a>
@@ -138,7 +135,11 @@ app.factory('AdviceSummaryFactory3', function(\$http){
 });
 
 app.controller('AdviceSummaryController', function(\$scope, \$http, \$timeout, AdviceSummaryFactory1, AdviceSummaryFactory2, AdviceSummaryFactory3, recentVisitFactory) {
-
+\$scope.alerts = [];
+var _selected;
+var patient = "${ patient.uuid }";
+var date2 = new Date();
+  
 var path = window.location.search;
 var i = path.indexOf("visitId=");
 var visitId = path.substr(i + 8, path.length);
@@ -147,7 +148,7 @@ var visitId = path.substr(i + 8, path.length);
 \$scope.visitNoteData = [];
 \$scope.visitNotePresent = true;
 \$scope.visitStatus = false;
-
+\$scope.encounterUuid = "";
 recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 						\$scope.visitDetails = data.data;
 							if (\$scope.visitDetails.stopDatetime == null || \$scope.visitDetails.stopDatetime == undefined) {
@@ -162,13 +163,13 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 							angular.forEach(\$scope.visitEncounters, function(value, key){
 								var isVital = value.display;
 								if(isVital.match("Visit Note") !== null) {
-									var encounterUuid = value.uuid;
-									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + encounterUuid;
+									\$scope.encounterUuid = value.uuid;
+									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + \$scope.encounterUuid;
 									\$http.get(encounterUrl).then(function(response) {
 										angular.forEach(response.data.obs, function(v, k){
 											var isRequestedTest = v.display;
 											if(isRequestedTest.match("MEDICAL ADVICE") !== null) {
-											\$scope.visitObs.push({"msg":v.display, "uuid":v.uuid});
+											\$scope.alerts.push({"msg":v.display, "uuid": v.uuid});
 											}
 										});
 									}, function(response) {
@@ -184,13 +185,6 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 						}, function(error) {
 						console.log(error);
 					});
-
-
-
-  \$scope.alerts = [];
-  var _selected;
-  var patient = "${ patient.uuid }";
-  var date2 = new Date();
 
   var promiseAdvice = AdviceSummaryFactory3.async().then(function(d){
         return d;
@@ -232,7 +226,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
                                 	person: patient,
                                 	obsDatetime: date2,
                                 	value: \$scope.addMe,
-                                	encounter: x
+                                	encounter: \$scope.encounterUuid
                         	}
                         	\$scope.addMe = "";
                         	\$http.post(url2, JSON.stringify(\$scope.json)).then(function(response){

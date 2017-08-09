@@ -125,20 +125,20 @@ form.sized-inputs label.heading {
 		<p>{{errortext}}</p>
 		<br/>
 		<div id="new-order" ng-show="addMe">
-			<input ng-model="dose" type="number" placeholder="Dose" min="0">
-			<input type="text" ng-model="doseUnits" uib-typeahead="test for test in doseunitlist | filter:\$viewValue" placeholder="Units" class="form-control">
-			<input type="text" ng-model="frequency" uib-typeahead="test for test in frequencylist | filter:\$viewValue" placeholder="Frequency" class="form-control">
-			<input type="text" ng-model="route" uib-typeahead="test for test in routelist | filter:\$viewValue" placeholder="Route (optional)" class="form-control">
+			<input ng-show="visitStatus" ng-model="dose" type="number" placeholder="Dose" min="0">
+			<input ng-show="visitStatus" type="text" ng-model="doseUnits" uib-typeahead="test for test in doseunitlist | filter:\$viewValue" placeholder="Units" class="form-control">
+			<input ng-show="visitStatus" type="text" ng-model="frequency" uib-typeahead="test for test in frequencylist | filter:\$viewValue" placeholder="Frequency" class="form-control">
+			<input ng-show="visitStatus" type="text" ng-model="route" uib-typeahead="test for test in routelist | filter:\$viewValue" placeholder="Route (optional)" class="form-control">
 			<br/>
 			As needed for
-			<input ng-model="asNeededCondition" type="text" size="30" placeholder="reason (optional)"/>
+			<input ng-show="visitStatus" ng-model="asNeededCondition" type="text" size="30" placeholder="reason (optional)"/>
 			<br/>
 			For
-			<input ng-model="duration" type="number" min="0" placeholder="Duration">
-			<input type="text" ng-model="durationUnits" uib-typeahead="test for test in durationlist | filter:\$viewValue" placeholder="Units" class="form-control">
+			<input ng-show="visitStatus" ng-model="duration" type="number" min="0" placeholder="Duration">
+			<input ng-show="visitStatus" type="text" ng-model="durationUnits" uib-typeahead="test for test in durationlist | filter:\$viewValue" placeholder="Units" class="form-control">
 			total
 			<br/>
-			<textarea ng-model="dosingInstructions" rows="2" cols="60" placeholder="Additional instruction not covered above"></textarea>
+			<textarea ng-show="visitStatus" ng-model="dosingInstructions" rows="2" cols="60" placeholder="Additional instruction not covered above"></textarea>
 			<br/>
 		</div>
 	    </form>
@@ -223,6 +223,11 @@ app.factory('MedsListFactory4', function(\$http){
 });
 
 app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, CurrentEncountersFactory1, NewEncounterFactory2, MedsListFactory3, MedsListFactory4, recentVisitFactory) {
+\$scope.alerts = [];
+var _selected;
+var patient = "${ patient.uuid }";
+var date2 = new Date();
+
 var path = window.location.search;
 var i = path.indexOf("visitId=");
 var visitId = path.substr(i + 8, path.length);
@@ -231,7 +236,7 @@ var visitId = path.substr(i + 8, path.length);
 \$scope.visitNoteData = [];
 \$scope.visitNotePresent = true;
 \$scope.visitStatus = false;
-
+\$scope.encounterUuid = "";
 recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 						\$scope.visitDetails = data.data;
 							if (\$scope.visitDetails.stopDatetime == null || \$scope.visitDetails.stopDatetime == undefined) {
@@ -246,13 +251,13 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 							angular.forEach(\$scope.visitEncounters, function(value, key){
 								var isVital = value.display;
 								if(isVital.match("Visit Note") !== null) {
-									var encounterUuid = value.uuid;
-									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + encounterUuid;
+									\$scope.encounterUuid = value.uuid;
+									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + \$scope.encounterUuid;
 									\$http.get(encounterUrl).then(function(response) {
 										angular.forEach(response.data.obs, function(v, k){
 											var isRequestedTest = v.display;
 											if(isRequestedTest.match("MEDICATIONS") !== null) {
-											\$scope.visitObs.push({"msg":v.display, "uuid":v.uuid});
+											\$scope.alerts.push({"msg":v.display, "uuid":v.uuid});
 											}
 										});
 									}, function(response) {
@@ -268,14 +273,6 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 						}, function(error) {
 						console.log(error);
 					});
-
-
-
-
-  \$scope.alerts = [];
-  var _selected;
-  var patient = "${ patient.uuid }";
-  var date2 = new Date();
 
   var promiseMeds = MedsListFactory3.async("c25ea0e9-6522-417f-97ec-6e4b7a615254").then(function(d){
         return d;
@@ -365,7 +362,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
                                 	person: patient,
                                 	obsDatetime: date2,
                                 	value: alertText,
-                                	encounter: x
+                                	encounter: \$scope.encounterUuid
                         	}
                         	\$scope.addMe = "";
 				\$scope.dose = "";

@@ -69,9 +69,9 @@ button.close {
 		<i class="icon-beaker"></i>
 		<h3>Prescribed Tests</h3>
 	</div>
-	<div class="info-body">
-			<input ng-if="visitStatus" type="text" ng-model="addMe" uib-typeahead="test for test in testlist | filter:\$viewValue | limitTo:8" class="form-control">
-			<button type="button" class='btn btn-default' ng-click="addAlert()">Add Test</button>
+	<div class="info-body">{{test}}
+			<input ng-show="visitStatus" type="text" ng-model="addMe" uib-typeahead="test for test in testlist | filter:\$viewValue | limitTo:8" class="form-control">
+			<button ng-show="visitStatus" type="button" class='btn btn-default' ng-click="addAlert()">Add Test</button>
 			<p>{{errortext}}</p>
 			<br/>
 			<br/>
@@ -155,7 +155,7 @@ var visitId = path.substr(i + 8, path.length);
 \$scope.visitNoteData = [];
 \$scope.visitNotePresent = true;
 \$scope.visitStatus = false;
-
+\$scope.encounterUuid = "";
 recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 						\$scope.visitDetails = data.data;
 							if (\$scope.visitDetails.stopDatetime == null || \$scope.visitDetails.stopDatetime == undefined) {
@@ -170,8 +170,8 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 							angular.forEach(\$scope.visitEncounters, function(value, key){
 								var isVital = value.display;
 								if(isVital.match("Visit Note") !== null) {
-									var encounterUuid = value.uuid;
-									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + encounterUuid;
+									\$scope.encounterUuid = value.uuid;
+									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + \$scope.encounterUuid;
 									\$http.get(encounterUrl).then(function(response) {
 										angular.forEach(response.data.obs, function(v, k){
 											var isRequestedTest = v.display;
@@ -237,7 +237,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
          				person: patient,
          				obsDatetime: date2,
          				value: \$scope.addMe,
-         				encounter: x
+         				encounter: \$scope.encounterUuid
         			}
     				\$scope.addMe = "";
     				\$http.post(url2, JSON.stringify(\$scope.json)).then(function(response){
