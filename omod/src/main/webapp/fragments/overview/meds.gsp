@@ -118,7 +118,7 @@ form.sized-inputs label.heading {
 		<h3>Prescribed Medication</h3>
 	</div>
 	<div class="info-body">
-	    <form ng-if="visitStatus" id="new-order" class="sized-inputs css-form" name="newOrderForm" novalidate>
+	    <form ng-show="visitStatus" id="new-order" class="sized-inputs css-form" name="newOrderForm" novalidate>
 		<br/>
 		<input type="text" ng-model="addMe" uib-typeahead="test for test in medslist | filter:\$viewValue | limitTo:8" class="form-control">
 		<button type="button" class='btn btn-default' ng-click="addAlert()">Add Medication</button>
@@ -221,6 +221,7 @@ app.factory('MedsListFactory4', function(\$http){
 
 app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, CurrentEncountersFactory1, NewEncounterFactory2, MedsListFactory3, MedsListFactory4, recentVisitFactory) {
 \$scope.alerts = [];
+\$scope.respuuid = [];
 var _selected;
 var patient = "${ patient.uuid }";
 var date2 = new Date();
@@ -252,8 +253,8 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + \$scope.encounterUuid;
 									\$http.get(encounterUrl).then(function(response) {
 										angular.forEach(response.data.obs, function(v, k){
-											var isRequestedTest = v.display;
-											if(isRequestedTest.match("MEDICATIONS") !== null) {
+											var encounter = v.display;
+											if(encounter.match("MEDICATIONS") !== null) {
 											\$scope.alerts.push({"msg":v.display.slice(16,v.display.length), "uuid":v.uuid});
 											}
 										});
@@ -328,7 +329,6 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
   	});
 
   	promise.then(function(x){
-        	\$scope.respuuid = [];
   		\$scope.addAlert = function() {
         		\$scope.errortext = "";
 			var alertText = "";
@@ -361,7 +361,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
                                 	value: alertText,
                                 	encounter: \$scope.encounterUuid
                         	}
-                        	\$scope.addMe = "";
+                        	
 				\$scope.dose = "";
 				\$scope.doseUnits = "";
 				\$scope.route = "";
@@ -371,9 +371,16 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 				\$scope.duration = "";
 				\$scope.durationUnits = "";
                         	\$http.post(url2, JSON.stringify(\$scope.json)).then(function(response){
-                        		if(response.data)
+                        		if(response.data) {
                                 		\$scope.statuscode = "Success";
-                                        	\$scope.respuuid.push(response.data.uuid);
+                                        	angular.forEach(\$scope.alerts, function(v, k){
+ 											var encounter = v.msg;
+ 											if(encounter.match(\$scope.addMe) !== null) {
+ 											v.uuid = response.data.uuid;
+ 											}
+ 										});
+ 										\$scope.addMe = "";
+                                 }
                         	}, function(response){
                         		\$scope.statuscode = "Failed to create Obs";
                         	});
@@ -382,12 +389,11 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 
   		\$scope.closeAlert = function(index) {
   			if (\$scope.visitStatus) {
-        		\$scope.alerts.splice(index, 1);
-        		\$scope.errortext = "";
 				\$scope.myColor = "white";
-				\$scope.deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.respuuid[index] + "?purge=true";
-                \$scope.respuuid.splice(index, 1);
+				\$scope.deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.alerts[index].uuid + "?purge=true";
                 \$http.delete(\$scope.deleteurl).then(function(response){
+                \$scope.alerts.splice(index, 1);
+        		\$scope.errortext = "";
                 	\$scope.statuscode = "Success";
                 }, function(response){
                 	\$scope.statuscode = "Failed to delete Obs";

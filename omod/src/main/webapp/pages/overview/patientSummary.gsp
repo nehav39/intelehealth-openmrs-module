@@ -147,8 +147,6 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
       	  								visitNoteEncounterUuid = d2;
     								});
 						}
-						console.log("visitNoteEncounterUuid");
-						console.log(visitNoteEncounterUuid);
 					}, function(error) {
 						console.log(error);
 					});

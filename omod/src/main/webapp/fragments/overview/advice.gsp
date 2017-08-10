@@ -236,7 +236,6 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
                                 		angular.forEach(\$scope.alerts, function(v, k){
 											var encounter = v.msg;
 											if(encounter.match(\$scope.addMe) !== null) {
-											debugger;
 											v.uuid = response.data.uuid;
 											}
 										});

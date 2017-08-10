@@ -143,6 +143,7 @@ app.factory('OrderedTestsSummaryFactory3', function(\$http){
 
 app.controller('OrderedTestsSummaryController', function(\$scope, \$http, \$timeout, OrderedTestsSummaryFactory1, OrderedTestsSummaryFactory2, OrderedTestsSummaryFactory3, recentVisitFactory) {
   \$scope.alerts = [];
+  \$scope.respuuid = [];
   var _selected;
   var patient = "${ patient.uuid }";
   var date2 = new Date();
@@ -174,9 +175,9 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + \$scope.encounterUuid;
 									\$http.get(encounterUrl).then(function(response) {
 										angular.forEach(response.data.obs, function(v, k){
-											var isRequestedTest = v.display;
-											if(isRequestedTest.match("REQUESTED TESTS") !== null) {
-											\$scope.alerts.push({"msg":v.display.slice(17,v.display.length)});
+											var encounter = v.display;
+											if(encounter.match("REQUESTED TESTS") !== null) {
+											\$scope.alerts.push({"msg":v.display.slice(17,v.display.length), "uuid": v.uuid});
 											}
 										});
 									}, function(response) {
@@ -222,7 +223,6 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
         promise.then(function(x){
                 \$scope.data3 = x;
 
-                \$scope.respuuid = [];
                 \$scope.addAlert = function() {
                         \$scope.errortext = "";
                         if (!\$scope.addMe) {
@@ -239,11 +239,17 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
          				value: \$scope.addMe,
          				encounter: \$scope.encounterUuid
         			}
-    				\$scope.addMe = "";
     				\$http.post(url2, JSON.stringify(\$scope.json)).then(function(response){
-        				if(response.data)
+        				if(response.data) {
                 				\$scope.statuscode = "Success";
-                				\$scope.respuuid.push(response.data.uuid);
+                				angular.forEach(\$scope.alerts, function(v, k){
+										var encounter = v.msg;
+										if(encounter.match(\$scope.addMe) !== null) {
+										v.uuid = response.data.uuid;
+										}
+								});
+								\$scope.addMe = "";
+                        }
     				}, function(response){
                 			\$scope.statuscode = "Failed to create Obs";
     				});
@@ -252,11 +258,10 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 
 	  		\$scope.closeAlert = function(index) {
 	  			if (\$scope.visitStatus) {
-		    		\$scope.alerts.splice(index, 1);
-		    		\$scope.errortext = "";
-		    		var deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.respuuid[index] + "?purge=true";
-		    		\$scope.respuuid.splice(index, 1);
+		    		var deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.alerts[index].uuid + "?purge=true";
 					\$http.delete(deleteurl).then(function(response){
+					\$scope.alerts.splice(index, 1);
+ 			        		\$scope.errortext = "";
 						\$scope.statuscode = "Success";
 					}, function(response){
 						\$scope.statuscode = "Failed to delete Obs";
