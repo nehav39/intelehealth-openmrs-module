@@ -2,9 +2,13 @@ intelehealthAdditionalDocs.controller('intelehealthAdditionalDocsController',
 		function($scope, $http, $timeout, $location,
 				intelehealthAdditionalDocsFactory) {
 			$scope.patientImage = [];
-			$scope.patientId = window.location.search.split('=')[1];
+			var str = window.location.search.split('=')[1];
+			$scope.patientId = str.split('&')[0];
+			var path = window.location.search;
+			var i = path.indexOf("visitId=");
+			var visitId = path.substr(i + 8, path.length);
 
-			intelehealthAdditionalDocsFactory.fetchAdditionalDocuments().then(
+			intelehealthAdditionalDocsFactory.fetchAdditionalDocuments($scope.patientId, visitId).then(
 					function(data) {
 						$scope.patientImage = data.data.results;
 					}, function(error) {
