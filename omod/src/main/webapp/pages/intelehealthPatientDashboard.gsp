@@ -6,6 +6,7 @@
     ui.includeCss("intelehealth", "overview/patientSummary.css")
     ui.decorateWith("appui", "standardEmrPage")
     ui.includeCss("coreapps", "clinicianfacing/patient.css")
+    ui.includeJavascript("intelehealth", "constants.js")
     ui.includeJavascript("intelehealth", "intelehealth_patient_dashboard/intelehealth_patient_dashboard.module.js")
     ui.includeJavascript("intelehealth", "intelehealth_patient_dashboard/intelehealth_patient_dashboard.service.js")
     ui.includeJavascript("intelehealth", "intelehealth_patient_dashboard/intelehealth_patient_dashboard.controller.js")

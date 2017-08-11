@@ -1,5 +1,6 @@
 <%
     ui.decorateWith("appui", "standardEmrPage")
+    ui.includeJavascript("intelehealth", "constants.js")
 %>
 <script type="text/javascript">
     var breadcrumbs = [

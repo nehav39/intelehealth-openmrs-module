@@ -114,7 +114,7 @@ var app = angular.module('diagnoses', []);
       date = \$filter('date')(new Date(), 'yyyy-MM-dd');
       var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
           url += "?patient=" + patient;
-          url += "&encounterType=" + "d7151f82-c1f3-4152-a605-2f9ea7414a79";
+          url += "&encounterType=" + window.constantConfigObj.encounterTypeVisitNote;
           url += "&fromdate=" + date;
       return {
         async: function(){
@@ -130,7 +130,7 @@ var app = angular.module('diagnoses', []);
       var date2 = new Date();
       var json = {
           patient: patient,
-          encounterType: "d7151f82-c1f3-4152-a605-2f9ea7414a79",
+          encounterType: window.constantConfigObj.encounterTypeVisitNote,
           encounterDatetime: date2
       };
       return {
@@ -199,7 +199,7 @@ var app = angular.module('diagnoses', []);
                 			scope.respuuid = [];
 					var url2 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs";
                                 	scope.json = {
-                                        	concept: "537bb20d-d09d-4f88-930b-cc45c7d662df",
+                                        	concept: window.constantConfigObj.conceptDiagnosis,
                                         	person: patient,
                                         	obsDatetime: date2,
                                         	value: topost.diagnosis.matchedName,

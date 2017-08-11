@@ -92,7 +92,7 @@ app.factory('OrderedTestsSummaryFactory1', function(\$http, \$filter){
   date = \$filter('date')(new Date(), 'yyyy-MM-dd');
   var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
       url += "?patient=" + patient;
-      url += "&encounterType=" + "d7151f82-c1f3-4152-a605-2f9ea7414a79";
+      url += "&encounterType=" + window.constantConfigObj.encounterTypeVisitNote;
       url += "&fromdate=" + date;
   return {
     async: function(){
@@ -112,7 +112,7 @@ app.factory('OrderedTestsSummaryFactory2', function(\$http){
   var visitId = path.substr(i + 8, path.length);
   var json = {
       patient: patient,
-      encounterType: "d7151f82-c1f3-4152-a605-2f9ea7414a79",
+      encounterType: window.constantConfigObj.encounterTypeVisitNote,
       encounterDatetime: date2,
       visit: visitId,
       obs: []
@@ -127,7 +127,7 @@ app.factory('OrderedTestsSummaryFactory2', function(\$http){
 });
 
 app.factory('OrderedTestsSummaryFactory3', function(\$http){
-  var testurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/concept/98c5881f-b214-4597-83d4-509666e9a7c9";
+  var testurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/concept/" + window.constantConfigObj.conceptTests;
   return {
     async: function(){
       return \$http.get(testurl).then(function(response){
@@ -233,7 +233,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
     				\$scope.alerts.push({msg: \$scope.addMe})
     				var url2 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs";
     				\$scope.json = {
-         				concept: "23601d71-50e6-483f-968d-aeef3031346d",
+         				concept: window.constantConfigObj.conceptRequestedTests,
          				person: patient,
          				obsDatetime: date2,
          				value: \$scope.addMe,

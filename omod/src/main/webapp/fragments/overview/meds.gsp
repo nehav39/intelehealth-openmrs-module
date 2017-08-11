@@ -160,7 +160,7 @@ app.factory('CurrentEncountersFactory1', function(\$http, \$filter){
   date = \$filter('date')(new Date(), 'yyyy-MM-dd');
   var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
       url += "?patient=" + patient;
-      url += "&encounterType=" + "d7151f82-c1f3-4152-a605-2f9ea7414a79";
+      url += "&encounterType=" + window.constantConfigObj.encounterTypeVisitNote;
       url += "&fromdate=" + date;
   return {
     async: function(){
@@ -177,7 +177,7 @@ app.factory('NewEncounterFactory2', function(\$http){
   var date2 = new Date();
   var json = {
       patient: patient,
-      encounterType: "d7151f82-c1f3-4152-a605-2f9ea7414a79",
+      encounterType: window.constantConfigObj.encounterTypeVisitNote,
       encounterDatetime: date2
   };
   return {
@@ -272,7 +272,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 						console.log(error);
 					});
 
-  var promiseMeds = MedsListFactory3.async("c25ea0e9-6522-417f-97ec-6e4b7a615254").then(function(d){
+  var promiseMeds = MedsListFactory3.async(window.constantConfigObj.conceptPrescription).then(function(d){
         return d;
   });
 
@@ -280,7 +280,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
         \$scope.medslist = x;
   })
 
-  var promiseDoses = MedsListFactory4.async("162384AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").then(function(d){
+  var promiseDoses = MedsListFactory4.async(window.constantConfigObj.conceptDoseUnit).then(function(d){
         return d;
   });
 
@@ -288,7 +288,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
         \$scope.doseunitlist = x;
   })
 
-  var promiseFrequencies = MedsListFactory3.async("9847b24f-8434-4ade-8978-157184c435d2").then(function(d){
+  var promiseFrequencies = MedsListFactory3.async(window.constantConfigObj.conceptFrequency).then(function(d){
         return d;
   });
 
@@ -296,7 +296,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
         \$scope.frequencylist = x;
   })
 
-  var promiseRoutes = MedsListFactory4.async("162394AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").then(function(d){
+  var promiseRoutes = MedsListFactory4.async(window.constantConfigObj.conceptRoutesOfAdministration).then(function(d){
         return d;
   });
         
@@ -304,7 +304,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
         \$scope.routelist = x;
   }) 
 
-  var promiseDurations = MedsListFactory3.async("1732AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").then(function(d){
+  var promiseDurations = MedsListFactory3.async(window.constantConfigObj.conceptDurationUnit).then(function(d){
         return d;
   });
 
@@ -355,7 +355,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
                 		\$scope.alerts.push({msg: alertText})
 				var url2 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs";
                         	\$scope.json = {
-                        		concept: "c38c0c50-2fd2-4ae3-b7ba-7dd25adca4ca",
+                        		concept: window.constantConfigObj.conceptMedication,
                                 	person: patient,
                                 	obsDatetime: date2,
                                 	value: alertText,

@@ -13,7 +13,7 @@
     ui.includeJavascript("intelehealth", "angular-animate/angular-animate.js")
     ui.includeJavascript("intelehealth", "angular-ui-bootstrap/dist/ui-bootstrap-tpls.js")
     ui.includeJavascript("intelehealth", "angular-ui-carousel/dist/ui-carousel.js")
-    
+    ui.includeJavascript("intelehealth", "constants.js")
     ui.includeJavascript("intelehealth", "recent_visits/recent_visits.module.js")
     ui.includeJavascript("intelehealth", "recent_visits/recent_visits.service.js")
     ui.includeJavascript("intelehealth", "intelehealth_patient_profile_image/intelehealth_patient_profile_image.module.js")
@@ -92,7 +92,7 @@ app.factory('PatientSummaryFactory1', function(\$http, \$filter){
   date = \$filter('date')(new Date(), 'yyyy-MM-dd');
   var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
       url += "?patient=" + patient;
-      url += "&encounterType=" + "d7151f82-c1f3-4152-a605-2f9ea7414a79";
+      url += "&encounterType=" + window.constantConfigObj.encounterTypeVisitNote;
       url += "&fromdate=" + date;
   return {
     async: function(){
@@ -109,7 +109,7 @@ app.factory('PatientSummaryFactory2', function(\$http){
   var date2 = new Date();
   var json = {
       patient: patient,
-      encounterType: "d7151f82-c1f3-4152-a605-2f9ea7414a79",
+      encounterType: window.constantConfigObj.encounterTypeVisitNote,
       visit: visitId,
       encounterDatetime: date2
   };

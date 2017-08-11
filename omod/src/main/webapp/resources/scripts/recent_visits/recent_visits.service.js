@@ -9,8 +9,8 @@ recentVisits.factory('recentVisitFactory', [ '$http', '$q',
 					var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/visit/" + visitId + "?v=custom:(uuid,display,startDatetime,stopDatetime,encounters:(display,uuid,obs:(display,uuid,value)),patient:(uuid))";
 					return $http.get(url);
 				},
-				fetchVisitDetails : function(uuid) {
-					var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/visit/" + uuid;
+				fetchVisitDetails : function(visitId) {
+					var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/visit/" + visitId;
 					return $http.get(url);
 				}
 			};

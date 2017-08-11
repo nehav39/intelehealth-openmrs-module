@@ -121,7 +121,7 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
     var patient = "${ patient.uuid }";
     var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
         url += "?patient=" + patient;
-        url += "&encounterType=" + "67a71486-1a54-468f-ac3e-7091a9a79584";
+        url += "&encounterType=" + window.constantConfigObj.encounterTypeVitals;
     \$http.get(url)
     	  .then(function(response) {
         	\$scope.vitalEncounters = response.data.results;
