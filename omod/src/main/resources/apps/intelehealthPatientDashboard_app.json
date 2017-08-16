@@ -9,7 +9,7 @@
                 "type": "link",
                 "url": "/intelehealth/overview/intelehealthPatientDashboard.page?patientId={{ patientId }}&app=intelehealth.intelehealthPatientDashboardApp",
                 "requiredPrivilege": "App: intelehealth.findPatient",
-                "requiredPrivilege": "App: intelehealth.PatientDashboard"
+                "requiredPrivilege": "App: intelehealth.patientDashboard"
             }
         ],
         "contextModel": [ "patient" ]

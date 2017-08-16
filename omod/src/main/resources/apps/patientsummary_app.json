@@ -9,7 +9,7 @@
             {
                 "id": "intelehealth.findRecordHomepageLink",
                 "url": "/intelehealth/overview/patientSummary.page?patientId={{ patientId }}",
-                "requiredPrivilege": "App: intelehealth.findRecord"
+                "requiredPrivilege": "App: intelehealth.findpatient"
             }
         ]
     }
