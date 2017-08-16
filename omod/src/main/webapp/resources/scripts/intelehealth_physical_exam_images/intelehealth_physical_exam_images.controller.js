@@ -8,12 +8,16 @@ intelehealthPhysicalExamination.controller(
 			var path = window.location.search;
 			var i = path.indexOf("visitId=");
 			var visitId = path.substr(i + 8, path.length);
-			console.log("patientId");
-			console.log($scope.patientId);
+			$scope.physicalExamPresent = false;
 			
 			intelehealthPhysicalExaminationFactory.fetchPhysicalExamination($scope.patientId, visitId).then(
 					function(data) {
-						$scope.patientImage = data.data.results;
+						if (data.data.results.length !== 0) {
+							$scope.physicalExamPresent = true;
+							$scope.patientImage = data.data.results;	
+						} else {
+							$scope.physicalExamPresent = false;
+						}
 					}, function(error) {
 						console.log(error);
 					});
