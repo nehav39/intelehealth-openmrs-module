@@ -8,7 +8,8 @@
                 "extensionPointId": "coreapps.findPatient",
                 "type": "link",
                 "url": "/intelehealth/overview/intelehealthPatientDashboard.page?patientId={{ patientId }}&app=intelehealth.intelehealthPatientDashboardApp",
-                "requiredPrivilege": "App: intelehealth.findRecord"
+                "requiredPrivilege": "App: intelehealth.findPatient",
+                "requiredPrivilege": "App: intelehealth.PatientDashboard"
             }
         ],
         "contextModel": [ "patient" ]
