@@ -29,7 +29,7 @@
 
 <script type="text/javascript">
     var breadcrumbs = [
-        { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
+        { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/referenceapplication/home.page' },
         { label: "${ ui.format(patient.familyName) }, ${ ui.format(patient.givenName) }" ,
             link: '${ui.pageLink("intelehealth", "overview/patientSummary", [patientId: patient.id])}'}
     ]

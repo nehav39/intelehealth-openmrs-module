@@ -21,7 +21,7 @@
 
 <script type="text/javascript">
     var breadcrumbs = [
-        { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
+		{ icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/referenceapplication/home.page' },
         { label: "${ ui.escapeJs(ui.encodeHtmlContent(ui.format(patient.patient))) }" ,
             link: '${ ui.urlBind("/" + contextPath + dashboardUrl, [ patientId: patient.patient.id ] ) }'}
     ];
@@ -112,17 +112,10 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient.patient, a
 			<%   }
 			} %>
 			
-			<div>
-${ui.includeFragment("intelehealth", "intelehealthPatientDashboard/recentVisitsIntelehealth", [patient: patient])}
+		<div>
+	${ui.includeFragment("intelehealth", "intelehealthPatientDashboard/recentVisitsIntelehealth", [patient: patient])}
+	</div>
 </div>
-			
-        </div>
-        <div class="action-container column">
-    ${ui.includeFragment("intelehealth", "intelehealthPatientDashboard/patientProfileImageIntelehealth", [patient: patient])}
-        </div>
-    </div>
-    
+<div class="action-container column">
+	${ui.includeFragment("intelehealth", "intelehealthPatientDashboard/patientProfileImageIntelehealth", [patient: patient])}
 </div>
-
-
-
