@@ -120,7 +120,7 @@ app.factory('AdviceSummaryFactory2', function(\$http){
 });
 
 app.factory('AdviceSummaryFactory3', function(\$http){
-  var testurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/concept/" + window.constantConfigObj.conceptMedicalAdvice1;
+  var testurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/concept/" + window.constantConfigObj.conceptMedicalAdvice2;
   return {
     async: function(){
       return \$http.get(testurl).then(function(response){
