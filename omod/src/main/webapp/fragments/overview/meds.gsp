@@ -341,14 +341,17 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
                 		return;
         		} else {
 				alertText = \$scope.addMe + ': ' + \$scope.dose.toString() + ' ' + \$scope.doseUnits.toLowerCase();
-				if (!\$scope.route) {
+				if (\$scope.route) {
 					alertText += ' (' + \$scope.route + ')';
 				} 
 				alertText += ', ' + \$scope.frequency.toLowerCase();
-				if (!\$scope.asNeededCondition) {
+				if (\$scope.asNeededCondition) {
                                         alertText += ' as needed for ' + \$scope.asNeededCondition;
                                 }
-				alertText += ' for ' + \$scope.duration.toString() + ' ' + \$scope.durationUnits.toLowerCase() + ' total.  ' + \$scope.dosingInstructions;
+				alertText += ' for ' + \$scope.duration.toString() + ' ' + \$scope.durationUnits.toLowerCase() + ' total.  ';
+				if (\$scope.dosingInstructions) {
+                                        alertText += \$scope.dosingInstructions;
+                                }
 			}
         		if (\$scope.alerts.indexOf(\$scope.addMe) == -1){
 				
