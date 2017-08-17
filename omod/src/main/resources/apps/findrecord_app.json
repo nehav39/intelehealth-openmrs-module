@@ -12,7 +12,7 @@
                 "label": "intelehealth.findPatient.app.label",
                 "url": "intelehealth/findrecord/findRecord.page?app=intelehealth.findRecord",
                 "icon": "icon-search",
-                "requiredPrivilege": "App: intelehealth.findRecord"
+                "requiredPrivilege": "App: intelehealth.findPatient"
             }
         ]
     }

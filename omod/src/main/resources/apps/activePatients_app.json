@@ -15,7 +15,7 @@
                 "label": "intelehealth.activeVisits.app.label",
                 "url": "intelehealth/activePatients.page?app=intelehealth.activePatients",
                 "icon": "icon-user",
-                "requiredPrivilege": "App: intelehealth.activePatients"
+                "requiredPrivilege": "App: intelehealth.activeVisits"
             }
         ]
     }
