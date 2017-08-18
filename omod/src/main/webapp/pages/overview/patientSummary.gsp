@@ -16,6 +16,9 @@
     ui.includeJavascript("intelehealth", "constants.js")
     ui.includeJavascript("intelehealth", "recent_visits/recent_visits.module.js")
     ui.includeJavascript("intelehealth", "recent_visits/recent_visits.service.js")
+    ui.includeJavascript("intelehealth", "intelehealth_additional_comments/intelehealth_additional_comments.module.js")
+    ui.includeJavascript("intelehealth", "intelehealth_additional_comments/intelehealth_additional_comments.service.js")
+    ui.includeJavascript("intelehealth", "intelehealth_additional_comments/intelehealth_additional_comments.controller.js")
     ui.includeJavascript("intelehealth", "intelehealth_patient_profile_image/intelehealth_patient_profile_image.module.js")
     ui.includeJavascript("intelehealth", "intelehealth_patient_profile_image/intelehealth_patient_profile_image.service.js")
     ui.includeJavascript("intelehealth", "intelehealth_patient_profile_image/intelehealth_patient_profile_image.controller.js")
@@ -74,6 +77,7 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient]) }
 				${ui.includeFragment("intelehealth", "overview/meds", [patient: patient])}
                 ${ui.includeFragment("intelehealth", "overview/orderedTests", [patient: patient])}
                 ${ui.includeFragment("intelehealth", "overview/advice", [patient: patient])}
+                ${ui.includeFragment("intelehealth", "overview/additionalComments", [patient: patient])}
 	 </div>
     </div>
 
@@ -84,7 +88,7 @@ var i = path.indexOf("visitId=");
 var visitId = path.substr(i + 8, path.length);
 var isVisitNotePresent = false;
 
-var app = angular.module('patientSummary', ['ngAnimate', 'ngSanitize', 'recentVisit', 'vitalsSummary', 'famhistSummary', 'historySummary', 'complaintSummary', 'examSummary', 'diagnoses', 'medsSummary', 'orderedTestsSummary', 'adviceSummary', 'intelehealthPatientProfileImage', 'intelehealthPhysicalExamination', 'intelehealthAdditionalDocs', 'ui.bootstrap', 'ui.carousel']);
+var app = angular.module('patientSummary', ['ngAnimate', 'ngSanitize', 'recentVisit', 'vitalsSummary', 'famhistSummary', 'historySummary', 'complaintSummary', 'examSummary', 'diagnoses', 'medsSummary', 'orderedTestsSummary', 'adviceSummary', 'intelehealthPatientProfileImage', 'intelehealthPhysicalExamination', 'intelehealthAdditionalDocs', 'ui.bootstrap', 'ui.carousel', 'intelehealthAdditionalComments']);
 
 app.factory('PatientSummaryFactory1', function(\$http, \$filter){
   var patient = "${ patient.uuid }";
