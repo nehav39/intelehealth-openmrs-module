@@ -12,5 +12,6 @@ var constantConfigObj = {
 		conceptMedication: 'c38c0c50-2fd2-4ae3-b7ba-7dd25adca4ca',
 		conceptTests: '98c5881f-b214-4597-83d4-509666e9a7c9',
 		conceptRequestedTests: '23601d71-50e6-483f-968d-aeef3031346d',
-		conceptDiagnosis: '537bb20d-d09d-4f88-930b-cc45c7d662df'
+		conceptDiagnosis: '537bb20d-d09d-4f88-930b-cc45c7d662df',
+		conceptAdditionalComments: '162169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
 }
