@@ -12,7 +12,7 @@ resize: none
 	</div>
 	<div class="info-body">
 			<textarea row="3" cols="50" class="comments" ng-show="visitStatus" type="text" ng-model="addMe" class="form-control"></textarea>
-			<button ng-show="visitStatus" type="button" class='btn btn-default' ng-click="addAlert()">Add Test</button>
+			<button ng-show="visitStatus" type="button" class='btn btn-default' ng-click="addAlert()">Add Comment</button>
 			<p>{{errortext}}</p>
 			<br/>
 			<br/>
