@@ -9,7 +9,8 @@
                 <tr ng-if="vitalsPresent" ng-repeat="item in vitalsData | orderBy:'-date'">
                         <td width="100px" style="border: none">{{item.date | vitalsDate | date: 'dd.MMM.yyyy'}}</td>
                         <td style="border:none">
-	                    Temp: {{(item.temperature * 9/5) + 32 | round}} F
+	                    <span ng-if="!item.temperature.includes('-')">Temp: {{(item.temperature * 9/5) + 32 | round}} F</span>
+	                    <span ng-if="item.temperature.includes('-')">Temp: {{item.temperature}} </span>
                         </td>
                         <td style="border:none">
                             Height: {{item.height}} cm
