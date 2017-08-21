@@ -1,6 +1,6 @@
 <div class="long-info-section" >
     <div class="info-header">
-        <h3>PHYSICAL EXAMINATION</h3>
+        <h3>Physical Exam Images</h3>
     </div>
     <div class="info-body" ng-controller="intelehealthPhysicalExaminationController">
     
@@ -15,7 +15,7 @@
 </ui-carousel>
 </div>
 <div ng-if="!physicalExamPresent">
-    	No Physical Examination available!
+    	No Physical Exam Images available!
     </div>
     
     </div>

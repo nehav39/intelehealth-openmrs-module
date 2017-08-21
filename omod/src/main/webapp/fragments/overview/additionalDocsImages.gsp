@@ -1,6 +1,6 @@
 <div class="info-section" >
     <div class="info-header">
-        <h3>ADDITIONAL DOCUMENTS</h3>
+        <h3>Additional Documents</h3>
     </div>
     <div class="info-body" ng-controller="intelehealthAdditionalDocsController">
 
