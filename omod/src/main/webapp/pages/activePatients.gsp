@@ -1,9 +1,10 @@
 <%
     ui.decorateWith("appui", "standardEmrPage")
+    ui.includeJavascript("intelehealth", "constants.js")
 %>
 <script type="text/javascript">
     var breadcrumbs = [
-        { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
+        { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/referenceapplication/home.page' },
         { label: "${ ui.message("intelehealth.app.activeVisits.label")}"}
     ];
 </script>
@@ -33,7 +34,7 @@
 				<td>
 
                     <!-- TODO: only add link to patient dashboard if user has appropriate privilege -->
-                        <a href="${ ui.urlBind("/openmrs/intelehealth/overview/patientSummary.page?patientId=" + v.visit.patient.uuid + "&visitId=" + v.visit.uuid, v.visit) }">
+                        <a href="${ ui.urlBind("/openmrs/intelehealth/intelehealthPatientDashboard.page?patientId=" + v.visit.patient.uuid, v.visit.patient) }">
 
                     ${ ui.format(v.visit.patient) }
 

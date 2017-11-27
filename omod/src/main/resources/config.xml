@@ -49,6 +49,10 @@
             org.openmrs.module.reporting
         </require_module>
 
+        <require_module version="${coreappsVersion}">
+            org.openmrs.module.coreapps
+        </require_module>
+
     </require_modules>
 	<!-- / Required Modules -->
 

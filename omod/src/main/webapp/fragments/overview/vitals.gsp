@@ -9,7 +9,8 @@
                 <tr ng-if="vitalsPresent" ng-repeat="item in vitalsData | orderBy:'-date'">
                         <td width="100px" style="border: none">{{item.date | vitalsDate | date: 'dd.MMM.yyyy'}}</td>
                         <td style="border:none">
-	                    Temp: {{(item.temperature * 9/5) + 32 | round}} F
+	                    <span ng-if="!item.temperature.includes('-')">Temp: {{(item.temperature * 9/5) + 32 | round}} F</span>
+	                    <span ng-if="item.temperature.includes('-')">Temp: {{item.temperature}} </span>
                         </td>
                         <td style="border:none">
                             Height: {{item.height}} cm
@@ -52,7 +53,6 @@ app.filter('vitalsDate', function() {
     };
 });
 
-
 app.filter('round', function(){
 	return function(x){
   		return x.toFixed(1);
@@ -81,7 +81,7 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 								\$scope.visitObs.push(response.data.obs);
 								 var answers = {date:response.data.display, temperature:'-', height:'-', weight:'-', o2sat:'-', systolicBP:'-', diastolicBP: '-', pulse: '-'};
 								   angular.forEach(response.data.obs, function(value, key){
-									if(value.display.includes('Temp')){
+									if(value.display.includes('TEMP')){
 										answers.temperature = Number(value.display.slice(17,value.display.length));
 									}
 				                                        if(value.display.includes('Height')){
@@ -90,13 +90,13 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 				                                        if(value.display.includes('Weight')){
 				                                                answers.weight = Number(value.display.slice(13,value.display.length));
 				                                        }
-				                                        if(value.display.includes('Blood oxygen')){
+				                                        if(value.display.includes('BLOOD OXYGEN')){
 				                                                answers.o2sat = Number(value.display.slice(25,value.display.length));
 				                                        }
-				                                        if(value.display.includes('Systolic')){
+				                                        if(value.display.includes('SYSTOLIC')){
 				                                                answers.systolicBP = Number(value.display.slice(25,value.display.length));
 				                                        }
-				                                        if(value.display.includes('Diastolic')){
+				                                        if(value.display.includes('DIASTOLIC')){
 				                                                answers.diastolicBP = Number(value.display.slice(26,value.display.length));
 				                                        }	
 				                                        if(value.display.includes('Pulse')){
@@ -118,14 +118,11 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 					}, function(error) {
 						console.log(error);
 					});
-
-	
- 	
     	
     var patient = "${ patient.uuid }";
     var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
         url += "?patient=" + patient;
-        url += "&encounterType=" + "67a71486-1a54-468f-ac3e-7091a9a79584";
+        url += "&encounterType=" + window.constantConfigObj.encounterTypeVitals;
     \$http.get(url)
     	  .then(function(response) {
         	\$scope.vitalEncounters = response.data.results;

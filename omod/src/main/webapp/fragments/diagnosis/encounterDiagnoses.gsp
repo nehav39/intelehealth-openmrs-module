@@ -30,7 +30,12 @@
 </script>
 
 <div id="encounter-diagnoses-app">
-
+<div class="info-header">
+        <i class="icon-diagnosis"></i>
+        <h3>${ ui.message("coreapps.clinicianfacing.diagnoses").toUpperCase() }</h3>
+    </div>
+    
+    <div class="info-body">
     <script type="text/ng-template" id="selected-diagnosis">
         <div class="diagnosis" data-ng-class="{primary: d.primary}">
             <span class="code">
@@ -61,7 +66,7 @@
         </div>
         <i data-ng-click="removeDiagnosis(d)" tabindex="-1" class="icon-remove delete-item"></i>
     </script>
-
+</div>
     <div data-ng-controller="DiagnosesController">
 
         <div id="diagnosis-search-container">
@@ -109,7 +114,7 @@ var app = angular.module('diagnoses', []);
       date = \$filter('date')(new Date(), 'yyyy-MM-dd');
       var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
           url += "?patient=" + patient;
-          url += "&encounterType=" + "d7151f82-c1f3-4152-a605-2f9ea7414a79";
+          url += "&encounterType=" + window.constantConfigObj.encounterTypeVisitNote;
           url += "&fromdate=" + date;
       return {
         async: function(){
@@ -125,7 +130,7 @@ var app = angular.module('diagnoses', []);
       var date2 = new Date();
       var json = {
           patient: patient,
-          encounterType: "d7151f82-c1f3-4152-a605-2f9ea7414a79",
+          encounterType: window.constantConfigObj.encounterTypeVisitNote,
           encounterDatetime: date2
       };
       return {
@@ -194,7 +199,7 @@ var app = angular.module('diagnoses', []);
                 			scope.respuuid = [];
 					var url2 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs";
                                 	scope.json = {
-                                        	concept: "537bb20d-d09d-4f88-930b-cc45c7d662df",
+                                        	concept: window.constantConfigObj.conceptDiagnosis,
                                         	person: patient,
                                         	obsDatetime: date2,
                                         	value: topost.diagnosis.matchedName,
