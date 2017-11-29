@@ -6,6 +6,7 @@
     ui.includeCss("intelehealth", "overview/patientSummary.css")
     ui.decorateWith("appui", "standardEmrPage")
     ui.includeCss("coreapps", "clinicianfacing/patient.css")
+    ui.includeJavascript("intelehealth", "constants.js")
     ui.includeJavascript("intelehealth", "intelehealth_patient_dashboard/intelehealth_patient_dashboard.module.js")
     ui.includeJavascript("intelehealth", "intelehealth_patient_dashboard/intelehealth_patient_dashboard.service.js")
     ui.includeJavascript("intelehealth", "intelehealth_patient_dashboard/intelehealth_patient_dashboard.controller.js")
@@ -20,7 +21,7 @@
 
 <script type="text/javascript">
     var breadcrumbs = [
-        { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
+		{ icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/referenceapplication/home.page' },
         { label: "${ ui.escapeJs(ui.encodeHtmlContent(ui.format(patient.patient))) }" ,
             link: '${ ui.urlBind("/" + contextPath + dashboardUrl, [ patientId: patient.patient.id ] ) }'}
     ];
@@ -111,17 +112,10 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient.patient, a
 			<%   }
 			} %>
 			
-			<div>
-${ui.includeFragment("intelehealth", "intelehealthPatientDashboard/recentVisitsIntelehealth", [patient: patient])}
+		<div>
+	${ui.includeFragment("intelehealth", "intelehealthPatientDashboard/recentVisitsIntelehealth", [patient: patient])}
+	</div>
 </div>
-			
-        </div>
-        <div class="action-container column">
-    ${ui.includeFragment("intelehealth", "intelehealthPatientDashboard/patientProfileImageIntelehealth", [patient: patient])}
-        </div>
-    </div>
-    
+<div class="action-container column">
+	${ui.includeFragment("intelehealth", "intelehealthPatientDashboard/patientProfileImageIntelehealth", [patient: patient])}
 </div>
-
-
-

@@ -1,10 +1,3 @@
-<%
-    ui.includeJavascript("intelehealth", "angular/angular.min.js")
-    ui.includeJavascript("intelehealth", "angular/angular.js")
-    ui.includeJavascript("intelehealth", "angular-sanitize/angular-sanitize.js")
-    ui.includeJavascript("intelehealth", "angular-animate/angular-animate.js")
-    ui.includeJavascript("intelehealth", "angular-bootstrap/ui-bootstrap-tpls.js")
-%>
 
 <style>
 
@@ -76,21 +69,22 @@ button.close {
 		<i class="icon-beaker"></i>
 		<h3>Prescribed Tests</h3>
 	</div>
-	<div class="info-body">
-		<input type="text" ng-model="addMe" uib-typeahead="test for test in testlist | filter:\$viewValue | limitTo:8" class="form-control">
-		<button type="button" class='btn btn-default' ng-click="addAlert()">Add Test</button>
-		<p>{{errortext}}</p>
-		<br/>
-		<br/>
-		<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
+	<div class="info-body">{{test}}
+			<input ng-show="visitStatus" type="text" ng-model="addMe" uib-typeahead="test for test in testlist | filter:\$viewValue | limitTo:8" class="form-control">
+			<button ng-show="visitStatus" type="button" class='btn btn-default' ng-click="addAlert()">Add Test</button>
+			<p>{{errortext}}</p>
+			<br/>
+			<br/>
+			<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
 	</div>
+	
     <div>
         <a href="#" class="right back-to-top">Back to top</a>
     </div>
 </div>
 
 <script>
-var app = angular.module('orderedTestsSummary', ['ngAnimate', 'ngSanitize']);
+var app = angular.module('orderedTestsSummary', ['ngAnimate', 'ngSanitize', 'recentVisit']);
 
 app.factory('OrderedTestsSummaryFactory1', function(\$http, \$filter){
   var patient = "${ patient.uuid }";
@@ -98,7 +92,7 @@ app.factory('OrderedTestsSummaryFactory1', function(\$http, \$filter){
   date = \$filter('date')(new Date(), 'yyyy-MM-dd');
   var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
       url += "?patient=" + patient;
-      url += "&encounterType=" + "d7151f82-c1f3-4152-a605-2f9ea7414a79";
+      url += "&encounterType=" + window.constantConfigObj.encounterTypeVisitNote;
       url += "&fromdate=" + date;
   return {
     async: function(){
@@ -113,10 +107,15 @@ app.factory('OrderedTestsSummaryFactory2', function(\$http){
   var patient = "${ patient.uuid }";
   var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
   var date2 = new Date();
+  var path = window.location.search;
+  var i = path.indexOf("visitId=");
+  var visitId = path.substr(i + 8, path.length);
   var json = {
       patient: patient,
-      encounterType: "d7151f82-c1f3-4152-a605-2f9ea7414a79",
-      encounterDatetime: date2
+      encounterType: window.constantConfigObj.encounterTypeVisitNote,
+      encounterDatetime: date2,
+      visit: visitId,
+      obs: []
   };
   return {
     async: function(){
@@ -128,7 +127,7 @@ app.factory('OrderedTestsSummaryFactory2', function(\$http){
 });
 
 app.factory('OrderedTestsSummaryFactory3', function(\$http){
-  var testurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/concept/98c5881f-b214-4597-83d4-509666e9a7c9";
+  var testurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/concept/" + window.constantConfigObj.conceptTests;
   return {
     async: function(){
       return \$http.get(testurl).then(function(response){
@@ -142,11 +141,60 @@ app.factory('OrderedTestsSummaryFactory3', function(\$http){
   };
 });
 
-app.controller('OrderedTestsSummaryController', function(\$scope, \$http, \$timeout, OrderedTestsSummaryFactory1, OrderedTestsSummaryFactory2, OrderedTestsSummaryFactory3) {
+app.controller('OrderedTestsSummaryController', function(\$scope, \$http, \$timeout, OrderedTestsSummaryFactory1, OrderedTestsSummaryFactory2, OrderedTestsSummaryFactory3, recentVisitFactory) {
   \$scope.alerts = [];
+  \$scope.respuuid = [];
   var _selected;
   var patient = "${ patient.uuid }";
   var date2 = new Date();
+
+var path = window.location.search;
+var i = path.indexOf("visitId=");
+var visitId = path.substr(i + 8, path.length);
+\$scope.visitEncounters = [];
+\$scope.visitObs = [];
+\$scope.visitNoteData = [];
+\$scope.visitNotePresent = true;
+\$scope.visitStatus = false;
+\$scope.encounterUuid = "";
+recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
+						\$scope.visitDetails = data.data;
+							if (\$scope.visitDetails.stopDatetime == null || \$scope.visitDetails.stopDatetime == undefined) {
+								\$scope.visitStatus = true;
+							}
+							else {
+								\$scope.visitStatus = false;
+							}
+						\$scope.visitEncounters = data.data.encounters; 
+						if(\$scope.visitEncounters.length !== 0) {
+						\$scope.visitNotePresent = true;
+							angular.forEach(\$scope.visitEncounters, function(value, key){
+								var isVital = value.display;
+								if(isVital.match("Visit Note") !== null) {
+									\$scope.encounterUuid = value.uuid;
+									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + \$scope.encounterUuid;
+									\$http.get(encounterUrl).then(function(response) {
+										angular.forEach(response.data.obs, function(v, k){
+											var encounter = v.display;
+											if(encounter.match("REQUESTED TESTS") !== null) {
+											\$scope.alerts.push({"msg":v.display.slice(17,v.display.length), "uuid": v.uuid});
+											}
+										});
+									}, function(response) {
+										\$scope.error = "Get Encounter Obs Went Wrong";
+								    	\$scope.statuscode = response.status;
+								    });				
+								}
+							});
+						}
+						else {
+							\$scope.visitNotePresent = false;
+						}
+					}, function(error) {
+						console.log(error);
+					});
+
+
 
   var promiseTests = OrderedTestsSummaryFactory3.async().then(function(d){
 	return d;
@@ -175,7 +223,6 @@ app.controller('OrderedTestsSummaryController', function(\$scope, \$http, \$time
         promise.then(function(x){
                 \$scope.data3 = x;
 
-                \$scope.respuuid = [];
                 \$scope.addAlert = function() {
                         \$scope.errortext = "";
                         if (!\$scope.addMe) {
@@ -186,34 +233,41 @@ app.controller('OrderedTestsSummaryController', function(\$scope, \$http, \$time
     				\$scope.alerts.push({msg: \$scope.addMe})
     				var url2 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs";
     				\$scope.json = {
-         				concept: "23601d71-50e6-483f-968d-aeef3031346d",
+         				concept: window.constantConfigObj.conceptRequestedTests,
          				person: patient,
          				obsDatetime: date2,
          				value: \$scope.addMe,
-         				encounter: x
+         				encounter: \$scope.encounterUuid
         			}
-    				\$scope.addMe = "";
     				\$http.post(url2, JSON.stringify(\$scope.json)).then(function(response){
-        				if(response.data)
+        				if(response.data) {
                 				\$scope.statuscode = "Success";
-                				\$scope.respuuid.push(response.data.uuid);
+                				angular.forEach(\$scope.alerts, function(v, k){
+										var encounter = v.msg;
+										if(encounter.match(\$scope.addMe) !== null) {
+										v.uuid = response.data.uuid;
+										}
+								});
+								\$scope.addMe = "";
+                        }
     				}, function(response){
                 			\$scope.statuscode = "Failed to create Obs";
     				});
     			}
   		};
 
-  		\$scope.closeAlert = function(index) {
-    			\$scope.alerts.splice(index, 1);
-    			\$scope.errortext = "";
-    			var deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.respuuid[index] + "?purge=true";
-    			\$scope.respuuid.splice(index, 1);
-			\$http.delete(deleteurl).then(function(response){
-				\$scope.statuscode = "Success";
-			}, function(response){
-				\$scope.statuscode = "Failed to delete Obs";
-			});
-  		};  
+	  		\$scope.closeAlert = function(index) {
+	  			if (\$scope.visitStatus) {
+		    		var deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.alerts[index].uuid + "?purge=true";
+					\$http.delete(deleteurl).then(function(response){
+					\$scope.alerts.splice(index, 1);
+ 			        		\$scope.errortext = "";
+						\$scope.statuscode = "Success";
+					}, function(response){
+						\$scope.statuscode = "Failed to delete Obs";
+					});
+				}
+	  		};  
         });
   }, 2000);
 

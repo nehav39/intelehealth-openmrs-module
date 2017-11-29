@@ -1,11 +1,3 @@
-<%
-    ui.includeJavascript("intelehealth", "angular/angular.min.js")
-    ui.includeJavascript("intelehealth", "angular/angular.js")
-    ui.includeJavascript("intelehealth", "angular-sanitize/angular-sanitize.js")
-    ui.includeJavascript("intelehealth", "angular-animate/angular-animate.js")
-    ui.includeJavascript("intelehealth", "angular-bootstrap/ui-bootstrap-tpls.js")
-%>
-
 <style>
 
 .sr-only {
@@ -126,7 +118,7 @@ form.sized-inputs label.heading {
 		<h3>Prescribed Medication</h3>
 	</div>
 	<div class="info-body">
-	    <form id="new-order" class="sized-inputs css-form" name="newOrderForm" novalidate>
+	    <form ng-show="visitStatus" id="new-order" class="sized-inputs css-form" name="newOrderForm" novalidate>
 		<br/>
 		<input type="text" ng-model="addMe" uib-typeahead="test for test in medslist | filter:\$viewValue | limitTo:8" class="form-control">
 		<button type="button" class='btn btn-default' ng-click="addAlert()">Add Medication</button>
@@ -160,7 +152,7 @@ form.sized-inputs label.heading {
 </div>
 
 <script>
-var app = angular.module('medsSummary', ['ngAnimate', 'ngSanitize']);
+var app = angular.module('medsSummary', ['ngAnimate', 'ngSanitize', 'recentVisit']);
 
 app.factory('CurrentEncountersFactory1', function(\$http, \$filter){
   var patient = "${ patient.uuid }";
@@ -168,7 +160,7 @@ app.factory('CurrentEncountersFactory1', function(\$http, \$filter){
   date = \$filter('date')(new Date(), 'yyyy-MM-dd');
   var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
       url += "?patient=" + patient;
-      url += "&encounterType=" + "d7151f82-c1f3-4152-a605-2f9ea7414a79";
+      url += "&encounterType=" + window.constantConfigObj.encounterTypeVisitNote;
       url += "&fromdate=" + date;
   return {
     async: function(){
@@ -185,7 +177,7 @@ app.factory('NewEncounterFactory2', function(\$http){
   var date2 = new Date();
   var json = {
       patient: patient,
-      encounterType: "d7151f82-c1f3-4152-a605-2f9ea7414a79",
+      encounterType: window.constantConfigObj.encounterTypeVisitNote,
       encounterDatetime: date2
   };
   return {
@@ -227,13 +219,60 @@ app.factory('MedsListFactory4', function(\$http){
   };
 });
 
-app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, CurrentEncountersFactory1, NewEncounterFactory2, MedsListFactory3, MedsListFactory4) {
-  \$scope.alerts = [];
-  var _selected;
-  var patient = "${ patient.uuid }";
-  var date2 = new Date();
+app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, CurrentEncountersFactory1, NewEncounterFactory2, MedsListFactory3, MedsListFactory4, recentVisitFactory) {
+\$scope.alerts = [];
+\$scope.respuuid = [];
+var _selected;
+var patient = "${ patient.uuid }";
+var date2 = new Date();
 
-  var promiseMeds = MedsListFactory3.async("c25ea0e9-6522-417f-97ec-6e4b7a615254").then(function(d){
+var path = window.location.search;
+var i = path.indexOf("visitId=");
+var visitId = path.substr(i + 8, path.length);
+\$scope.visitEncounters = [];
+\$scope.visitObs = [];
+\$scope.visitNoteData = [];
+\$scope.visitNotePresent = true;
+\$scope.visitStatus = false;
+\$scope.encounterUuid = "";
+recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
+						\$scope.visitDetails = data.data;
+							if (\$scope.visitDetails.stopDatetime == null || \$scope.visitDetails.stopDatetime == undefined) {
+								\$scope.visitStatus = true;
+							}
+							else {
+								\$scope.visitStatus = false;
+							}
+						\$scope.visitEncounters = data.data.encounters; 
+						if(\$scope.visitEncounters.length !== 0) {
+						\$scope.visitNotePresent = true;
+							angular.forEach(\$scope.visitEncounters, function(value, key){
+								var isVital = value.display;
+								if(isVital.match("Visit Note") !== null) {
+									\$scope.encounterUuid = value.uuid;
+									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + \$scope.encounterUuid;
+									\$http.get(encounterUrl).then(function(response) {
+										angular.forEach(response.data.obs, function(v, k){
+											var encounter = v.display;
+											if(encounter.match("MEDICATIONS") !== null) {
+											\$scope.alerts.push({"msg":v.display.slice(16,v.display.length), "uuid":v.uuid});
+											}
+										});
+									}, function(response) {
+										\$scope.error = "Get Encounter Obs Went Wrong";
+								    	\$scope.statuscode = response.status;
+								    });				
+								}
+							});
+						}
+						else {
+							\$scope.visitNotePresent = false;
+						}
+						}, function(error) {
+						console.log(error);
+					});
+
+  var promiseMeds = MedsListFactory3.async(window.constantConfigObj.conceptPrescription).then(function(d){
         return d;
   });
 
@@ -241,7 +280,7 @@ app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, Cur
         \$scope.medslist = x;
   })
 
-  var promiseDoses = MedsListFactory4.async("162384AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").then(function(d){
+  var promiseDoses = MedsListFactory4.async(window.constantConfigObj.conceptDoseUnit).then(function(d){
         return d;
   });
 
@@ -249,7 +288,7 @@ app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, Cur
         \$scope.doseunitlist = x;
   })
 
-  var promiseFrequencies = MedsListFactory3.async("9847b24f-8434-4ade-8978-157184c435d2").then(function(d){
+  var promiseFrequencies = MedsListFactory3.async(window.constantConfigObj.conceptFrequency).then(function(d){
         return d;
   });
 
@@ -257,7 +296,7 @@ app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, Cur
         \$scope.frequencylist = x;
   })
 
-  var promiseRoutes = MedsListFactory4.async("162394AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").then(function(d){
+  var promiseRoutes = MedsListFactory4.async(window.constantConfigObj.conceptRoutesOfAdministration).then(function(d){
         return d;
   });
         
@@ -265,7 +304,7 @@ app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, Cur
         \$scope.routelist = x;
   }) 
 
-  var promiseDurations = MedsListFactory3.async("1732AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").then(function(d){
+  var promiseDurations = MedsListFactory3.async(window.constantConfigObj.conceptDurationUnit).then(function(d){
         return d;
   });
 
@@ -290,7 +329,6 @@ app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, Cur
   	});
 
   	promise.then(function(x){
-        	\$scope.respuuid = [];
   		\$scope.addAlert = function() {
         		\$scope.errortext = "";
 			var alertText = "";
@@ -303,27 +341,30 @@ app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, Cur
                 		return;
         		} else {
 				alertText = \$scope.addMe + ': ' + \$scope.dose.toString() + ' ' + \$scope.doseUnits.toLowerCase();
-				if (!\$scope.route) {
+				if (\$scope.route) {
 					alertText += ' (' + \$scope.route + ')';
 				} 
 				alertText += ', ' + \$scope.frequency.toLowerCase();
-				if (!\$scope.asNeededCondition) {
+				if (\$scope.asNeededCondition) {
                                         alertText += ' as needed for ' + \$scope.asNeededCondition;
                                 }
-				alertText += ' for ' + \$scope.duration.toString() + ' ' + \$scope.durationUnits.toLowerCase() + ' total.  ' + \$scope.dosingInstructions;
+				alertText += ' for ' + \$scope.duration.toString() + ' ' + \$scope.durationUnits.toLowerCase() + ' total.  ';
+				if (\$scope.dosingInstructions) {
+                                        alertText += \$scope.dosingInstructions;
+                                }
 			}
         		if (\$scope.alerts.indexOf(\$scope.addMe) == -1){
 				
                 		\$scope.alerts.push({msg: alertText})
 				var url2 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs";
                         	\$scope.json = {
-                        		concept: "c38c0c50-2fd2-4ae3-b7ba-7dd25adca4ca",
+                        		concept: window.constantConfigObj.conceptMedication,
                                 	person: patient,
                                 	obsDatetime: date2,
                                 	value: alertText,
-                                	encounter: x
+                                	encounter: \$scope.encounterUuid
                         	}
-                        	\$scope.addMe = "";
+                        	
 				\$scope.dose = "";
 				\$scope.doseUnits = "";
 				\$scope.route = "";
@@ -333,9 +374,16 @@ app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, Cur
 				\$scope.duration = "";
 				\$scope.durationUnits = "";
                         	\$http.post(url2, JSON.stringify(\$scope.json)).then(function(response){
-                        		if(response.data)
+                        		if(response.data) {
                                 		\$scope.statuscode = "Success";
-                                        	\$scope.respuuid.push(response.data.uuid);
+                                        	angular.forEach(\$scope.alerts, function(v, k){
+ 											var encounter = v.msg;
+ 											if(encounter.match(\$scope.addMe) !== null) {
+ 											v.uuid = response.data.uuid;
+ 											}
+ 										});
+ 										\$scope.addMe = "";
+                                 }
                         	}, function(response){
                         		\$scope.statuscode = "Failed to create Obs";
                         	});
@@ -343,16 +391,17 @@ app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, Cur
   		};
 
   		\$scope.closeAlert = function(index) {
-        		\$scope.alerts.splice(index, 1);
+  			if (\$scope.visitStatus) {
+				\$scope.myColor = "white";
+				\$scope.deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.alerts[index].uuid + "?purge=true";
+                \$http.delete(\$scope.deleteurl).then(function(response){
+                \$scope.alerts.splice(index, 1);
         		\$scope.errortext = "";
-			\$scope.myColor = "white";
-			\$scope.deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.respuuid[index] + "?purge=true";
-                	\$scope.respuuid.splice(index, 1);
-                	\$http.delete(\$scope.deleteurl).then(function(response){
-                		\$scope.statuscode = "Success";
-                	}, function(response){
-                		\$scope.statuscode = "Failed to delete Obs";
-                	});
+                	\$scope.statuscode = "Success";
+                }, function(response){
+                	\$scope.statuscode = "Failed to delete Obs";
+                });
+			}
   		};
   	});
   }, 2000);

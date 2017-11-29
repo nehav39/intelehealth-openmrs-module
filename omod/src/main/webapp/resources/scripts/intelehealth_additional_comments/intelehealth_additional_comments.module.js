@@ -1,0 +1,1 @@
+var intelehealthAdditionalComments = angular.module('intelehealthAdditionalComments', ['ngAnimate', 'ngSanitize', 'recentVisit']);
