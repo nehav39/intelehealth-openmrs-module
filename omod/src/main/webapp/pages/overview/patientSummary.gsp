@@ -53,10 +53,10 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient]) }
     <i class="icon-vitals"><a href="#vitals">Vitals</a></i>
     <i class="icon-group"><a href="#famhist">Family History</a></i>
     <i class="icon-book"><a href="#history">Past Medical History</a></i>
-    <i class="icon-comment"><a href="#complaints">Presenting Complaints</a></i>
+    <i class="icon-comment"><a href="#complaint">Presenting Complaints</a></i>
     <i class="icon-stethoscope"><a href="#exam">On Examination</a></i>
 <br/>
-    <i class="icon-heart-empty"><a href="#diagnosis">Diagnoses</a></i>
+    <i class="icon-heart-empty"><a href="#encounter-diagnoses-app">Diagnoses</a></i>
     <i class="icon-comments"><a href="#comments">Doctor's Note</a></i>
     <i class="icon-medicine"><a href="#meds">Prescribed Medication</a></i>
     <i class="icon-beaker"><a href="#orderedTests">Prescribed Tests</a></i>
@@ -80,7 +80,7 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient]) }
                 ${ui.includeFragment("intelehealth", "overview/meds", [patient: patient])}
                 ${ui.includeFragment("intelehealth", "overview/orderedTests", [patient: patient])}
                 ${ui.includeFragment("intelehealth", "overview/advice", [patient: patient])}
-                
+
 	 </div>
     </div>
 
@@ -126,18 +126,18 @@ app.factory('PatientSummaryFactory2', function(\$http){
         return response.data.uuid;
       });
     }
-  };  
+  };
 });
 
-app.controller('PatientSummaryController', function(\$scope, \$http, PatientSummaryFactory1, PatientSummaryFactory2, recentVisitFactory) { 
+app.controller('PatientSummaryController', function(\$scope, \$http, PatientSummaryFactory1, PatientSummaryFactory2, recentVisitFactory) {
 \$scope.isLoading = true;
 \$scope.visitEncounters = [];
 \$scope.visitObs = [];
 \$scope.visitNoteData = [];
-\$scope.visitStatus = false;  
+\$scope.visitStatus = false;
 recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 						\$scope.visitDetails = data.data;
-						\$scope.visitEncounters = data.data.encounters; 
+						\$scope.visitEncounters = data.data.encounters;
 						if(\$scope.visitEncounters.length !== 0) {
 							angular.forEach(\$scope.visitEncounters, function(value, key){
 								var encounter = value.display;
@@ -163,4 +163,3 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 
 <script>
 </script>
-
