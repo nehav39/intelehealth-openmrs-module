@@ -47,6 +47,7 @@
 </script>
 
 ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient]) }
+<a href="#history">intelehealth</a>
 
 <div class="info-body jump-header">
     <span class="jump-label">Jump to:</span>
