@@ -1,17 +1,17 @@
 <%
     ui.includeJavascript("intelehealth", "jquery/jquery.js")
-     
+
     def id = config.id
     def props = config.properties ?: ["encounterType", "encounterDatetime", "location", "provider"]
 %>
 <%= ui.resourceLinks() %>
- 
- 
- 
- 
+
+
+
+
 <script>
 jq = jQuery;
- 
+
 jq(function() {
     jq('#${ id }_button').click(function() {
         jq.getJSON('${ ui.actionLink("getEncounters") }',
@@ -39,9 +39,9 @@ jq(function() {
     });
 });
 </script>
- 
+
 <input id="${ id }_button" type="button" value="Refresh"/>
- 
+
 <table id="${ id }">
     <thead>
         <tr>

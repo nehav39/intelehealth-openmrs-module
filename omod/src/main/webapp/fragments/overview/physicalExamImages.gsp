@@ -3,7 +3,7 @@
         <h3>Physical Exam Images</h3>
     </div>
     <div class="info-body" ng-controller="intelehealthPhysicalExaminationController">
-    
+
     <div ng-if="physicalExamPresent">
   <ui-carousel slides="patientImage" slides-to-show="3" slides-to-scroll="3" dots="true">
   <carousel-item>
@@ -17,9 +17,9 @@
 <div ng-if="!physicalExamPresent">
     	No Physical Exam Images available!
     </div>
-    
+
     </div>
     <div>
-        <a href="#" class="right back-to-top">Back to top</a>
+        <a href="#top" target="_self" class="right back-to-top">Back to top</a>
     </div>
 </div>

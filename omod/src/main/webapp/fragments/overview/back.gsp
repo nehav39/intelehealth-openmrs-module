@@ -85,7 +85,7 @@ button.close {
 		<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
 	</div>
     <div>
-        <a href="#" class="right back-to-top">Back to top</a>
+        <a href="#top" target="_self" class="right back-to-top">Back to top</a>
     </div>
     <br/>
 </div>
@@ -165,12 +165,12 @@ app.controller('BackSummaryController', function(\$scope, \$http, \$filter, \$q)
 			}, function(response){
 				\$scope.statuscode = "Failed to delete Obs";
 			});
-  		};  
+  		};
 	}, function(response) {
                 \$scope.error = "Get Visit Note Encounters Went Wrong";
                 \$scope.statuscode = response.status;
         });
-             
+
   \$scope.selected = undefined;
   \$scope.getTest = function() {
     return \$http.get('//openmrs.amal.io:8080/openmrs/ws/rest/v1/concept/98c5881f-b214-4597-83d4-509666e9a7c9').then(function(response){
@@ -185,4 +185,4 @@ app.controller('BackSummaryController', function(\$scope, \$http, \$filter, \$q)
 
 <script>
     angular.bootstrap("#back", ['BackTestsSummary']);
-</script>  
+</script>

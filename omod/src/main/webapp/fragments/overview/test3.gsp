@@ -83,7 +83,7 @@ button.close {
                   Foo = {{foo}}
 	</div>
     <div>
-        <a href="#" class="right back-to-top">Back to top</a>
+        <a href="#top" target="_self" class="right back-to-top">Back to top</a>
     </div>
     <br/>
 </div>
@@ -136,4 +136,4 @@ return {
 
 <script>
     angular.bootstrap("#test3", ['test3Summary']);
-</script>  
+</script>
