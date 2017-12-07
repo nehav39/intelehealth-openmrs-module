@@ -14,7 +14,7 @@ target
 *.war
 *.ear
 
-
+omod/src/main/compass/sass-external/*
 
 # Rubygems build directories #
 omod/.rubygems
