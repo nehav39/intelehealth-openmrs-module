@@ -96,7 +96,7 @@ button.close {
 		<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
 	</div>
     <div>
-        <a href="#" class="right back-to-top">Back to top</a>
+        <a href="#top" target="_self" class="right back-to-top">Back to top</a>
     </div>
     <br/>
 </div>
@@ -106,4 +106,4 @@ button.close {
 </script>
 
 <script>
-</script>  
+</script>

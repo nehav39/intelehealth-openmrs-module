@@ -1,4 +1,8 @@
+
+
+
 <%
+
     ui.includeJavascript("uicommons", "handlebars/handlebars.min.js")
     ui.includeCss("intelehealth", "overview/patientSummary.css")
     ui.includeCss("intelehealth", "overview/ui-carousel.css")
@@ -29,6 +33,7 @@
     ui.includeJavascript("intelehealth", "intelehealth_physical_exam_images/intelehealth_physical_exam_images.service.js")
     ui.includeJavascript("intelehealth", "intelehealth_physical_exam_images/intelehealth_physical_exam_images.controller.js")
 %>
+<div id="top">
 
 <script type="text/javascript">
     var breadcrumbs = [
@@ -63,6 +68,7 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient]) }
     <i class="icon-comments"><a href="#advice">Medical Advice</a></i>
     <i class="icon-list-alt"><a href="#comments">Additional Comments</a></i>
 </div>
+</div>
 
 <div class="clear"></div>
     <div class="dashboard clear" ng-app="patientSummary" ng-controller="PatientSummaryController">
@@ -78,6 +84,7 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient]) }
 				${ui.includeFragment("intelehealth", "overview/meds", [patient: patient])}
                 ${ui.includeFragment("intelehealth", "overview/orderedTests", [patient: patient])}
                 ${ui.includeFragment("intelehealth", "overview/advice", [patient: patient])}
+
 
 	 </div>
     </div>

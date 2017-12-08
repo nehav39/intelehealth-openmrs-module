@@ -15,7 +15,7 @@
 	</table>
 	</div>
     <div>
-        <a href="#" class="right back-to-top">Back to top</a>
+        <a href="#top" target="_self" class="right back-to-top">Back to top</a>
     </div>
 </div>
 
@@ -48,12 +48,12 @@ var path = window.location.search;
 var i = path.indexOf("visitId=");
 var visitId = path.substr(i + 8, path.length);
 \$scope.visitEncounters = [];
-\$scope.visitObs = []; 
+\$scope.visitObs = [];
 \$scope.vitalsData = [];
 \$scope.vitalsPresent = true;
 recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 						\$scope.visitDetails = data.data;
-						\$scope.visitEncounters = data.data.encounters; 
+						\$scope.visitEncounters = data.data.encounters;
 						if(\$scope.visitEncounters.length !== 0) {
 						\$scope.vitalsPresent = true;
 					}
@@ -97,4 +97,4 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 });
 </script>
 <script>
-</script>  
+</script>
