@@ -1,0 +1,89 @@
+.lozenge {
+  display: inline-block;
+  padding: 0px 8px;
+  border: 1px solid black;
+  border-radius: 3px;
+  font-size: 0.7em;
+  text-transform: uppercase;
+}
+.lozenge.recent {
+  background-color: white;
+  color: #4a6785;
+  border-color: #4a6785;
+}
+.lozenge.prn {
+  background-color: #f6c342;
+  border-color: #f6c342;
+}
+.lozenge.alert {
+  background-color: darkred;
+  border-color: darkred;
+  color: white;
+}
+
+.prescription-group.inactive, .prescription-group .inactive {
+  background-color: darkgray;
+}
+.prescription-group .prescriber {
+  font-size: 0.9em;
+}
+
+.iv-fluid-order .concept-name {
+  text-transform: uppercase;
+}
+.iv-fluid-order.inactive, .iv-fluid-order .inactive {
+  background-color: darkgray;
+}
+.iv-fluid-order .prescriber {
+  font-size: 0.9em;
+}
+
+.jump-header {
+  font-weight: bold;
+  font-size: 0.9em;
+  font-family: "OpenSansBold", serif;
+  margin-bottom: 20px;
+  margin-top: 15px;
+}
+.jump-header .jump-label {
+  padding-left: 10px;
+}
+.jump-header i {
+  padding-left: 20px !important;
+}
+.jump-header a {
+  font-weight: bold;
+  text-decoration: underline;
+  padding-left: 3px;
+  padding-right: 10px;
+}
+
+.dashboard .long-info-section {
+  margin-bottom: 25px;
+}
+.dashboard .info-header h3 {
+  width: 250px;
+}
+.dashboard .info-header .active-visit-started-at-message {
+  background: #51a351;
+  border-color: #51a351;
+}
+.dashboard .info-header .active-visit-message {
+  background: #666;
+  border-color: #666;
+}
+.dashboard .info-header .active-visit-message, .dashboard .info-header .active-visit-started-at-message {
+  display: inline-block;
+  vertical-align: text-bottom;
+  color: #FFF;
+  padding: 2px 4px;
+  border-radius: 1px;
+  font-size: 0.8em;
+}
+.dashboard [class^="icon-"],
+.dashboard [class*=" icon-"] {
+  display: inline;
+}
+.dashboard .back-to-top {
+  margin-top: 10px;
+}

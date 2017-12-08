@@ -1,0 +1,17 @@
+.selected-answer {
+  background-color: white;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px 1px;
+}
+.selected-answer .code {
+  display: inline-block;
+  min-width: 50px;
+}
+.selected-answer .name {
+  display: inline-block;
+  min-width: 500px;
+}
+.selected-answer .actions {
+  float: right;
+}
