@@ -52,7 +52,7 @@
     <%}
 } %>
 
-${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient.patient, activeVisit: activeVisit, appContextModel: appContextModel ]) }
+${ ui.includeFragment("coreapps", "patientHeader", [patient: patient.patient, activeVisit: activeVisit, appContextModel: appContextModel ]) }
 
 <div class="clear"></div>
 <div class="container">
@@ -89,7 +89,7 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient.patient, a
             <div class="info-section">
                 <div class="info-header">
                     <i class="icon-medical"></i>
-                    <h3>${ ui.message("coreapps.clinicianfacing.allergies").toUpperCase() }</h3>
+
                 </div>
                 <div class="info-body">
                     <ul>
@@ -98,7 +98,7 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient.patient, a
                 </div>
             </div>
             */%>
-            
+
             <% if (secondColumnFragments) {
 			    secondColumnFragments.each {
                     // create a base map from the fragmentConfig if it exists, otherwise just create an empty map
@@ -111,7 +111,7 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient.patient, a
 			        ${ ui.includeFragment(it.extensionParams.provider, it.extensionParams.fragment, configs)}
 			<%   }
 			} %>
-			
+
 		<div>
 	${ui.includeFragment("intelehealth", "intelehealthPatientDashboard/recentVisitsIntelehealth", [patient: patient])}
 	</div>

@@ -36,7 +36,7 @@ import org.openmrs.ui.framework.UiUtils;
  * This class contains the logic that is run every time this module is either started or stopped.
  */
 public class IntelehealthActivator extends BaseModuleActivator {
-	
+
 	protected Log log = LogFactory.getLog(getClass());
 
     /**
@@ -76,7 +76,7 @@ public class IntelehealthActivator extends BaseModuleActivator {
 	public void willRefreshContext() {
 		log.info("Refreshing Intelehealth Module");
 	}
-	
+
 	/**
 	 * @see ModuleActivator#contextRefreshed()
 	 */
@@ -99,17 +99,17 @@ public class IntelehealthActivator extends BaseModuleActivator {
 
             htmlFormEntryService.addHandler(IntelehealthConstants.HTMLFORMENTRY_CODED_OR_FREE_TEXT_OBS_TAG_NAME, new CodedOrFreeTextObsTagHandler());
         }
-   */     
+   */
 		log.info("Intelehealth Module refreshed");
 	}
-	
+
 	/**
 	 * @see ModuleActivator#willStart()
 	 */
 	public void willStart() {
 		log.info("Starting Intelehealth Module");
 	}
-	
+
 	/**
 	 * @see ModuleActivator#started()
 	 */
@@ -123,7 +123,7 @@ public class IntelehealthActivator extends BaseModuleActivator {
 
         log.info("Intelehealth Module started");
     }
-	
+
 	/**
 	 * @see ModuleActivator#willStop()
 	 */
@@ -145,5 +145,5 @@ public class IntelehealthActivator extends BaseModuleActivator {
 
 		log.info("Intelehealth Module stopped");
 	}
-	
+
 }
