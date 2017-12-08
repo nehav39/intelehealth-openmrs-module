@@ -24,7 +24,7 @@ intelehealthAdditionalComments.controller('intelehealthAdditionalCommentsControl
 								else {
 									$scope.visitStatus = false;
 								}
-							$scope.visitEncounters = data.data.encounters; 
+							$scope.visitEncounters = data.data.encounters;
 							if($scope.visitEncounters.length !== 0) {
 							$scope.visitNotePresent = true;
 								angular.forEach($scope.visitEncounters, function(value, key){
@@ -42,7 +42,7 @@ intelehealthAdditionalComments.controller('intelehealthAdditionalCommentsControl
 										}, function(response) {
 											$scope.error = "Get Encounter Obs Went Wrong";
 									    	$scope.statuscode = response.status;
-									    });				
+									    });
 									}
 								});
 							}
@@ -124,7 +124,7 @@ intelehealthAdditionalComments.controller('intelehealthAdditionalCommentsControl
 							$scope.statuscode = "Failed to delete Obs";
 						});
 					}
-		  		};  
+		  		};
 	        });
 	  }, 2000);
 
@@ -148,7 +148,7 @@ intelehealthAdditionalComments.factory('AdditionalCommentsFactory1', function($h
 	});
 
 	intelehealthAdditionalComments.factory('AdditionalCommentsFactory2', function($http){
-	  var patient = "${ patient.uuid }";
+	  var patient = "${ patient.uuidPROBLEMAREA }"; //This is where the extra encounter gets posted from. patient here is the ID, not the patient obj
 	  var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
 	  var date2 = new Date();
 	  var path = window.location.search;
