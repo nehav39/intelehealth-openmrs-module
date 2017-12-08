@@ -147,8 +147,10 @@ intelehealthAdditionalComments.factory('AdditionalCommentsFactory1', function($h
 	  };
 	});
 
+//This is creating an extra encounter when the patient summary loads
+//Or rather, it would, if it had the right scope to retrieve the patient UUID
 	intelehealthAdditionalComments.factory('AdditionalCommentsFactory2', function($http){
-	  var patient = "${ patient.uuidPROBLEMAREA }"; //This is where the extra encounter gets posted from. patient here is the ID, not the patient obj
+	  var patient = "${ patient }"; //This is the issue. Patient refers to the patientID, not the UUID or the patient Obj 
 	  var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
 	  var date2 = new Date();
 	  var path = window.location.search;

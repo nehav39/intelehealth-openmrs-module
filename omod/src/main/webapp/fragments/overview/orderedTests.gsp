@@ -77,7 +77,7 @@ button.close {
 			<br/>
 			<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
 	</div>
-	
+
     <div>
         <a href="#" class="right back-to-top">Back to top</a>
     </div>
@@ -103,6 +103,7 @@ app.factory('OrderedTestsSummaryFactory1', function(\$http, \$filter){
   };
 });
 
+//This is creating an extra encounter when the patient summary loads 
 app.factory('OrderedTestsSummaryFactory2', function(\$http){
   var patient = "${ patient.uuid }";
   var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
@@ -112,7 +113,7 @@ app.factory('OrderedTestsSummaryFactory2', function(\$http){
   var visitId = path.substr(i + 8, path.length);
   var json = {
       patient: patient,
-      encounterType: window.constantConfigObj.encounterTypeVisitNote,
+      encounterType: "window.constantConfigObj.encounterTypeVisitNote",
       encounterDatetime: date2,
       visit: visitId,
       obs: []
@@ -165,7 +166,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 							else {
 								\$scope.visitStatus = false;
 							}
-						\$scope.visitEncounters = data.data.encounters; 
+						\$scope.visitEncounters = data.data.encounters;
 						if(\$scope.visitEncounters.length !== 0) {
 						\$scope.visitNotePresent = true;
 							angular.forEach(\$scope.visitEncounters, function(value, key){
@@ -183,7 +184,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 									}, function(response) {
 										\$scope.error = "Get Encounter Obs Went Wrong";
 								    	\$scope.statuscode = response.status;
-								    });				
+								    });
 								}
 							});
 						}
@@ -267,7 +268,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 						\$scope.statuscode = "Failed to delete Obs";
 					});
 				}
-	  		};  
+	  		};
         });
   }, 2000);
 
@@ -275,4 +276,4 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 </script>
 
 <script>
-</script>  
+</script>
