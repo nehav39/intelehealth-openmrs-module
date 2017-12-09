@@ -7,6 +7,72 @@
     ui.includeCss("coreapps", "diagnoses/encounterDiagnoses.css")
 %>
 
+
+<style>
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid transparent;
+    border-radius: 4px
+}
+.alert h4 {
+    margin-top: 0;
+    color: inherit
+}
+.alert .alert-link {
+    font-weight: 700
+}
+.alert-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1
+}
+.alert-info hr {
+    border-top-color: #a6e1ec
+}
+.alert-info .alert-link {
+    color: #245269
+}
+.close {
+    float: right;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+    opacity: .2
+}
+.close:focus,
+.close:hover {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    filter: alpha(opacity=50);
+    opacity: .5
+}
+button.close {
+    -webkit-appearance: none;
+    padding: 0;
+    cursor: pointer;
+    background: 0 0;
+    border: 0
+}
+
+</style>
+
 <% /* This is an underscore template, since I dont know how to use angular templates programmatically */ %>
 <script type="text/template" id="autocomplete-render-item">
     <span class="code">
@@ -34,7 +100,7 @@
         <i class="icon-diagnosis"></i>
         <h3>${ ui.message("coreapps.clinicianfacing.diagnoses").toUpperCase() }</h3>
     </div>
-    
+
     <div class="info-body">
     <script type="text/ng-template" id="selected-diagnosis">
         <div class="diagnosis" data-ng-class="{primary: d.primary}">
@@ -88,6 +154,7 @@
                 <li data-ng-repeat="d in encounterDiagnoses.primaryDiagnoses()">
                     <span data-ng-include="'selected-diagnosis'"></span>
                 </li>
+
             </ul>
             <br/>
 
@@ -102,7 +169,10 @@
                 </li>
             </ul>
         </div>
+        <div class="info-body">Previous Diagnoses
 
+            <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
+        </div>
     </div>
 </div>
 
@@ -192,7 +262,7 @@ var app = angular.module('diagnoses', []);
                                 scope.patient = "${ patient.uuid }";
 				var order = [];
 				var confirmed = [];
-		
+
                                 scope.diagnosesToPost = {name:topost.diagnosis.matchedName,confirmed:topost.confirmed,primary:topost.primary};
 				promise.then(function(x){
 					var date2 = new Date();
@@ -225,8 +295,66 @@ var app = angular.module('diagnoses', []);
             };
         }
     });
-    app.controller('DiagnosesController', [ '\$scope', '\$timeout', 'DiagnosisFactory1', 'DiagnosisFactory2',
-        function DiagnosesController(\$scope, \$timeout, DiagnosisFactory1, DiagnosisFactory2) {
+    app.controller('DiagnosesController', [ '\$scope', '\$http' , '\$timeout', 'DiagnosisFactory1', 'DiagnosisFactory2', 'recentVisitFactory',
+        function DiagnosesController(\$scope, \$http, \$timeout, DiagnosisFactory1, DiagnosisFactory2, recentVisitFactory) {
+
+          \$scope.alerts = [];
+          \$scope.respuuid = [];
+          var _selected;
+          var patient = "${ patient.uuid }";
+          var date2 = new Date();
+
+        var path = window.location.search;
+        var i = path.indexOf("visitId=");
+        var visitId = path.substr(i + 8, path.length);
+        \$scope.visitEncounters = [];
+        \$scope.visitObs = [];
+        \$scope.visitNoteData = [];
+        \$scope.visitNotePresent = true;
+        \$scope.visitStatus = false;
+        \$scope.encounterUuid = "";
+        recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
+        						\$scope.visitDetails = data.data;
+        							if (\$scope.visitDetails.stopDatetime == null || \$scope.visitDetails.stopDatetime == undefined) {
+        								\$scope.visitStatus = true;
+        							}
+        							else {
+        								\$scope.visitStatus = false;
+        							}
+        						\$scope.visitEncounters = data.data.encounters;
+        						if(\$scope.visitEncounters.length !== 0) {
+        						\$scope.visitNotePresent = true;
+        							angular.forEach(\$scope.visitEncounters, function(value, key){
+        								var isVital = value.display;
+        								if(isVital.match("Visit Note") !== null) {
+        									\$scope.encounterUuid = value.uuid;
+        									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + \$scope.encounterUuid;
+                        
+        									\$http.get(encounterUrl).then(function(response) {
+        										angular.forEach(response.data.obs, function(v, k){
+        											var encounter = v.display;
+                              console.log(encounter);
+        											if(encounter.match("TELEMEDICINE DIAGNOSIS") !== null) {
+        											\$scope.alerts.push({"msg":v.display.slice(23,v.display.length), "uuid": v.uuid});
+
+        											}
+        										});
+        									}, function(response) {
+        										\$scope.error = "Get Encounter Obs Went Wrong";
+        								    	\$scope.statuscode = response.status;
+        								    });
+        								}
+        							});
+        						}
+        						else {
+        							\$scope.visitNotePresent = false;
+        						}
+        					}, function(error) {
+        						console.log(error);
+        					});
+
+
+
             \$timeout(function () {
                 \$scope.test1 = 0;
                 \$scope.test2 = 0;
@@ -247,6 +375,7 @@ var app = angular.module('diagnoses', []);
                         }).join(", ") + "]";
                 };
               }, 2000);
+
         }
     ]);
 
@@ -268,8 +397,8 @@ var app = angular.module('diagnoses', []);
             priorDiagnoses.addDiagnosis(diagnoses.Diagnosis(${ it }));
         <% } %>
     });
-    
+
     },1000);
-    
+
 
 </script>
