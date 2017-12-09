@@ -71,6 +71,7 @@ button.close {
     border: 0
 }
 
+
 </style>
 
 <% /* This is an underscore template, since I dont know how to use angular templates programmatically */ %>
@@ -168,9 +169,11 @@ button.close {
                     <span data-ng-include="'selected-diagnosis'"></span>
                 </li>
             </ul>
-        </div>
-        <div class="info-body">Previous Diagnoses
 
+        </div>
+<br></br>
+        <div class="info-body1" style = "color:red;font-size: 17px;">Previous Diagnoses <br>  </br>
+<hr>
             <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
         </div>
     </div>
@@ -329,7 +332,7 @@ var app = angular.module('diagnoses', []);
         								if(isVital.match("Visit Note") !== null) {
         									\$scope.encounterUuid = value.uuid;
         									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + \$scope.encounterUuid;
-                        
+
         									\$http.get(encounterUrl).then(function(response) {
         										angular.forEach(response.data.obs, function(v, k){
         											var encounter = v.display;
@@ -374,6 +377,18 @@ var app = angular.module('diagnoses', []);
                                 return d.valueToSubmit();
                         }).join(", ") + "]";
                 };
+                \$scope.closeAlert = function(index) {
+        	  			if (\$scope.visitStatus) {
+        		    		var deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.alerts[index].uuid + "?purge=true";
+        					\$http.delete(deleteurl).then(function(response){
+        					\$scope.alerts.splice(index, 1);
+         			        		\$scope.errortext = "";
+        						\$scope.statuscode = "Success";
+        					}, function(response){
+        						\$scope.statuscode = "Failed to delete Obs";
+        					});
+        				}
+        	  		};
               }, 2000);
 
         }

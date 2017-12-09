@@ -75,7 +75,7 @@ button.close {
 			<p>{{errortext}}</p>
 			<br/>
 			<br/>
-			<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}</div>
+			<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
 	</div>
 
     <div>
