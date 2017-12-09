@@ -171,14 +171,14 @@ app.factory('CurrentEncountersFactory1', function(\$http, \$filter){
   };
 });
 
-//This is creating an extra encounter when the patient summary loads 
+//This is creating an extra encounter when the patient summary loads
 app.factory('NewEncounterFactory2', function(\$http){
   var patient = "${ patient.uuid }";
   var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
   var date2 = new Date();
   var json = {
       patient: patient,
-      encounterType: "window.constantConfigObj.encounterTypeVisitNote",
+      encounterType: window.constantConfigObj.encounterTypeVisitNote,
       encounterDatetime: date2
   };
   return {

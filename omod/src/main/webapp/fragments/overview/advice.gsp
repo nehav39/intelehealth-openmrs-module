@@ -108,7 +108,7 @@ app.factory('AdviceSummaryFactory2', function(\$http){
   var date2 = new Date();
   var json = {
       patient: patient,
-      encounterType: "window.constantConfigObj.encounterTypeVisitNote",
+      encounterType: window.constantConfigObj.encounterTypeVisitNote,
       encounterDatetime: date2
   };
   return {

@@ -103,7 +103,7 @@ app.factory('OrderedTestsSummaryFactory1', function(\$http, \$filter){
   };
 });
 
-//This is creating an extra encounter when the patient summary loads 
+//This is creating an extra encounter when the patient summary loads
 app.factory('OrderedTestsSummaryFactory2', function(\$http){
   var patient = "${ patient.uuid }";
   var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
@@ -113,7 +113,7 @@ app.factory('OrderedTestsSummaryFactory2', function(\$http){
   var visitId = path.substr(i + 8, path.length);
   var json = {
       patient: patient,
-      encounterType: "window.constantConfigObj.encounterTypeVisitNote",
+      encounterType: window.constantConfigObj.encounterTypeVisitNote,
       encounterDatetime: date2,
       visit: visitId,
       obs: []
