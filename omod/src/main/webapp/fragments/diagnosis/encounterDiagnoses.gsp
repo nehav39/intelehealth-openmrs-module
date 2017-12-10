@@ -122,7 +122,7 @@ button.close {
 
             <div class="actions">
                 <label>
-                    <input type="checkbox" data-ng-model="d.primary"/>
+                    <input type="checkbox" data-ng-model="d.primary" />
                     ${ui.message("coreapps.Diagnosis.Order.PRIMARY")}
                 </label>
                 <label>
@@ -152,7 +152,7 @@ button.close {
                 ${ui.message("coreapps.consult.primaryDiagnosis.notChosen")}
             </div>
             <ul>
-                <li data-ng-repeat="d in encounterDiagnoses.primaryDiagnoses()">
+                <li data-ng-repeat="d in encounterDiagnoses.primaryDiagnoses()" >
                     <span data-ng-include="'selected-diagnosis'"></span>
                 </li>
 
@@ -172,9 +172,9 @@ button.close {
 
         </div>
 <br></br>
-        <div class="info-body1" style = "color:red;font-size: 17px;">Previous Diagnoses <br>  </br>
+        <div class="info-body">Previous Diagnoses <br>  </br>
 <hr>
-            <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
+            <div uib-alert ng-repeat="alert in alerts"  ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
         </div>
     </div>
 </div>
