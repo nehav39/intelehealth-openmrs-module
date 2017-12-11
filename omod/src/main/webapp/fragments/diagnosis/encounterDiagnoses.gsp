@@ -10,72 +10,21 @@
 
 <style>
 
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0
+hr.style1{
+	border-top: 1px solid #8c8b8b;
+}
+div.error{background-color: #d9edf7;
+  color: #31708f;padding: 15px;
+  margin-bottom: 10px;border: 1px solid transparent;border-radius: 4px;
+  margin-top: 0;  color: inherit
 }
 
-.alert {
-    padding: 15px;
-    margin-bottom: 10px;
-    border: 1px solid transparent;
-    border-radius: 4px
-}
-.alert h4 {
-    margin-top: 0;
-    color: inherit
-}
-.alert .alert-link {
-    font-weight: 700
-}
-.alert-info {
-    color: #31708f;
-    background-color: #d9edf7;
-    border-color: #bce8f1
-}
-.alert-info hr {
-    border-top-color: #a6e1ec
-}
-.alert-info .alert-link {
-    color: #245269
-}
-.close {
-    float: right;
-    font-size: 21px;
-    font-weight: 700;
-    line-height: 1;
-    color: #000;
-    text-shadow: 0 1px 0 #fff;
-    filter: alpha(opacity=20);
-    opacity: .2
-}
-.close:focus,
-.close:hover {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-    filter: alpha(opacity=50);
-    opacity: .5
-}
-button.close {
-    -webkit-appearance: none;
-    padding: 0;
-    cursor: pointer;
-    background: 0 0;
-    border: 0
-}
-
+</style>
 
 </style>
 
 <% /* This is an underscore template, since I dont know how to use angular templates programmatically */ %>
-<script type="text/template" id="autocomplete-render-item">
+<script ng-show="visitStatus" type="text/template" id="autocomplete-render-item">
     <span class="code">
         {{ if (item.code) { }}
         {{- item.code }}
@@ -102,8 +51,8 @@ button.close {
         <h3>${ ui.message("coreapps.clinicianfacing.diagnoses").toUpperCase() }</h3>
     </div>
 
-    <div class="info-body">
-    <script type="text/ng-template" id="selected-diagnosis">
+    <div class="info-body" ng-show="visitStatus">
+    <script type="text/ng-template" id="selected-diagnosis" ng-show="visitStatus">
         <div class="diagnosis" data-ng-class="{primary: d.primary}">
             <span class="code">
                 <span data-ng-show="d.diagnosis.code">{{ d.diagnosis.code }}</span>
@@ -134,18 +83,18 @@ button.close {
         <i data-ng-click="removeDiagnosis(d)" tabindex="-1" class="icon-remove delete-item"></i>
     </script>
 </div>
-    <div data-ng-controller="DiagnosesController">
+    <div data-ng-controller="DiagnosesController" >
 
-        <div id="diagnosis-search-container">
-            <label for="diagnosis-search">${ ui.message("coreapps.consult.addDiagnosis") }</label>
-            <input id="diagnosis-search" type="text" placeholder="${ ui.message("coreapps.consult.addDiagnosis.placeholder") }" autocomplete itemFormatter="autocomplete-render-item"/>
+        <div id="diagnosis-search-container" ng-show="visitStatus">
+            <label  for="diagnosis-search">${ ui.message("coreapps.consult.addDiagnosis") }</label>
+            <input  id="diagnosis-search" type="text" placeholder="${ ui.message("coreapps.consult.addDiagnosis.placeholder") }" autocomplete itemFormatter="autocomplete-render-item"/>
 
             <% if(jsForPrior.size > 0) { %>
-                <button type="button" ng-click="addPriorDiagnoses()">${ ui.message("coreapps.consult.priorDiagnoses.add") }</button>
+                <button type="button" ng-show="visitStatus" ng-click="addPriorDiagnoses()">${ ui.message("coreapps.consult.priorDiagnoses.add") }</button>
             <% } %>
         </div>
 
-        <div id="display-encounter-diagnoses-container">
+        <div id="display-encounter-diagnoses-container" ng-show="visitStatus">
             <h3>${ui.message("coreapps.consult.primaryDiagnosis")}</h3>
 
             <div data-ng-show="encounterDiagnoses.primaryDiagnoses().length == 0">
@@ -171,13 +120,27 @@ button.close {
             </ul>
 
         </div>
-<br></br>
-        <div class="info-body">Previous Diagnoses <br>  </br>
-<hr>
-            <div uib-alert ng-repeat="alert in alerts"  ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
+
+<br ng-show ="recentVisit">
+  <div ng-show ="recentVisit" style= "font-size: 17px;">
+  Previous Diagnoses:
+  </div>
+<hr ng-show ="recentVisit" class="style1">
+          <div class="errror" > {{test}}
+          <p>{{errortext}}</p>
+    			<br/>
+    			<br/>
+            <div class="error"
+            uib-alert ng-repeat="alert in alerts"  ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}
+
+        </div>
+        <div>
+            <a href="#" class="right back-to-top">Back to top</a>
         </div>
     </div>
-</div>
+    <br/>
+
+
 
 <script>
 var app = angular.module('diagnoses', []);
@@ -267,6 +230,7 @@ var app = angular.module('diagnoses', []);
 				var confirmed = [];
 
                                 scope.diagnosesToPost = {name:topost.diagnosis.matchedName,confirmed:topost.confirmed,primary:topost.primary};
+                                console.log(scope.diagnosesToPost);
 				promise.then(function(x){
 					var date2 = new Date();
                 			scope.respuuid = [];
