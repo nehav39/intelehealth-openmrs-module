@@ -77,7 +77,7 @@ button.close {
 			<br/>
 			<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
 	</div>
-	
+
     <div>
         <a href="#" class="right back-to-top">Back to top</a>
     </div>
@@ -165,7 +165,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 							else {
 								\$scope.visitStatus = false;
 							}
-						\$scope.visitEncounters = data.data.encounters; 
+						\$scope.visitEncounters = data.data.encounters;
 						if(\$scope.visitEncounters.length !== 0) {
 						\$scope.visitNotePresent = true;
 							angular.forEach(\$scope.visitEncounters, function(value, key){
@@ -173,17 +173,20 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 								if(isVital.match("Visit Note") !== null) {
 									\$scope.encounterUuid = value.uuid;
 									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + \$scope.encounterUuid;
+
 									\$http.get(encounterUrl).then(function(response) {
 										angular.forEach(response.data.obs, function(v, k){
 											var encounter = v.display;
+
 											if(encounter.match("REQUESTED TESTS") !== null) {
 											\$scope.alerts.push({"msg":v.display.slice(17,v.display.length), "uuid": v.uuid});
+
 											}
 										});
 									}, function(response) {
 										\$scope.error = "Get Encounter Obs Went Wrong";
 								    	\$scope.statuscode = response.status;
-								    });				
+								    });
 								}
 							});
 						}
@@ -267,7 +270,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 						\$scope.statuscode = "Failed to delete Obs";
 					});
 				}
-	  		};  
+	  		};
         });
   }, 2000);
 
@@ -275,4 +278,4 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 </script>
 
 <script>
-</script>  
+</script>
