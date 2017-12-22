@@ -34,7 +34,7 @@
         <i class="icon-diagnosis"></i>
         <h3>${ ui.message("coreapps.clinicianfacing.diagnoses").toUpperCase() }</h3>
     </div>
-    
+
     <div class="info-body">
     <script type="text/ng-template" id="selected-diagnosis">
         <div class="diagnosis" data-ng-class="{primary: d.primary}">
@@ -192,7 +192,7 @@ var app = angular.module('diagnoses', []);
                                 scope.patient = "${ patient.uuid }";
 				var order = [];
 				var confirmed = [];
-		
+
                                 scope.diagnosesToPost = {name:topost.diagnosis.matchedName,confirmed:topost.confirmed,primary:topost.primary};
 				promise.then(function(x){
 					var date2 = new Date();
@@ -268,8 +268,8 @@ var app = angular.module('diagnoses', []);
             priorDiagnoses.addDiagnosis(diagnoses.Diagnosis(${ it }));
         <% } %>
     });
-    
+
     },1000);
-    
+
 
 </script>

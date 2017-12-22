@@ -115,27 +115,33 @@ app.factory('PatientSummaryFactory2', function(\$http){
   var patient = "${ patient.uuid }";
   var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
   var date2 = new Date();
-  return {
+/*sreturn {
   getdata: function(){
         var providerUrl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/session";
         return \$http.get(providerUrl).then(function(response){
         return response.data.user.uuid;
     });
 }
-};
+};*/
 
   var json = {
       patient: patient,
       encounterType: window.constantConfigObj.encounterTypeVisitNote,
       encounterProviders: [{
-        provider: getdata(),
-        encounterRole: "73bbb069-9781-4afc-a9d1-54b6b2270e03"
-      }],
+      provider: getdata(),
+     encounterRole: "73bbb069-9781-4afc-a9d1-54b6b2270e03"
+   }],
       visit: visitId,
       encounterDatetime: date2
   };
   console.log(json);
   return {
+    getdata: function(){
+          var providerUrl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/session";
+          return \$http.get(providerUrl).then(function(response){
+          return response.data.user.uuid;
+      });
+    },
     async: function(){
       return \$http.post(url1, JSON.stringify(json)).then(function(response){
         return response.data.uuid;
@@ -145,7 +151,7 @@ app.factory('PatientSummaryFactory2', function(\$http){
 });
 
 app.controller('PatientSummaryController', function(\$scope, \$http, PatientSummaryFactory1, PatientSummaryFactory2, recentVisitFactory) {
-  PatientSummaryFactory2.getdata().then(function(response){
+ PatientSummaryFactory2.getdata().then(function(response){
         console.log(response);
   });
 \$scope.isLoading = true;
