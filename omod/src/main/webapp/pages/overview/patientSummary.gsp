@@ -113,47 +113,20 @@ app.factory('PatientSummaryFactory1', function(\$http, \$filter){
 
 app.factory('PatientSummaryFactory2', function(\$http){
   var patient = "${ patient.uuid }";
-  var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
+  var testurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/session";
   var date2 = new Date();
-/*sreturn {
-  getdata: function(){
-        var providerUrl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/session";
-        return \$http.get(providerUrl).then(function(response){
-        return response.data.user.uuid;
-    });
-}
-};*/
-
-  var json = {
-      patient: patient,
-      encounterType: window.constantConfigObj.encounterTypeVisitNote,
-      encounterProviders: [{
-      provider: getdata(),
-     encounterRole: "73bbb069-9781-4afc-a9d1-54b6b2270e03"
-   }],
-      visit: visitId,
-      encounterDatetime: date2
-  };
-  console.log(json);
   return {
-    getdata: function(){
-          var providerUrl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/session";
-          return \$http.get(providerUrl).then(function(response){
-          return response.data.user.uuid;
-      });
-    },
     async: function(){
-      return \$http.post(url1, JSON.stringify(json)).then(function(response){
-        return response.data.uuid;
+      return \$http.get(testurl).then(function(response){
+        return response.data.user.uuid;
       });
     }
   };
 });
 
 app.controller('PatientSummaryController', function(\$scope, \$http, PatientSummaryFactory1, PatientSummaryFactory2, recentVisitFactory) {
- PatientSummaryFactory2.getdata().then(function(response){
-        console.log(response);
-  });
+var patient = "${ patient.uuid }";
+var date2 = new Date();
 \$scope.isLoading = true;
 \$scope.visitEncounters = [];
 \$scope.visitObs = [];
@@ -173,11 +146,31 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 							});
 						}
 						if (isVisitNotePresent == false || \$scope.visitEncounters.length == 0) {
-									PatientSummaryFactory2.async().then(function(d2){
-      	  								\$scope.data2 = d2;
-      	  								visitNoteEncounterUuid = d2;
-                          console.log(\$scope.data2);
-    								});
+              var promiseuuid = PatientSummaryFactory2.async().then(function(d){
+                    return d;
+              });
+
+              promiseuuid.then(function(x){
+                    \$scope.uuid = x;
+                    console.log(\$scope.uuid);
+                    var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
+                    var json = {
+                                patient: patient,
+                                encounterType: window.constantConfigObj.encounterTypeVisitNote,
+                                visit: visitId,
+                                encounterProviders: [{
+                                  provider: \$scope.uuid,
+                                  encounterRole: "73bbb069-9781-4afc-a9d1-54b6b2270e03"
+                                }],
+                                encounterDatetime: date2
+                              };
+                              console.log(json);
+                    \$http.post(url1, JSON.stringify(json)).then(function(response){
+                        console.log("Posted");
+                    }, function(response){
+                      console.log("Failed");
+                    });
+              });
 						}
 					}, function(error) {
 						console.log(error);
