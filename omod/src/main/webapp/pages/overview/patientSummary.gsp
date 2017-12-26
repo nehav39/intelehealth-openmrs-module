@@ -152,23 +152,46 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 
               promiseuuid.then(function(x){
                     \$scope.uuid = x;
-                    console.log(\$scope.uuid);
+                    \$scope.uuid3;
+                    var url2 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/provider?user=" + \$scope.uuid;
+                    console.log(url2);
+                    \$http.get(url2).then(function(response){
+                      angular.forEach(response.data.results, function(v, k){
+  											var uuid = v.uuid;
+                        var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
+                        var json = {
+                                    patient: patient,
+                                    encounterType: window.constantConfigObj.encounterTypeVisitNote,
+                                    encounterProviders:[{
+                                      provider: uuid,
+                                      encounterRole: window.constantConfigObj.encounterRoleDoctor
+                                    }],
+                                    visit: visitId,
+                                    encounterDatetime: date2
+                                  };
+                                console.log(json);
+                        \$http.post(url1, JSON.stringify(json)).then(function(response){
+                            console.log("Posted Encounter");
+                        }, function(response){
+                          console.log("Failed");
+                        });
+  										});
+                    },function(response){
+                      console.log("Get user uuid Failed!");
+                    });
+                    //console.log(\$scope.uuid);
                     var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
                     var json = {
                                 patient: patient,
                                 encounterType: window.constantConfigObj.encounterTypeVisitNote,
                                 visit: visitId,
-                                encounterProviders: [{
-                                  provider: \$scope.uuid,
-                                  encounterRole: "73bbb069-9781-4afc-a9d1-54b6b2270e03"
-                                }],
                                 encounterDatetime: date2
                               };
-                              console.log(json);
+                            //  console.log(json);
                     \$http.post(url1, JSON.stringify(json)).then(function(response){
-                        console.log("Posted");
+                        //console.log("Posted");
                     }, function(response){
-                      console.log("Failed");
+                      //console.log("Failed");
                     });
               });
 						}
