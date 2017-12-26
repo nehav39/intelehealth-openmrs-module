@@ -154,7 +154,6 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
                     \$scope.uuid = x;
                     \$scope.uuid3;
                     var url2 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/provider?user=" + \$scope.uuid;
-                    console.log(url2);
                     \$http.get(url2).then(function(response){
                       angular.forEach(response.data.results, function(v, k){
   											var uuid = v.uuid;
@@ -169,29 +168,14 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
                                     visit: visitId,
                                     encounterDatetime: date2
                                   };
-                                console.log(json);
                         \$http.post(url1, JSON.stringify(json)).then(function(response){
-                            console.log("Posted Encounter");
+                            	\$scope.statuscode = "Success";
                         }, function(response){
-                          console.log("Failed");
+                          \$scope.statuscode = "Failed to create Encounter";
                         });
   										});
                     },function(response){
                       console.log("Get user uuid Failed!");
-                    });
-                    //console.log(\$scope.uuid);
-                    var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
-                    var json = {
-                                patient: patient,
-                                encounterType: window.constantConfigObj.encounterTypeVisitNote,
-                                visit: visitId,
-                                encounterDatetime: date2
-                              };
-                            //  console.log(json);
-                    \$http.post(url1, JSON.stringify(json)).then(function(response){
-                        //console.log("Posted");
-                    }, function(response){
-                      //console.log("Failed");
                     });
               });
 						}
