@@ -24,7 +24,7 @@ intelehealthAdditionalComments.controller('intelehealthAdditionalCommentsControl
 								else {
 									$scope.visitStatus = false;
 								}
-							$scope.visitEncounters = data.data.encounters; 
+							$scope.visitEncounters = data.data.encounters;
 							if($scope.visitEncounters.length !== 0) {
 							$scope.visitNotePresent = true;
 								angular.forEach($scope.visitEncounters, function(value, key){
@@ -42,7 +42,7 @@ intelehealthAdditionalComments.controller('intelehealthAdditionalCommentsControl
 										}, function(response) {
 											$scope.error = "Get Encounter Obs Went Wrong";
 									    	$scope.statuscode = response.status;
-									    });				
+									    });
 									}
 								});
 							}
@@ -94,7 +94,7 @@ intelehealthAdditionalComments.controller('intelehealthAdditionalCommentsControl
 	         				person: $scope.patient,
 	         				obsDatetime: date2,
 	         				value: $scope.addMe,
-	         				encounter: $scope.encounterUuid
+	         				encounter: x
 	        			}
 	    				$http.post(url2, JSON.stringify($scope.json)).then(function(response){
 	        				if(response.data) {
@@ -124,7 +124,7 @@ intelehealthAdditionalComments.controller('intelehealthAdditionalCommentsControl
 							$scope.statuscode = "Failed to delete Obs";
 						});
 					}
-		  		};  
+		  		};
 	        });
 	  }, 2000);
 
