@@ -8,10 +8,9 @@
 	<table>
 		<tr ng-repeat="item in visitEncounters | orderBy:'-encounterDatetime' | filter : 'ADULTINITIAL'">
 			<td width="100px" style="border: none">{{item.display | dateFormat | date: 'dd.MMM.yyyy'}}</td>
-	                <td style="border:none" ng-repeat="ob in item.obs | filter : 'CURRENT COMPLAINT' | orderBy:'-display'" ng-bind-html = "ob.display | limitTo : ob.display.length : '19'">
-
+	                <td style="border:none" ng-repeat="ob in item.obs | filter : 'CURRENT COMPLAINT' | orderBy:'-display'">
+                	    {{ob.display | limitTo : ob.display.length : '19' }}
                 	</td>
-
 		</tr>
 	</table>
 	</div>
@@ -24,7 +23,7 @@
 </div>
 
 <script>
-var app = angular.module('complaintSummary', ['recentVisit', 'ngSanitize']);
+var app = angular.module('complaintSummary', ['recentVisit']);
 
 app.filter('dateFormat', function() {
  return function(text) {
@@ -48,26 +47,25 @@ return function(text) {
     };
 });
 
-app.controller('ComplaintSummaryController',  function(\$scope, \$http, recentVisitFactory, \$sce) {
-\$scope.text = "Hey <h1> This is HTML</h1>";
+app.controller('ComplaintSummaryController', function(\$scope, \$http, recentVisitFactory) {
 var path = window.location.search;
 var i = path.indexOf("visitId=");
 var visitId = path.substr(i + 8, path.length);
 \$scope.visitEncounters = [];
-\$scope.visitObs = [];
+\$scope.visitObs = []; 
 \$scope.vitalsData = [];
 \$scope.vitalsPresent = true;
 recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 						\$scope.visitDetails = data.data;
-						\$scope.visitEncounters = data.data.encounters;
+						\$scope.visitEncounters = data.data.encounters; 
 						if(\$scope.visitEncounters.length !== 0) {
 						\$scope.vitalsPresent = true;
 					}
 					}, function(error) {
 						console.log(error);
 					});
-
-
+					
+					
     var patient = "${ patient.uuid }";
     \$scope.objects = [];
     var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
@@ -91,7 +89,6 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 			\$http.get(item)
 			      .then(function(response) {
 		  		   \$scope.objects.push(response.data);
-						 //\$scope.trustedHtml = \$sce.trustAsHtml(item);
 			      }, function(response) {
 	       			   \$scope.error = "Get Encounter Observations Went Wrong";
 	       		           \$scope.statuscode = response.status;
@@ -104,4 +101,4 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 });
 </script>
 <script>
-</script>
+</script>  

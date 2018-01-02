@@ -8,7 +8,8 @@
 	<table>
 		<tr ng-repeat="item in visitEncounters | orderBy:'-encounterDatetime' | filter : 'ADULTINITIAL'">
 			<td width="100px" style="border: none">{{item.display | dateFormat | date: 'dd.MMM.yyyy'}}</td>
-	                <td style="border:none" ng-repeat="ob in item.obs | filter : 'FAMILY HISTORY'" ng-bind-html = "ob.display | limitTo : ob.display.length : '16'">
+	                <td style="border:none" ng-repeat="ob in item.obs | filter : 'FAMILY HISTORY'">
+                	    {{ ob.display | limitTo : ob.display.length : '16' }}
                 	</td>
 		</tr>
 	</table>
@@ -47,12 +48,12 @@ var path = window.location.search;
 var i = path.indexOf("visitId=");
 var visitId = path.substr(i + 8, path.length);
 \$scope.visitEncounters = [];
-\$scope.visitObs = [];
+\$scope.visitObs = []; 
 \$scope.vitalsData = [];
 \$scope.vitalsPresent = true;
 recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 						\$scope.visitDetails = data.data;
-						\$scope.visitEncounters = data.data.encounters;
+						\$scope.visitEncounters = data.data.encounters; 
 						if(\$scope.visitEncounters.length !== 0) {
 						\$scope.vitalsPresent = true;
 					}
@@ -81,7 +82,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 	        	    url2 += value;
                 	\$scope.url2.push(url2);
 		});
-
+                
 		\$scope.obs = \$scope.url2.length;
 		angular.forEach(\$scope.url2, function(item){
 			\$http.get(item)
@@ -99,4 +100,4 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 });
 </script>
 <script>
-</script>
+</script>  
