@@ -45,7 +45,7 @@ div.error{background-color: #d9edf7;
     {{ } }}
 </script>
 
-<div id="encounter-diagnoses-app">
+<div id="diagnosis">
 <div class="info-header">
         <i class="icon-diagnosis"></i>
         <h3>${ ui.message("coreapps.clinicianfacing.diagnoses").toUpperCase() }</h3>
@@ -230,7 +230,6 @@ var app = angular.module('diagnoses', []);
 				var confirmed = [];
 
                                 scope.diagnosesToPost = {name:topost.diagnosis.matchedName,confirmed:topost.confirmed,primary:topost.primary};
-                                console.log(scope.diagnosesToPost);
 				promise.then(function(x){
 					var date2 = new Date();
                 			scope.respuuid = [];
@@ -300,7 +299,6 @@ var app = angular.module('diagnoses', []);
         									\$http.get(encounterUrl).then(function(response) {
         										angular.forEach(response.data.obs, function(v, k){
         											var encounter = v.display;
-                              console.log(encounter);
         											if(encounter.match("TELEMEDICINE DIAGNOSIS") !== null) {
         											\$scope.alerts.push({"msg":v.display.slice(23,v.display.length), "uuid": v.uuid});
 
@@ -362,16 +360,16 @@ var app = angular.module('diagnoses', []);
 
     // add any existing diagnoses
     setTimeout(function(){
-    angular.element('#encounter-diagnoses-app').scope().\$apply(function() {
-        var encounterDiagnoses = angular.element('#encounter-diagnoses-app > .ng-scope').scope().encounterDiagnoses;
+    angular.element('#diagnosis').scope().\$apply(function() {
+        var encounterDiagnoses = angular.element('#diagnosis > .ng-scope').scope().encounterDiagnoses;
         <% jsForExisting.each { %>
             encounterDiagnoses.addDiagnosis(diagnoses.Diagnosis(${ it }));
         <% } %>
     });
 
     // add any prior diagnoses
-    angular.element('#encounter-diagnoses-app').scope().\$apply(function() {
-        var priorDiagnoses = angular.element('#encounter-diagnoses-app > .ng-scope').scope().priorDiagnoses;
+    angular.element('#diagnosis').scope().\$apply(function() {
+        var priorDiagnoses = angular.element('#diagnosis > .ng-scope').scope().priorDiagnoses;
         <% jsForPrior.each { %>
             priorDiagnoses.addDiagnosis(diagnoses.Diagnosis(${ it }));
         <% } %>

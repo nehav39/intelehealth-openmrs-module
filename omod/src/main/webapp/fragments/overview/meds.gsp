@@ -256,7 +256,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 											var encounter = v.display;
 											if(encounter.match("MEDICATIONS") !== null) {
 											\$scope.alerts.push({"msg":v.display.slice(16,v.display.length), "uuid":v.uuid});
-                    
+
 											}
 										});
 									}, function(response) {
@@ -363,7 +363,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
                                 	person: patient,
                                 	obsDatetime: date2,
                                 	value: alertText,
-                                	encounter: \$scope.encounterUuid
+                                	encounter: x
                         	}
 
 				\$scope.dose = "";

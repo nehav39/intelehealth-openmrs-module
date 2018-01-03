@@ -1,4 +1,4 @@
-<div id="complaint" class="long-info-section" ng-controller="ComplaintSummaryController">
+<div id="complaints" class="long-info-section" ng-controller="ComplaintSummaryController">
 	<br/>
 	<div class="info-header">
 		<i class="icon-comment"></i>

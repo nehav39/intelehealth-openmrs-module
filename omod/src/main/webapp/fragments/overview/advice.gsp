@@ -140,7 +140,7 @@ app.controller('AdviceSummaryController', function(\$scope, \$http, \$timeout, A
 var _selected;
 var patient = "${ patient.uuid }";
 var date2 = new Date();
-  
+
 var path = window.location.search;
 var i = path.indexOf("visitId=");
 var visitId = path.substr(i + 8, path.length);
@@ -158,7 +158,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 							else {
 								\$scope.visitStatus = false;
 							}
-						\$scope.visitEncounters = data.data.encounters; 
+						\$scope.visitEncounters = data.data.encounters;
 						if(\$scope.visitEncounters.length !== 0) {
 						\$scope.visitNotePresent = true;
 							angular.forEach(\$scope.visitEncounters, function(value, key){
@@ -176,7 +176,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 									}, function(response) {
 										\$scope.error = "Get Encounter Obs Went Wrong";
 								    	\$scope.statuscode = response.status;
-								    });				
+								    });
 								}
 							});
 						}
@@ -212,7 +212,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
   	});
 
   	promise.then(function(x){
-        	
+
   		\$scope.addAlert = function() {
         		\$scope.errortext = "";
         		if (!\$scope.addMe) {
@@ -227,9 +227,9 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
                                 	person: patient,
                                 	obsDatetime: date2,
                                 	value: \$scope.addMe,
-                                	encounter: \$scope.encounterUuid
+                                	encounter: x
                         	}
-                        	
+
                         	\$http.post(url2, JSON.stringify(\$scope.json)).then(function(response){
                         		if(response.data){
                                 		\$scope.statuscode = "Success";
@@ -249,7 +249,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 
   		\$scope.closeAlert = function(index) {
 	  		if (\$scope.visitStatus) {
-	        		
+
 				\$scope.deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.alerts[index].uuid + "?purge=true";
 	                	\$http.delete(\$scope.deleteurl).then(function(response){
 			                \$scope.alerts.splice(index, 1);
@@ -268,4 +268,4 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 </script>
 
 <script>
-</script>  
+</script>
