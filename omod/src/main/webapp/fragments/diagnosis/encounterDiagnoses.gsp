@@ -164,24 +164,7 @@ var app = angular.module('diagnoses', []);
         }
       };
     });
-    app.factory('DiagnosisFactory2', function(\$http){
-      var patient = "${ patient.uuid }";
-      var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
-      var date2 = new Date();
-      var json = {
-          patient: patient,
-          encounterType: window.constantConfigObj.encounterTypeVisitNote,
-          encounterDatetime: date2
-      };
-      return {
-        async: function(){
-          return \$http.post(url1, JSON.stringify(json)).then(function(response){
-            return response.data.uuid;
-          });
-        }
-      };
-    });
-    app.directive('autocomplete', function(\$compile, \$timeout, \$http, DiagnosisFactory1, DiagnosisFactory2) {
+    app.directive('autocomplete', function(\$compile, \$timeout, \$http, DiagnosisFactory1) {
         return function(scope, element, attrs) {
             // I don't know how to use an angular template programmatically, so use an underscore template instead. :-(
             var itemFormatter = _.template(\$('#' + attrs.itemformatter).html());
@@ -213,6 +196,7 @@ var app = angular.module('diagnoses', []);
                     scope.\$apply(function() {
                         scope.encounterDiagnoses.addDiagnosis(diagnoses.Diagnosis(ui.item));
                         var topost = diagnoses.Diagnosis(ui.item);
+                        console.log(ui.item);
                         \$timeout(function () {
                                 var promise = DiagnosisFactory1.async().then(function(d){
                                         var length = d.length;
@@ -220,17 +204,13 @@ var app = angular.module('diagnoses', []);
                                                 angular.forEach(d, function(value, key){
                                                         scope.data = value.uuid;
                                                 });
-                                        } else {
-                                                scope.data2 = "Created an Encounter";
-                                                DiagnosisFactory2.async().then(function(d2){
-                                                        scope.data = d2;
-                                                })
-                                        };
+                                        }
                                         return scope.data;
                                 });
 				scope.test1 = topost;
                                 scope.patient = "${ patient.uuid }";
 				var order = [];
+        console.log(order);
 				var confirmed = [];
 
                                 scope.diagnosesToPost = {name:topost.diagnosis.matchedName,confirmed:topost.confirmed,primary:topost.primary};
@@ -265,8 +245,8 @@ var app = angular.module('diagnoses', []);
             };
         }
     });
-    app.controller('DiagnosesController', [ '\$scope', '\$http' , '\$timeout', 'DiagnosisFactory1', 'DiagnosisFactory2', 'recentVisitFactory',
-        function DiagnosesController(\$scope, \$http, \$timeout, DiagnosisFactory1, DiagnosisFactory2, recentVisitFactory) {
+    app.controller('DiagnosesController', [ '\$scope', '\$http' , '\$timeout', 'DiagnosisFactory1', 'recentVisitFactory',
+        function DiagnosesController(\$scope, \$http, \$timeout, DiagnosisFactory1, recentVisitFactory) {
 
           \$scope.alerts = [];
           \$scope.respuuid = [];
