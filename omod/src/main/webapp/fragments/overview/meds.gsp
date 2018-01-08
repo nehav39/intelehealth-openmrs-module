@@ -170,6 +170,24 @@ app.factory('CurrentEncountersFactory1', function(\$http, \$filter){
   };
 });
 
+app.factory('NewEncounterFactory2', function(\$http){
+  var patient = "${ patient.uuid }";
+  var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
+  var date2 = new Date();
+  var json = {
+      patient: patient,
+      encounterType: window.constantConfigObj.encounterTypeVisitNote,
+      encounterDatetime: date2
+  };
+  return {
+    async: function(){
+      return \$http.post(url1, JSON.stringify(json)).then(function(response){
+        return response.data.uuid;
+      });
+    }
+  };
+});
+
 app.factory('MedsListFactory3', function(\$http){
   return {
     async: function(uuid){
@@ -200,7 +218,7 @@ app.factory('MedsListFactory4', function(\$http){
   };
 });
 
-app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, CurrentEncountersFactory1, MedsListFactory3, MedsListFactory4, recentVisitFactory) {
+app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, CurrentEncountersFactory1, NewEncounterFactory2, MedsListFactory3, MedsListFactory4, recentVisitFactory) {
 \$scope.alerts = [];
 \$scope.respuuid = [];
 var _selected;
@@ -301,7 +319,12 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 			angular.forEach(d, function(value, key){
 				\$scope.data = value.uuid;
 			});
-		}
+		} else {
+			\$scope.data2 = "Created an Encounter";
+			NewEncounterFactory2.async().then(function(d2){
+				\$scope.data = d2;
+			})
+		};
 		return \$scope.data;
   	});
 

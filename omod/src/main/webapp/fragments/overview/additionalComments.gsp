@@ -107,6 +107,29 @@ app.factory('additionalCommentsFactory1', function(\$http, \$filter){
   };
 });
 
+app.factory('additionalCommentsFactory2', function(\$http){
+  var patient = "${ patient.uuid }";
+  var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
+  var date2 = new Date();
+  var path = window.location.search;
+  var i = path.indexOf("visitId=");
+  var visitId = path.substr(i + 8, path.length);
+  var json = {
+      patient: patient,
+      encounterType: window.constantConfigObj.encounterTypeVisitNote,
+      encounterDatetime: date2,
+      visit: visitId,
+      obs: []
+  };
+  return {
+    async: function(){
+      return \$http.post(url1, JSON.stringify(json)).then(function(response){
+        return response.data.uuid;
+      });
+    }
+  };
+});
+
 app.factory('additionalCommentsFactory3', function(\$http){
   var testurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/concept/" + window.constantConfigObj.conceptAdditionalComments;
   return {
@@ -122,7 +145,7 @@ app.factory('additionalCommentsFactory3', function(\$http){
   };
 });
 
-app.controller('intelehealthAdditionalCommentsController', function(\$scope, \$http, \$timeout, additionalCommentsFactory1, additionalCommentsFactory3, recentVisitFactory) {
+app.controller('intelehealthAdditionalCommentsController', function(\$scope, \$http, \$timeout, additionalCommentsFactory1, additionalCommentsFactory2, additionalCommentsFactory3, recentVisitFactory) {
   \$scope.alerts = [];
   \$scope.respuuid = [];
   var _selected;
@@ -195,7 +218,12 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
                         angular.forEach(d, function(value, key){
                                 \$scope.data = value.uuid;
                         });
-                }
+                } else {
+                        \$scope.data2 = "Created an Encounter";
+                        additionalCommentsFactory2.async().then(function(d2){
+                                \$scope.data = d2;
+                        })
+                };
                 return \$scope.data;
         });
 
