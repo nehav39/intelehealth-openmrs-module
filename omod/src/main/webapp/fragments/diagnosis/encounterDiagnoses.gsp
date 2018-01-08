@@ -121,6 +121,10 @@ div.error{background-color: #d9edf7;
 
         </div>
 
+        <div>
+          <input type="text" ng-model = "fetchEncouter">
+        </div>
+
 <br ng-show ="recentVisit">
   <div ng-show ="recentVisit" style= "font-size: 17px;">
   Previous Diagnoses:
