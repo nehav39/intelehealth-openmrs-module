@@ -98,6 +98,7 @@ app.factory('additionalCommentsFactory1', function(\$http, \$filter){
   var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
       url += "?patient=" + patient;
       url += "&encounterType=" + window.constantConfigObj.encounterTypeVisitNote;
+      url += "&fromdate=" + date;
   return {
     async: function(){
       return \$http.get(url).then(function(response){
