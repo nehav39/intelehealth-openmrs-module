@@ -65,6 +65,7 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient]) }
 <div class="clear"></div>
     <div class="dashboard clear" ng-app="patientSummary" ng-controller="PatientSummaryController">
         <div class="long-info-container column">
+                ${ui.includeFragment("intelehealth", "overview/patientInfo", [patient: patient])}
                 ${ui.includeFragment("intelehealth", "overview/vitals", [patient: patient])}
                 ${ui.includeFragment("intelehealth", "overview/famhist", [patient: patient])}
                 ${ui.includeFragment("intelehealth", "overview/history", [patient: patient])}
@@ -88,7 +89,7 @@ var i = path.indexOf("visitId=");
 var visitId = path.substr(i + 8, path.length);
 var isVisitNotePresent = false;
 
-var app = angular.module('patientSummary', ['ngAnimate', 'ngSanitize', 'recentVisit', 'vitalsSummary', 'famhistSummary', 'historySummary', 'complaintSummary', 'examSummary', 'diagnoses', 'medsSummary', 'orderedTestsSummary', 'adviceSummary', 'intelehealthPatientProfileImage', 'intelehealthPhysicalExamination', 'intelehealthAdditionalDocs', 'ui.bootstrap', 'ui.carousel', 'additionalComments']);
+var app = angular.module('patientSummary', ['ngAnimate', 'ngSanitize', 'recentVisit','patientInfo', 'vitalsSummary', 'famhistSummary', 'historySummary', 'complaintSummary', 'examSummary', 'diagnoses', 'medsSummary', 'orderedTestsSummary', 'adviceSummary', 'intelehealthPatientProfileImage', 'intelehealthPhysicalExamination', 'intelehealthAdditionalDocs', 'ui.bootstrap', 'ui.carousel', 'additionalComments']);
 
 app.factory('PatientSummaryFactory1', function(\$http, \$filter){
   var patient = "${ patient.uuid }";
