@@ -4,7 +4,7 @@
 		<h3>Patient Information</h3>
 	</div>
 	<div class="info-body">
-	<table>
+	<table ng-cloak>
 									<td style="border:none">
 											Prison Name: {{var2}}
 									</td>
@@ -32,23 +32,23 @@ var app = angular.module('patientInfo', ['ngAnimate', 'ngSanitize']);
 app.controller('patientInfoController', function(\$scope, \$http) {
 	  var patient = "${ patient.uuid }";
 	  var testurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/person/" + patient;
-		console.log(patient);
 	 \$http.get(testurl).then(function(response){
+		 console.log(response.data);
 			angular.forEach(response.data.attributes, function(v, k){
 				var encounter = v.display;
-				if(encounter.match("cell_no") !== null) {
-				\$scope.var1 = v.display.slice(9,v.display.length);
+				if(encounter.match("Cell Number") !== null) {
+				\$scope.var1 = v.display.slice(13,v.display.length);
 				}
-				else if(encounter.match("prison_name") !== null) {
+				else if(encounter.match("Prison Name") !== null) {
 				\$scope.var2 = v.display.slice(13,v.display.length);
 				}
-				else if(encounter.match("patient_status") !== null) {
+				else if(encounter.match("Patient Status") !== null) {
 				\$scope.var3 = v.display.slice(16,v.display.length);
 				}
-				else if(encounter.match("department") !== null) {
+				else if(encounter.match("Department") !== null) {
 				\$scope.var4 = v.display.slice(12,v.display.length);
 				}
-				else if(encounter.match("commune") !== null) {
+				else if(encounter.match("Commune") !== null) {
 				\$scope.var5 = v.display.slice(9,v.display.length);
 				}
 			});

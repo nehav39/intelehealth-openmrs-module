@@ -135,6 +135,7 @@ var visitId = path.substr(i + 8, path.length);
 \$scope.visitStatus = false;
 \$scope.encounterUuid = "";
 recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
+    console.log(data);
 						\$scope.visitDetails = data.data;
 							if (\$scope.visitDetails.stopDatetime == null || \$scope.visitDetails.stopDatetime == undefined) {
 								\$scope.visitStatus = true;

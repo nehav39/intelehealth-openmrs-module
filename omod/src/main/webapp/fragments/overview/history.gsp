@@ -4,7 +4,7 @@
 		<i class="icon-book"></i>
 		<h3>Past Medical History</h3>
 	</div>
-	<div class="info-body">
+	<div class="info-body" ng-cloak>
 	<table>
 		<tr ng-repeat="item in visitEncounters | orderBy:'-encounterDatetime' | filter : 'ADULTINITIAL'">
 			<td width="100px" style="border: none">{{item.display | dateFormat | date: 'dd.MMM.yyyy'}}</td>

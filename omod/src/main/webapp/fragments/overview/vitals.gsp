@@ -3,7 +3,7 @@
 		<i class="icon-vitals"></i>
 		<h3>Vitals</h3>
 	</div>
-	<div class="info-body">
+	<div class="info-body" ng-cloak>
         <table>
                 <tr ng-if="!vitalsPresent"><td>No Data</td></tr>
                 <tr ng-if="vitalsPresent" ng-repeat="item in vitalsData | orderBy:'-date'">
@@ -64,12 +64,12 @@ var path = window.location.search;
 var i = path.indexOf("visitId=");
 var visitId = path.substr(i + 8, path.length);
 \$scope.visitEncounters = [];
-\$scope.visitObs = []; 
+\$scope.visitObs = [];
 \$scope.vitalsData = [];
 \$scope.vitalsPresent = true;
 recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 						\$scope.visitDetails = data.data;
-						\$scope.visitEncounters = data.data.encounters; 
+						\$scope.visitEncounters = data.data.encounters;
 						if(\$scope.visitEncounters.length !== 0) {
 						\$scope.vitalsPresent = true;
 						angular.forEach(\$scope.visitEncounters, function(value, key){
@@ -98,7 +98,7 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 				                                        }
 				                                        if(value.display.includes('DIASTOLIC')){
 				                                                answers.diastolicBP = Number(value.display.slice(26,value.display.length));
-				                                        }	
+				                                        }
 				                                        if(value.display.includes('Pulse')){
 				                                                answers.pulse = Number(value.display.slice(7,value.display.length));
 				                                        }
@@ -107,18 +107,18 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 										}, function(response) {
 											\$scope.error = "Get Encounter Obs Went Wrong";
 							        		\$scope.statuscode = response.status;
-							    	});				
+							    	});
 								}
 							});
 					}
 					else {
 					\$scope.vitalsPresent = false;
 					}
-					
+
 					}, function(error) {
 						console.log(error);
 					});
-    	
+
     var patient = "${ patient.uuid }";
     var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
         url += "?patient=" + patient;
@@ -162,7 +162,7 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
                                         }
                                         if(value.display.includes('Diastolic')){
                                                 answers.diastolicBP = Number(value.display.slice(26,value.display.length));
-                                        }	
+                                        }
                                         if(value.display.includes('Pulse')){
                                                 answers.pulse = Number(value.display.slice(7,value.display.length));
                                         }
@@ -181,4 +181,4 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 </script>
 <script>
 
-</script>  
+</script>
