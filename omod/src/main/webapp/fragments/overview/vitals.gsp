@@ -18,9 +18,12 @@
                         <td style="border:none">
                             Weight: {{item.weight}} kg
                         </td>
-                        <td style="border:none">
-                            BMI: {{item.weight/((item.height/100)*(item.height/100)) | round}}
+                        <td style="border:none"  ng-if="item.weight.includes('-') || item.height.includes('-')">
+                            BMI: N.A.
                         </td>
+												<td style="border:none" ng-if="!item.weight.includes('-') || !item.height.includes('-')">
+														BMI: {{item.weight/((item.height/100)*(item.height/100)) | round}}
+												</td>
                         <td style="border:none">
                             Sp02: {{item.o2sat}}%
                         </td>
@@ -118,65 +121,6 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 					}, function(error) {
 						console.log(error);
 					});
-
-    var patient = "${ patient.uuid }";
-    var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
-        url += "?patient=" + patient;
-        url += "&encounterType=" + window.constantConfigObj.encounterTypeVitals;
-    \$http.get(url)
-    	  .then(function(response) {
-        	\$scope.vitalEncounters = response.data.results;
-		\$scope.vitalEncountersUrl = [];
-		\$scope.url2 = [];
-		angular.forEach(\$scope.vitalEncounters, function(value, key){
-			\$scope.vitalEncountersUrl.push(value.uuid);
-		});
-		angular.forEach(\$scope.vitalEncountersUrl, function(value, key){
-        		var url2 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/";
-	        	    url2 += value;
-                	\$scope.url2.push(url2);
-		});
-                var objects = [];
-		\$scope.vitals = [];
-		\$scope.obs = \$scope.url2.length;
-		angular.forEach(\$scope.url2, function(item){
-			\$http.get(item)
-			      .then(function(response) {
-		  		   objects.push(response.data);
-				   var answers = {date:response.data.display, temperature:'-', height:'-', weight:'-', o2sat:'-', systolicBP:'-', diastolicBP: '-', pulse: '-'};
-				   angular.forEach(response.data.obs, function(value, key){
-					if(value.display.includes('Temp')){
-						answers.temperature = Number(value.display.slice(17,value.display.length));
-					}
-                                        if(value.display.includes('Height')){
-                                                answers.height = Number(value.display.slice(13,value.display.length));
-                                        }
-                                        if(value.display.includes('Weight')){
-                                                answers.weight = Number(value.display.slice(13,value.display.length));
-                                        }
-                                        if(value.display.includes('Blood oxygen')){
-                                                answers.o2sat = Number(value.display.slice(25,value.display.length));
-                                        }
-                                        if(value.display.includes('Systolic')){
-                                                answers.systolicBP = Number(value.display.slice(25,value.display.length));
-                                        }
-                                        if(value.display.includes('Diastolic')){
-                                                answers.diastolicBP = Number(value.display.slice(26,value.display.length));
-                                        }
-                                        if(value.display.includes('Pulse')){
-                                                answers.pulse = Number(value.display.slice(7,value.display.length));
-                                        }
-				   })
-			      \$scope.vitals.push(answers);
-			      }, function(response) {
-	       			   \$scope.error = "Get Encounter Observations Went Wrong";
-	       		           \$scope.statuscode = response.status;
-			      });
-		});
-          }, function(response) {
-		\$scope.error = "Get Visit Encounters Went Wrong";
-        	\$scope.statuscode = response.status;
-    	});
 });
 </script>
 <script>

@@ -33,7 +33,6 @@ app.controller('patientInfoController', function(\$scope, \$http) {
 	  var patient = "${ patient.uuid }";
 	  var testurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/person/" + patient;
 	 \$http.get(testurl).then(function(response){
-		 console.log(response.data);
 			angular.forEach(response.data.attributes, function(v, k){
 				var encounter = v.display;
 				if(encounter.match("Cell Number") !== null) {

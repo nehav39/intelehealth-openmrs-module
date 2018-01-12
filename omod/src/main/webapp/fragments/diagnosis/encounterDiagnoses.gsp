@@ -19,6 +19,67 @@ div.error{background-color: #d9edf7;
   margin-top: 0;  color: inherit
 }
 
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid transparent;
+    border-radius: 4px
+}
+.alert h4 {
+    margin-top: 0;
+    color: inherit
+}
+.alert .alert-link {
+    font-weight: 700
+}
+.alert-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1
+}
+.alert-info hr {
+    border-top-color: #a6e1ec
+}
+.alert-info .alert-link {
+    color: #245269
+}
+.close {
+    float: right;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+    opacity: .2
+}
+.close:focus,
+.close:hover {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    filter: alpha(opacity=50);
+    opacity: .5
+}
+button.close {
+    -webkit-appearance: none;
+    padding: 0;
+    cursor: pointer;
+    background: 0 0;
+    border: 0
+}
+
 </style>
 
 </style>
@@ -44,14 +105,7 @@ div.error{background-color: #d9edf7;
     </span>
     {{ } }}
 </script>
-
-<div id="diagnosis">
-<div class="info-header">
-        <i class="icon-diagnosis"></i>
-        <h3>${ ui.message("coreapps.clinicianfacing.diagnoses").toUpperCase() }</h3>
-    </div>
-
-    <div class="info-body" ng-show="visitStatus">
+<div class="info-body" ng-show="visitStatus">
     <script type="text/ng-template" id="selected-diagnosis" ng-show="visitStatus">
         <div class="diagnosis" data-ng-class="{primary: d.primary}">
             <span class="code">
@@ -83,64 +137,29 @@ div.error{background-color: #d9edf7;
         <i data-ng-click="removeDiagnosis(d)" tabindex="-1" class="icon-remove delete-item"></i>
     </script>
 </div>
-    <div data-ng-controller="DiagnosesController" >
-
-        <div id="diagnosis-search-container" ng-show="visitStatus">
-            <label  for="diagnosis-search">${ ui.message("coreapps.consult.addDiagnosis") }</label>
-            <input  id="diagnosis-search" type="text" placeholder="${ ui.message("coreapps.consult.addDiagnosis.placeholder") }" autocomplete itemFormatter="autocomplete-render-item"/>
-
-            <% if(jsForPrior.size > 0) { %>
-                <button type="button" ng-show="visitStatus" ng-click="addPriorDiagnoses()">${ ui.message("coreapps.consult.priorDiagnoses.add") }</button>
-            <% } %>
-        </div>
-
-        <div id="display-encounter-diagnoses-container" ng-show="visitStatus">
-            <h3>${ui.message("coreapps.consult.primaryDiagnosis")}</h3>
-
-            <div data-ng-show="encounterDiagnoses.primaryDiagnoses().length == 0">
-                ${ui.message("coreapps.consult.primaryDiagnosis.notChosen")}
+<div id="diagnosis" class="long-info-section" ng-controller="DiagnosesController">
+        	<div class="info-header">
+        		<i class="icon-diagnosis"></i>
+        		<h3>Diagnoses</h3>
+        	</div>
+        	<div class="info-body">
+        	    <form ng-show="visitStatus" id="new-order" class="sized-inputs css-form" name="newOrderForm" novalidate>
+        		<br/>
+        		<input type="text" ng-model="addMe1" autocomplete itemFormatter="autocomplete-render-item"  class="form-control">
+        		<button type="button" class='btn btn-default' ng-click="addAlert()">Add Diagnosis</button>
+        		<p>{{errortext}}</p>
+        		<br/>
+          <div ng-show = "addMe1">
+            <input type='text' ng-model= "abc" placeholder="Primary/Secondary">
+            <input type='text' ng-model= "def" placeholder="Confirmed/Certainty">
+          </div>
+          </br>
+        		<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
+        	</div>
+            <div>
+                <a href="#" class="right back-to-top">Back to top</a>
             </div>
-            <ul>
-                <li data-ng-repeat="d in encounterDiagnoses.primaryDiagnoses()" >
-                    <span data-ng-include="'selected-diagnosis'"></span>
-                </li>
-
-            </ul>
-            <br/>
-
-            <h3>${ui.message("coreapps.consult.secondaryDiagnoses")}</h3>
-
-            <div data-ng-show="encounterDiagnoses.secondaryDiagnoses().length == 0">
-                ${ui.message("coreapps.consult.secondaryDiagnoses.notChosen")}
-            </div>
-            <ul>
-                <li data-ng-repeat="d in encounterDiagnoses.secondaryDiagnoses()">
-                    <span data-ng-include="'selected-diagnosis'"></span>
-                </li>
-            </ul>
-
         </div>
-
-<br ng-show ="recentVisit">
-  <div ng-show ="recentVisit" style= "font-size: 17px;">
-  Previous Diagnoses:
-  </div>
-<hr ng-show ="recentVisit" class="style1">
-          <div class="errror" > {{test}}
-          <p>{{errortext}}</p>
-    			<br/>
-    			<br/>
-            <div class="error"
-            uib-alert ng-repeat="alert in alerts"  ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}
-
-        </div>
-        <div>
-            <a href="#" class="right back-to-top">Back to top</a>
-        </div>
-    </div>
-    <br/>
-
-
 
 <script>
 var app = angular.module('diagnoses', []);
@@ -189,49 +208,9 @@ var app = angular.module('diagnoses', []);
                 },
                 select: function( event, ui ) {
                     scope.\$apply(function() {
-                        scope.encounterDiagnoses.addDiagnosis(diagnoses.Diagnosis(ui.item));
-                        var topost = diagnoses.Diagnosis(ui.item);
-                        console.log(ui.item);
-                        \$timeout(function () {
-                                var promise = DiagnosisFactory1.async().then(function(d){
-                                        var length = d.length;
-                                        if(length > 0) {
-                                                angular.forEach(d, function(value, key){
-                                                        scope.data = value.uuid;
-                                                });
-                                        }
-                                        return scope.data;
-                                });
-				scope.test1 = topost;
-                                scope.patient = "${ patient.uuid }";
-				var order = [];
-        console.log(order);
-				var confirmed = [];
-
-                                scope.diagnosesToPost = {name:topost.diagnosis.matchedName,confirmed:topost.confirmed,primary:topost.primary};
-				promise.then(function(x){
-					var date2 = new Date();
-                			scope.respuuid = [];
-					var url2 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs";
-                                	scope.json = {
-                                        	concept: window.constantConfigObj.conceptDiagnosis,
-                                        	person: patient,
-                                        	obsDatetime: date2,
-                                        	value: topost.diagnosis.matchedName,
-                                        	encounter: x
-                                	}
-                                	\$http.post(url2, JSON.stringify(scope.json)).then(function(response){
-                                        	if(response.data)
-                                                	scope.statuscode = "Success";
-                                                	scope.respuuid.push(response.data.uuid);
-                                		}, function(response){
-                                        		scope.statuscode = "Failed to create Obs";
-                                	});
-				});
-                        }, 2000);
-                        element.val('');
-                    });
-                    return false;
+                        scope.encounterDiagnoses.addDiagnosis(scope.addMe1);
+                                    });
+                                    return false;
                 }
             })
             .data( "autocomplete" )._renderItem = function( ul, item ) {
@@ -332,29 +311,81 @@ var app = angular.module('diagnoses', []);
         	  		};
               }, 2000);
 
-        }
-    ]);
+      \$timeout(function () {
+      	var promise = DiagnosisFactory1.async().then(function(d){
+      		var length = d.length;
+    		if(length > 0) {
+    			angular.forEach(d, function(value, key){
+    				\$scope.data = value.uuid;
+    			});
+    		}
+    		return \$scope.data;
+      	});
 
-    // manually bootstrap, in case there are multiple angular apps on a page
+      	promise.then(function(x){
+      		\$scope.addAlert = function() {
+            		\$scope.errortext = "";
+    			var alertText = "";
+    			\$scope.myColor = "white";
+            		if (!\$scope.addMe1 | !\$scope.abc | !\$scope.def) {
+                    		\$scope.errortext = "Please enter text.";
+    				if (!\$scope.addMe1){
+    					\$scope.myColor = "#FA787E";
+    				}
+                    		return;
+            		} else {
+    				alertText = \$scope.addMe1 + ': ' + \$scope.abc + ' ' + \$scope.def;
+    			}
+            		if (\$scope.alerts.indexOf(\$scope.addMe1) == -1){
 
-    // add any existing diagnoses
-    setTimeout(function(){
-    angular.element('#diagnosis').scope().\$apply(function() {
-        var encounterDiagnoses = angular.element('#diagnosis > .ng-scope').scope().encounterDiagnoses;
-        <% jsForExisting.each { %>
-            encounterDiagnoses.addDiagnosis(diagnoses.Diagnosis(${ it }));
-        <% } %>
-    });
+                    		\$scope.alerts.push({msg: alertText})
+    				var url2 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs";
+                            	\$scope.json = {
+                            		concept: window.constantConfigObj.conceptDiagnosis,
+                                    	person: patient,
+                                    	obsDatetime: date2,
+                                    	value: alertText,
+                                    	encounter: x
+                            	}
 
-    // add any prior diagnoses
-    angular.element('#diagnosis').scope().\$apply(function() {
-        var priorDiagnoses = angular.element('#diagnosis > .ng-scope').scope().priorDiagnoses;
-        <% jsForPrior.each { %>
-            priorDiagnoses.addDiagnosis(diagnoses.Diagnosis(${ it }));
-        <% } %>
-    });
+    				\$scope.abc = "";
+    				\$scope.def = "";
+                            	\$http.post(url2, JSON.stringify(\$scope.json)).then(function(response){
+                            		if(response.data) {
+                                  console.log( x, "Success" );
+                                    		\$scope.statuscode = "Success";
+                                            	angular.forEach(\$scope.alerts, function(v, k){
+     											var encounter = v.msg;
+     											if(encounter.match(\$scope.addMe1) !== null) {
+     											v.uuid = response.data.uuid;
+     											}
+     										});
+     										\$scope.addMe1 = "";
+                                     }
+                            	}, function(response){
+                            		\$scope.statuscode = "Failed to create Obs";
+                                console.log( x, "failure" );
+                            	});
+            		}
+      		};
 
-    },1000);
+      		\$scope.closeAlert = function(index) {
+      			if (\$scope.visitStatus) {
+    				\$scope.myColor = "white";
+    				\$scope.deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.alerts[index].uuid + "?purge=true";
+                    \$http.delete(\$scope.deleteurl).then(function(response){
+                    \$scope.alerts.splice(index, 1);
+            		\$scope.errortext = "";
+                    	\$scope.statuscode = "Success";
+                    }, function(response){
+                    	\$scope.statuscode = "Failed to delete Obs";
+                    });
+    			}
+      		};
+      	});
+      }, 2000);
 
+    }
+  ]);
 
 </script>

@@ -352,6 +352,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 				\$scope.durationUnits = "";
                         	\$http.post(url2, JSON.stringify(\$scope.json)).then(function(response){
                         		if(response.data) {
+                              console.log( x, "Success" );
                                 		\$scope.statuscode = "Success";
                                         	angular.forEach(\$scope.alerts, function(v, k){
  											var encounter = v.msg;
@@ -363,6 +364,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
                                  }
                         	}, function(response){
                         		\$scope.statuscode = "Failed to create Obs";
+                            console.log( x, "failure" );
                         	});
         		}
   		};
