@@ -161,29 +161,10 @@ app.factory('CurrentEncountersFactory1', function(\$http, \$filter){
   var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
       url += "?patient=" + patient;
       url += "&encounterType=" + window.constantConfigObj.encounterTypeVisitNote;
-      url += "&fromdate=" + date;
   return {
     async: function(){
       return \$http.get(url).then(function(response){
         return response.data.results;
-      });
-    }
-  };
-});
-
-app.factory('NewEncounterFactory2', function(\$http){
-  var patient = "${ patient.uuid }";
-  var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
-  var date2 = new Date();
-  var json = {
-      patient: patient,
-      encounterType: window.constantConfigObj.encounterTypeVisitNote,
-      encounterDatetime: date2
-  };
-  return {
-    async: function(){
-      return \$http.post(url1, JSON.stringify(json)).then(function(response){
-        return response.data.uuid;
       });
     }
   };
@@ -219,7 +200,7 @@ app.factory('MedsListFactory4', function(\$http){
   };
 });
 
-app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, CurrentEncountersFactory1, NewEncounterFactory2, MedsListFactory3, MedsListFactory4, recentVisitFactory) {
+app.controller('MedsSummaryController', function(\$scope, \$http, \$timeout, CurrentEncountersFactory1, MedsListFactory3, MedsListFactory4, recentVisitFactory) {
 \$scope.alerts = [];
 \$scope.respuuid = [];
 var _selected;
@@ -243,7 +224,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 							else {
 								\$scope.visitStatus = false;
 							}
-						\$scope.visitEncounters = data.data.encounters; 
+						\$scope.visitEncounters = data.data.encounters;
 						if(\$scope.visitEncounters.length !== 0) {
 						\$scope.visitNotePresent = true;
 							angular.forEach(\$scope.visitEncounters, function(value, key){
@@ -256,12 +237,13 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 											var encounter = v.display;
 											if(encounter.match("MEDICATIONS") !== null) {
 											\$scope.alerts.push({"msg":v.display.slice(16,v.display.length), "uuid":v.uuid});
+
 											}
 										});
 									}, function(response) {
 										\$scope.error = "Get Encounter Obs Went Wrong";
 								    	\$scope.statuscode = response.status;
-								    });				
+								    });
 								}
 							});
 						}
@@ -299,10 +281,10 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
   var promiseRoutes = MedsListFactory4.async(window.constantConfigObj.conceptRoutesOfAdministration).then(function(d){
         return d;
   });
-        
+
   promiseRoutes.then(function(x){
         \$scope.routelist = x;
-  }) 
+  })
 
   var promiseDurations = MedsListFactory3.async(window.constantConfigObj.conceptDurationUnit).then(function(d){
         return d;
@@ -319,12 +301,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 			angular.forEach(d, function(value, key){
 				\$scope.data = value.uuid;
 			});
-		} else {
-			\$scope.data2 = "Created an Encounter";
-			NewEncounterFactory2.async().then(function(d2){
-				\$scope.data = d2;
-			})
-		};
+		}
 		return \$scope.data;
   	});
 
@@ -343,7 +320,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 				alertText = \$scope.addMe + ': ' + \$scope.dose.toString() + ' ' + \$scope.doseUnits.toLowerCase();
 				if (\$scope.route) {
 					alertText += ' (' + \$scope.route + ')';
-				} 
+				}
 				alertText += ', ' + \$scope.frequency.toLowerCase();
 				if (\$scope.asNeededCondition) {
                                         alertText += ' as needed for ' + \$scope.asNeededCondition;
@@ -354,7 +331,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
                                 }
 			}
         		if (\$scope.alerts.indexOf(\$scope.addMe) == -1){
-				
+
                 		\$scope.alerts.push({msg: alertText})
 				var url2 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs";
                         	\$scope.json = {
@@ -362,9 +339,9 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
                                 	person: patient,
                                 	obsDatetime: date2,
                                 	value: alertText,
-                                	encounter: \$scope.encounterUuid
+                                	encounter: x
                         	}
-                        	
+
 				\$scope.dose = "";
 				\$scope.doseUnits = "";
 				\$scope.route = "";
@@ -411,4 +388,4 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 </script>
 
 <script>
-</script>  
+</script>

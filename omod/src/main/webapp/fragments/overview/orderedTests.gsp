@@ -77,7 +77,7 @@ button.close {
 			<br/>
 			<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
 	</div>
-	
+
     <div>
         <a href="#" class="right back-to-top">Back to top</a>
     </div>
@@ -93,7 +93,6 @@ app.factory('OrderedTestsSummaryFactory1', function(\$http, \$filter){
   var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
       url += "?patient=" + patient;
       url += "&encounterType=" + window.constantConfigObj.encounterTypeVisitNote;
-      url += "&fromdate=" + date;
   return {
     async: function(){
       return \$http.get(url).then(function(response){
@@ -103,28 +102,6 @@ app.factory('OrderedTestsSummaryFactory1', function(\$http, \$filter){
   };
 });
 
-app.factory('OrderedTestsSummaryFactory2', function(\$http){
-  var patient = "${ patient.uuid }";
-  var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
-  var date2 = new Date();
-  var path = window.location.search;
-  var i = path.indexOf("visitId=");
-  var visitId = path.substr(i + 8, path.length);
-  var json = {
-      patient: patient,
-      encounterType: window.constantConfigObj.encounterTypeVisitNote,
-      encounterDatetime: date2,
-      visit: visitId,
-      obs: []
-  };
-  return {
-    async: function(){
-      return \$http.post(url1, JSON.stringify(json)).then(function(response){
-        return response.data.uuid;
-      });
-    }
-  };
-});
 
 app.factory('OrderedTestsSummaryFactory3', function(\$http){
   var testurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/concept/" + window.constantConfigObj.conceptTests;
@@ -141,7 +118,7 @@ app.factory('OrderedTestsSummaryFactory3', function(\$http){
   };
 });
 
-app.controller('OrderedTestsSummaryController', function(\$scope, \$http, \$timeout, OrderedTestsSummaryFactory1, OrderedTestsSummaryFactory2, OrderedTestsSummaryFactory3, recentVisitFactory) {
+app.controller('OrderedTestsSummaryController', function(\$scope, \$http, \$timeout, OrderedTestsSummaryFactory1, OrderedTestsSummaryFactory3, recentVisitFactory) {
   \$scope.alerts = [];
   \$scope.respuuid = [];
   var _selected;
@@ -165,7 +142,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 							else {
 								\$scope.visitStatus = false;
 							}
-						\$scope.visitEncounters = data.data.encounters; 
+						\$scope.visitEncounters = data.data.encounters;
 						if(\$scope.visitEncounters.length !== 0) {
 						\$scope.visitNotePresent = true;
 							angular.forEach(\$scope.visitEncounters, function(value, key){
@@ -173,17 +150,20 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 								if(isVital.match("Visit Note") !== null) {
 									\$scope.encounterUuid = value.uuid;
 									var encounterUrl =  "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter/" + \$scope.encounterUuid;
+
 									\$http.get(encounterUrl).then(function(response) {
 										angular.forEach(response.data.obs, function(v, k){
 											var encounter = v.display;
+
 											if(encounter.match("REQUESTED TESTS") !== null) {
 											\$scope.alerts.push({"msg":v.display.slice(17,v.display.length), "uuid": v.uuid});
+
 											}
 										});
 									}, function(response) {
 										\$scope.error = "Get Encounter Obs Went Wrong";
 								    	\$scope.statuscode = response.status;
-								    });				
+								    });
 								}
 							});
 						}
@@ -211,12 +191,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
                         angular.forEach(d, function(value, key){
                                 \$scope.data = value.uuid;
                         });
-                } else {
-                        \$scope.data2 = "Created an Encounter";
-                        OrderedTestsSummaryFactory2.async().then(function(d2){
-                                \$scope.data = d2;
-                        })
-                };
+                }
                 return \$scope.data;
         });
 
@@ -237,7 +212,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
          				person: patient,
          				obsDatetime: date2,
          				value: \$scope.addMe,
-         				encounter: \$scope.encounterUuid
+         				encounter: x
         			}
     				\$http.post(url2, JSON.stringify(\$scope.json)).then(function(response){
         				if(response.data) {
@@ -267,7 +242,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 						\$scope.statuscode = "Failed to delete Obs";
 					});
 				}
-	  		};  
+	  		};
         });
   }, 2000);
 
@@ -275,4 +250,4 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 </script>
 
 <script>
-</script>  
+</script>

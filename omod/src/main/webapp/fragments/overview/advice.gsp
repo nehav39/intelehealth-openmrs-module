@@ -91,29 +91,10 @@ app.factory('AdviceSummaryFactory1', function(\$http, \$filter){
   var url = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
       url += "?patient=" + patient;
       url += "&encounterType=" + window.constantConfigObj.encounterTypeVisitNote;
-      url += "&fromdate=" + date;
   return {
     async: function(){
       return \$http.get(url).then(function(response){
         return response.data.results;
-      });
-    }
-  };
-});
-
-app.factory('AdviceSummaryFactory2', function(\$http){
-  var patient = "${ patient.uuid }";
-  var url1 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/encounter";
-  var date2 = new Date();
-  var json = {
-      patient: patient,
-      encounterType: "window.constantConfigObj.encounterTypeVisitNote",
-      encounterDatetime: date2
-  };
-  return {
-    async: function(){
-      return \$http.post(url1, JSON.stringify(json)).then(function(response){
-        return response.data.uuid;
       });
     }
   };
@@ -134,13 +115,13 @@ app.factory('AdviceSummaryFactory3', function(\$http){
   };
 });
 
-app.controller('AdviceSummaryController', function(\$scope, \$http, \$timeout, AdviceSummaryFactory1, AdviceSummaryFactory2, AdviceSummaryFactory3, recentVisitFactory) {
+app.controller('AdviceSummaryController', function(\$scope, \$http, \$timeout, AdviceSummaryFactory1, AdviceSummaryFactory3, recentVisitFactory) {
 \$scope.alerts = [];
 \$scope.respuuid = [];
 var _selected;
 var patient = "${ patient.uuid }";
 var date2 = new Date();
-  
+
 var path = window.location.search;
 var i = path.indexOf("visitId=");
 var visitId = path.substr(i + 8, path.length);
@@ -158,7 +139,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 							else {
 								\$scope.visitStatus = false;
 							}
-						\$scope.visitEncounters = data.data.encounters; 
+						\$scope.visitEncounters = data.data.encounters;
 						if(\$scope.visitEncounters.length !== 0) {
 						\$scope.visitNotePresent = true;
 							angular.forEach(\$scope.visitEncounters, function(value, key){
@@ -176,7 +157,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 									}, function(response) {
 										\$scope.error = "Get Encounter Obs Went Wrong";
 								    	\$scope.statuscode = response.status;
-								    });				
+								    });
 								}
 							});
 						}
@@ -202,17 +183,12 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 			angular.forEach(d, function(value, key){
 				\$scope.data = value.uuid;
 			});
-		} else {
-			\$scope.data2 = "Created an Encounter";
-			AdviceSummaryFactory2.async().then(function(d2){
-				\$scope.data = d2;
-			})
-		};
+		}
 		return \$scope.data;
   	});
 
   	promise.then(function(x){
-        	
+
   		\$scope.addAlert = function() {
         		\$scope.errortext = "";
         		if (!\$scope.addMe) {
@@ -227,9 +203,9 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
                                 	person: patient,
                                 	obsDatetime: date2,
                                 	value: \$scope.addMe,
-                                	encounter: \$scope.encounterUuid
+                                	encounter: x
                         	}
-                        	
+
                         	\$http.post(url2, JSON.stringify(\$scope.json)).then(function(response){
                         		if(response.data){
                                 		\$scope.statuscode = "Success";
@@ -249,7 +225,7 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 
   		\$scope.closeAlert = function(index) {
 	  		if (\$scope.visitStatus) {
-	        		
+
 				\$scope.deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.alerts[index].uuid + "?purge=true";
 	                	\$http.delete(\$scope.deleteurl).then(function(response){
 			                \$scope.alerts.splice(index, 1);
@@ -268,4 +244,4 @@ recentVisitFactory.fetchVisitEncounterObs(visitId).then(function(data) {
 </script>
 
 <script>
-</script>  
+</script>

@@ -1,4 +1,4 @@
-var app = angular.module('diagnoses', [])
+/*var app = angular.module('diagnoses', [])
     .directive('autocomplete', function($compile) {
         return function(scope, element, attrs) {
             // I don't know how to use an angular template programmatically, so use an underscore template instead. :-(
@@ -42,25 +42,4 @@ var app = angular.module('diagnoses', [])
         }
     })
 
-    .controller('DiagnosesController', [ '$scope',
-        function DiagnosesController($scope) {
-
-            $scope.encounterDiagnoses = diagnoses.EncounterDiagnoses();
-            $scope.priorDiagnoses = diagnoses.EncounterDiagnoses();
-
-            $scope.addPriorDiagnoses = function() {
-                $scope.encounterDiagnoses.addDiagnoses(angular.copy($scope.priorDiagnoses.getDiagnoses()));
-            }
-
-            $scope.removeDiagnosis = function(diagnosis) {
-                $scope.encounterDiagnoses.removeDiagnosis(diagnosis);
-            };
-
-            $scope.valueToSubmit = function() {
-                return "[" + _.map($scope.encounterDiagnoses.diagnoses, function(d) {
-                    return d.valueToSubmit();
-                }).join(", ") + "]";
-            };
-        }
-    ]);
-
+*/
