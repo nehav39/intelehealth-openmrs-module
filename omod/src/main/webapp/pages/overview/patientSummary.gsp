@@ -78,6 +78,7 @@ ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient]) }
                 ${ui.includeFragment("intelehealth", "overview/meds", [patient: patient])}
                 ${ui.includeFragment("intelehealth", "overview/orderedTests", [patient: patient])}
                 ${ui.includeFragment("intelehealth", "overview/advice", [patient: patient])}
+                <button ng-click = 'notify()'>Click here to notify health worker</button>
 
 	 </div>
     </div>
@@ -178,6 +179,41 @@ recentVisitFactory.fetchVisitDetails(visitId).then(function(data) {
 					}, function(error) {
 						console.log(error);
 					});
+      // This function is for the notification system!!!!!   Author - Hardik Nagda
+          \$scope.notify = function() {
+            var n = confirm("Have you prescribed everything?");
+            if(n == true){
+              var testurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/person/" + patient;
+          	 \$http.get(testurl).then(function(response){
+          			angular.forEach(response.data.attributes, function(v, k){
+          				var encounter = v.display;
+          				if(encounter.match("Notifier") !== null) {
+          				\$scope.var1 = v.display.slice(11,v.display.length);
+                  var name = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/person/" + patient + '/name';
+                  \$http.get(name).then(function(response){
+                      angular.forEach(response.data.results, function(v,k){
+                        \$scope.patientName = v.display
+                      })
+                  var json = {
+                    notification:{
+                      title: "Prescription",
+                      body: "Download prescription for:" + \$scope.patientName
+                    },
+                    to: \$scope.var1
+                  };
+                  var notifierUrl = "https://fcm.googleapis.com/fcm/send";
+                  \$http.post(notifierUrl, JSON.stringify(json), {
+                    headers: { 'Content-Type': 'application/json', 'Authorization' : 'key=AIzaSyDwG_641M8QASybWKpQMapWjwdChiGG6v4'},
+                  }).then(function(response) {
+                    });
+                });
+          				}
+          			});
+          	 });
+            }
+            else {console.log('Cancelled')};
+          }
+
 });
 
 </script>
