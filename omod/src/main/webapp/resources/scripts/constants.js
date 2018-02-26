@@ -13,5 +13,6 @@ var constantConfigObj = {
 		conceptTests: '98c5881f-b214-4597-83d4-509666e9a7c9',
 		conceptRequestedTests: '23601d71-50e6-483f-968d-aeef3031346d',
 		conceptDiagnosis: '537bb20d-d09d-4f88-930b-cc45c7d662df',
-		conceptAdditionalComments: '162169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+		conceptAdditionalComments: '162169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+		conceptTreatmentType: '7625a950-58fa-47d0-bb67-d80732f522f4'
 }
