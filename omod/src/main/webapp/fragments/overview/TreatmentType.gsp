@@ -14,8 +14,6 @@
 		<h3>Treatment Type</h3>
 	</div>
 	<div class="input">
-		Please select what type of treatment you will be prescribing -
-		<br/>
 		<br/>
 		<label>
 							<input type="radio"  value="Ayurvedic" ng-model="treatment">
@@ -29,12 +27,13 @@
 				<input type="radio"  value="Combination" ng-model="treatment">
 				Combination
 		</label>
-		<button type="button"  ng-click = 'addtype()' ng-disabled = "isDiasbled" style=" margin-left: 30px;" ng-show = "alerts.length == 0">Add Treatment Type</button>
-<br/>
+		<button type="button"  ng-click = 'addtype()'  style=" margin-left: 30px;" ng-show = "alerts.length == 0">Add Treatment Type</button>
+		{{errortext}}
+		<br/>
 <br/>
 <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
 	</div>
-		<p>{{errortext}}</p>
+
 	</div>
 	<div>
 		<p>*please delete current treatment type to reselect the treatment type.</p>
@@ -139,13 +138,6 @@
 
 	\$scope.types = ['Ayurvedic', 'Allopathic', 'Combination'];
 
-	// \$scope.check = function(){
-	// 	console.log(\$scope.alerts.length);
-	// 	if(\$scope.alerts.length !== '0'){
-	// 		return true;
-	// 	}
-	// };
-
 	\$timeout(function(){
 		var promise = TreatmentTypeFactory1.async().then(function(d){
 			var length = d.length;
@@ -165,20 +157,21 @@
 		promise.then(function(x){
 
 			\$scope.addtype = function(){
-				\$scope.isDiasbled = true;
-				console.log(\$scope.alerts);
-				if(\$scope.treatment != ''){
+				\$scope.errortext = "";
+				if (!\$scope.treatment) {
+								\$scope.errortext = "Please enter text.";
+								return;
+				}
 				if (\$scope.alerts.indexOf(\$scope.treatment) == -1){
-								\$scope.alerts.push({msg: \$scope.treatment})
+								\$scope.alerts.push({msg: \$scope.treatment});
 								  var url2 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs";
 											\$scope.json = {
-															concept: '91f72312-069f-4344-83c8-13fe61d37970',
+															concept: '7625a950-58fa-47d0-bb67-d80732f522f4',
 															person: patient,
 															obsDatetime: date2,
 															value: \$scope.treatment,
 															encounter: \$scope.encounterUuid
 											}
-											console.log(\$scope.json);
 											\$http.post(url2, JSON.stringify(\$scope.json)).then(function(response){
 												if(response.data){
 																\$scope.statuscode = "Success";
@@ -191,17 +184,16 @@
 								\$scope.treatment = "";
 														}
 											}, function(response){
+												console.log(response);
 												\$scope.statuscode = "Failed to create Obs";
 											});
 				}
-			};
-}
+};
 			\$scope.closeAlert = function(index) {
 	  		if (\$scope.visitStatus) {
 					\$scope.isDiasbled = false;
 				\$scope.deleteurl = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs/" + \$scope.alerts[index].uuid + "?purge=true";
 	                	\$http.delete(\$scope.deleteurl).then(function(response){
-											console.log(response);
 			                \$scope.alerts.splice(index, 1);
 			        		\$scope.errortext = "";
 	                		\$scope.statuscode = "Success";
