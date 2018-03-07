@@ -1,3 +1,9 @@
+<style>
+.input{
+background : #F9F9F9;
+display: block;
+}
+</style>
 <div ng-controller="Ctrl">
 <div class="info-header">
 		<i class="icon-book"></i>
@@ -5,21 +11,20 @@
 	</div>
 	<div class="info-body">
 		<br/>
-		<div >
-		    <div class="input-append">
-					From
-		        <input style = 'margin-left : 10px;  ' type="text" b-datepicker ng-model="from" />
+		<div>
+		        <input type="text" b-datepicker ng-model="from" placeholder="From"/>
 		        <button type="button" class="btn" data-toggle="datepicker"> <i class="icon-calendar"></i>
 		        </button>
-		    </div>
-				<div class="input-append">
-					To
-		        <input style = 'margin-left : 30px; margin-top : 10px;' type="text" b-datepicker ng-model="to" />
+<span>
+		        <input style = 'margin-top : 10px; margin-left : 10px;' type="text" b-datepicker ng-model="to" placeholder="To" />
 		        <button type="button" class="btn" data-toggle="datepicker"> <i class="icon-calendar"></i>
 		        </button>
-		    </div>
+</span>
+				<input type="text" style = 'margin-top : 10px; margin-left : 10px;' ng-model = 'advice' name="" value="" placeholder="Follow Up Advice">
+				<br/> <br/>
+				<button type="button" ng-click = 'addtype()' ng-show = "alerts.length == 0">Schedule a Follow Up</button>
+				{{errortext}}
 				<br/>
-				<button type="button" style = 'margin-left : 0px;' ng-click = 'addtype()' ng-disabled = "isDiasbled" style=" margin-left: 30px;" ng-show = "alerts.length == 0">Schedule a Follow Up</button>
 				<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'info')" close="closeAlert(\$index)">{{alert.msg}}</div>
 		</div>
 		</div>
@@ -135,18 +140,23 @@ myApp.controller('Ctrl', function(\$scope, \$http, \$timeout, FollowUpFactory1, 
 		});
 		promise.then(function(x){
 			\$scope.addtype = function(){
-				\$scope.isDiasbled = true;
-				if(\$scope.to != '' | \$scope.from != ''){
-				if (\$scope.alerts.indexOf(\$scope.treatment) == -1){
-debugger;
-					\$scope.treatment = \$scope.to + ' to ' +  \$scope.from;
-								\$scope.alerts.push({msg: \$scope.treatment})
+				\$scope.followup = \$scope.to + ' to ' +  \$scope.from;
+				if(\$scope.advice){
+					\$scope.followup += ', Advice: ' + \$scope.advice;
+				}
+				\$scope.errortext = "";
+				if (!\$scope.to || !\$scope.from) {
+								\$scope.errortext = "Please enter text.";
+								return;
+				}
+				if (\$scope.alerts.indexOf(\$scope.followup) == -1){
+								\$scope.alerts.push({msg: \$scope.followup})
 								  var url2 = "/" + OPENMRS_CONTEXT_PATH + "/ws/rest/v1/obs";
 											\$scope.json = {
 															concept: '79968663-20d8-4083-8aba-7ddffec1f25f',
 															person: patient,
 															obsDatetime: date2,
-															value: \$scope.treatment,
+															value: \$scope.followup,
 															encounter: \$scope.encounterUuid
 											}
 											\$http.post(url2, JSON.stringify(\$scope.json)).then(function(response){
@@ -154,18 +164,17 @@ debugger;
 																\$scope.statuscode = "Success";
 																angular.forEach(\$scope.alerts, function(v, k){
 									var encounter = v.msg;
-									if(encounter.match(\$scope.treatment) !== null) {
+									if(encounter.match(\$scope.followup) !== null) {
 									v.uuid = response.data.uuid;
 									}
 								});
-								\$scope.treatment = "";
+								\$scope.followup = "";
 														}
 											}, function(response){
 												\$scope.statuscode = "Failed to create Obs";
 											});
 				}
-			};
-}
+};
 			\$scope.closeAlert = function(index) {
 	  		if (\$scope.visitStatus) {
 					\$scope.isDiasbled = false;
